@@ -1,0 +1,48 @@
+// models/userModel.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../configs/db");
+
+const Comment = sequelize.define(
+  "Comment",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    ranting: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+    },
+    createAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      unique: true,
+    },
+    customer_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Customer", // 'Comment' refers to table name
+        key: "id",
+      },
+    },
+    product_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Product", // 'Comment' refers to table name
+        key: "id",
+      },
+    },
+  },
+  {
+    tableName: "comment",
+    timestamps: false,
+  }
+);
+
+module.exports = { Comment, sequelize };
