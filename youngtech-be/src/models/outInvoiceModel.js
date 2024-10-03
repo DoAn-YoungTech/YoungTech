@@ -40,7 +40,7 @@ const OutInvoice = sequelize.define(
     },
   },
   {
-    tableName: "outInvoice",
+    tableName: "OutInvoice",
     timestamps: false,
   }
 );

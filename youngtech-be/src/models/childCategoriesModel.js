@@ -2,8 +2,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/db");
 
-const ParentCategories = sequelize.define(
-  "ParentCategories",
+const ChildCategories = sequelize.define(
+  "ChildCategories",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -35,9 +35,9 @@ const ParentCategories = sequelize.define(
     },
   },
   {
-    tableName: "childCategories",
+    tableName: "ChildCategories",
     timestamps: false,
   }
 );
 
-module.exports = { ParentCategories, sequelize };
+module.exports = { ChildCategories, sequelize };

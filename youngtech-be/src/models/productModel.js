@@ -54,21 +54,21 @@ const Product = sequelize.define(
     brand_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Brand", // 'Comment' refers to table name
+        model: "Brand",
         key: "id",
       },
     },
 
-    category_id: {
+    childCategory_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Category", // 'Comment' refers to table name
+        model: "ChildCategories",
         key: "id",
       },
     },
   },
   {
-    tableName: "product",
+    tableName: "Product",
     timestamps: false,
   }
 );

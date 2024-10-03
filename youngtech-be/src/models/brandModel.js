@@ -21,7 +21,7 @@ const Brand = sequelize.define(
     },
   },
   {
-    tableName: "brand",
+    tableName: "Brand",
     timestamps: false,
   }
 );

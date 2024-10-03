@@ -6,8 +6,10 @@ var logger = require("morgan");
 
 const router = require("./src/routes");
 const sequelize = require("./src/configs/db");
+const defineAssociations = require("./src/models/defineAssociations");
 // const rootModel = require("./src/models");
 
+defineAssociations();
 var app = express();
 
 // view engine setup
@@ -22,15 +24,17 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", router);
 
-sequelize
-  .sync({ force: true }) // `force: true` nếu bạn muốn drop và tạo lại bảng mỗi khi chạy
-  .then(() => {
+async function syncDatabase() {
+  try {
+    await sequelize.sync({ force: true });
     console.log("Database synchronized");
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error("Error synchronizing database:", err);
-  });
+  }
+}
 
+// Gọi hàm này để đồng bộ hóa cơ sở dữ liệu
+syncDatabase();
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

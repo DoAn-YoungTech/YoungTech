@@ -26,7 +26,7 @@ const Account = sequelize.define(
     },
   },
   {
-    tableName: "account",
+    tableName: "Account",
     timestamps: false,
   }
 );
