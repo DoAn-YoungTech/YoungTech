@@ -40,7 +40,7 @@ const InputInvoice = sequelize.define(
       },
   },
   {
-    tableName: "inputInvoice",
+    tableName: "InputInvoice",
     timestamps: false,
   }
 );

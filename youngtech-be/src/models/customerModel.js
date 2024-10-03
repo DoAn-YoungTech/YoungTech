@@ -14,7 +14,6 @@ const Customer = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-
     },
     phoneNumber: {
       type: DataTypes.STRING,
@@ -30,7 +29,7 @@ const Customer = sequelize.define(
     },
   },
   {
-    tableName: "customer",
+    tableName: "Customer",
     timestamps: false,
   }
 );

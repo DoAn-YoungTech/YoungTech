@@ -28,7 +28,7 @@ const ParentCategories = sequelize.define(
     },
   },
   {
-    tableName: "parentCategories",
+    tableName: "ParentCategories",
     timestamps: false,
   }
 );

@@ -40,7 +40,7 @@ const OrderDetail = sequelize.define(
     },
   },
   {
-    tableName: "orderDetail",
+    tableName: "OrderDetail",
     timestamps: false,
   }
 );
