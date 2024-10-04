@@ -18,15 +18,11 @@ const OutInvoice = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
 
     order_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Order", // 'OutInvoice' refers to table name
+        model: "Order",
         key: "id",
       },
     },
@@ -34,7 +30,7 @@ const OutInvoice = sequelize.define(
     customer_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Customer", // 'OutInvoice' refers to table name
+        model: "Customer",
         key: "id",
       },
     },
