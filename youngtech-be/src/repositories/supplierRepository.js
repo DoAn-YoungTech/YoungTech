@@ -1,13 +1,10 @@
-const sequelize = require("../configs/db");
-
-const supplierRepository = {
-
+const sequelize = require("../configs/db"); 
+const supplierRepository = { 
     getAllSuppliers: async () => {
         const query = `SELECT * FROM supplier`;
         const [results] = await sequelize.query(query);
         return results;
-    },
-
+    }, 
     createSupplier: async (supplierData) => {
         const query = `INSERT INTO supplier (supplierName, contactName, phoneNumber, email, address) 
                    VALUES (:supplierName, :contactName, :phoneNumber, :email, :address)`;
@@ -33,6 +30,8 @@ const supplierRepository = {
         const [result] = await sequelize.query(query, {replacements: {id}});
         return result[0];
     },
-};
+}; 
+
+
 
 module.exports = supplierRepository;
