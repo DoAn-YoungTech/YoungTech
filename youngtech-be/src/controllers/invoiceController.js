@@ -4,7 +4,7 @@ const invoiceService = require('../services/invoiceService')
 const invoiceController = {
     getAllInvoice :async (req, res) => {
         try {
-            const result =await invoiceService.getAllInvoice() 
+            const result = await invoiceService.getAllInvoice() 
             res.json({message : "All Invoice !"})
         }catch(err) {
             res.json({message : "Err"})

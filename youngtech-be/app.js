@@ -2,6 +2,7 @@ var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
+
 var logger = require("morgan");
 
 const router = require("./src/routes");
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api", router);
+
 
 async function syncDatabase() {
   try {
