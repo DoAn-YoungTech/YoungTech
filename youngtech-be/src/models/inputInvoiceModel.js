@@ -22,7 +22,7 @@ const InputInvoice = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
+ 
     supplier_id: {
       type: DataTypes.INTEGER,
       references: {
