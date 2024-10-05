@@ -1,6 +1,3 @@
-
-
-
 const sequelize = require('../configs/db');
 const { createEmployee } = require('../services/employeeService');
 
