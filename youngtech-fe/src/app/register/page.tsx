@@ -1,11 +1,13 @@
-import AppItemProduct from "@/components/users/app.itemProduct"
+import AppRegister from "@/components/app.register"
+import "../style/app.login.css"
 
 
-const page = () => {
+const PageRegister = () => {
   return (
    <>
+   <AppRegister/>
    </>
   )
 }
 
-export default page
+export default PageRegister
