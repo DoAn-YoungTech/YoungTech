@@ -63,4 +63,4 @@ const Product = sequelize.define(
     }
 );
 
-module.exports = Product;
+module.exports = {Product, sequelize};

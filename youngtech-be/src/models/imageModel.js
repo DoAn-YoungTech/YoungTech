@@ -20,8 +20,6 @@ const Image = sequelize.define(
                 model: "Product",
                 key: "id",
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE',
         },
     },
     {

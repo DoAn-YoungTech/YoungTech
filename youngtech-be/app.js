@@ -8,7 +8,7 @@ var logger = require("morgan");
 const router = require("./src/routes");
 const sequelize = require("./src/configs/db");
 const defineAssociations = require("./src/models/defineAssociations");
-// const rootModel = require("./src/models");
+const rootModel = require("./src/models");
 
 defineAssociations();
 var app = express();
@@ -28,7 +28,7 @@ app.use("/api", router);
 
 async function syncDatabase() {
   try {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
     console.log("Database synchronized");
   } catch (err) {
     console.error("Error synchronizing database:", err);
