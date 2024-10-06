@@ -13,12 +13,7 @@ const Brand = sequelize.define(
     brandName: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
+    }
   },
   {
     tableName: "Brand",

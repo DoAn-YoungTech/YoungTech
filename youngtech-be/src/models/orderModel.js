@@ -14,6 +14,10 @@ const Order = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    succesDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
     totalAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
