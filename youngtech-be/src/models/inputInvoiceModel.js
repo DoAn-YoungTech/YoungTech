@@ -10,26 +10,17 @@ const InputInvoice = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+
     invoiceDate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
+
     totalAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    },  
  
-    supplier_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "Supplier", // 'InputInvoice' refers to table name
-        key: "id",
-      },
-    },
 
     employee_id: {
         type: DataTypes.INTEGER,

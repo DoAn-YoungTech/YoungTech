@@ -14,27 +14,7 @@ const Role = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
-    roleDescription: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    permissions: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    createAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    updateAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    }
   },
   {
     tableName: "Role",

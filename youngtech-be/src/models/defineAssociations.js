@@ -10,11 +10,11 @@ const { Order } = require("./orderModel");
 const { OrderDetail } = require("./orderDetailModel");
 const { OutInvoice } = require("./outInvoiceModel");
 const { ParentCategories } = require("./parentCategoriesModel");
-const { Product } = require("./productModel");
 const { Role } = require("./roleModel");
 const { Supplier } = require("./supplierModel");
 const { roleAccount } = require("./roleAccountModel");
 const { Employee } = require("./employeeModel");
+const Product = require("./productModel");
 
 const defineAssociations = () => {
   // Account - Customer: One-to-One
@@ -36,6 +36,7 @@ const defineAssociations = () => {
   // CartItem - Product: One-to-One
   Product.hasMany(CartItem, { foreignKey: "product_id" });
   CartItem.belongsTo(Product, { foreignKey: "product_id" });
+
 
   // Comment - Product: One-to-Many
   Product.hasMany(Comment, { foreignKey: "product_id" });
@@ -65,14 +66,19 @@ const defineAssociations = () => {
   Customer.hasMany(OutInvoice, { foreignKey: "customer_id" });
   OutInvoice.belongsTo(Customer, { foreignKey: "customer_id" });
 
-  // InputInvoice - Supplier: One-to-One
-  Supplier.hasMany(InputInvoice, { foreignKey: "supplier_id" });
-  InputInvoice.belongsTo(Supplier, { foreignKey: "supplier_id" });
+
+  Supplier.hasMany(Product, { foreignKey: "supplier_id" });
+  Product.belongsTo(Supplier, { foreignKey: "supplier_id" });
 
   // InputInvoice - Employee: One-to-One
   Employee.hasMany(InputInvoice, { foreignKey: "employee_id" });
   InputInvoice.belongsTo(Employee, { foreignKey: "employee_id" });
 
+  // Product - Brand: One-to-One
+  Brand.hasMany(Product, { foreignKey: "brand_id" });
+  Product.belongsTo(Brand, { foreignKey: "brand_id" });
+
+  
   // Product - Brand: One-to-One
   Brand.hasMany(Product, { foreignKey: "brand_id" });
   Product.belongsTo(Brand, { foreignKey: "brand_id" });
