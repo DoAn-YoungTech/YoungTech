@@ -1,10 +1,9 @@
-"use client";
-const Page = () => {
+const Header = () => {
   return (
     <div>
-      <h1>Page admin</h1>
+      <h1 className="text-red-800">Header admin</h1>
     </div>
   );
 };
 
-export default Page;
+export default Header;
