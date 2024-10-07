@@ -10,14 +10,11 @@ const OutInvoice = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    invoiceDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    totalAmount: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    
+   linkPdf: {
+    type: DataTypes.STRING,
+    allowNull: false
+   },
 
     order_id: {
       type: DataTypes.INTEGER,

@@ -10,18 +10,17 @@ const OrderDetail = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+
     unitPrice: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    
 
     order_id: {
       type: DataTypes.INTEGER,

@@ -13,17 +13,12 @@ const CartItem = sequelize.define(
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
-    },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
 
+    },
     cart_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Cart", // 'Comment' refers to table name
+        model: "Cart", 
         key: "id",
       },
     },
@@ -35,6 +30,7 @@ const CartItem = sequelize.define(
         key: "id",
       },
     },
+
   },
   {
     tableName: "CartItem",

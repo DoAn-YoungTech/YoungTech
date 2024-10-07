@@ -10,19 +10,7 @@ const Cart = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    createAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    updateAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
+
     customer_id: {
       type: DataTypes.INTEGER,
       references: {
