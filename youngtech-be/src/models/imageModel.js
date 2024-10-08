@@ -10,6 +10,10 @@ const Image = sequelize.define(
             primaryKey: true,
             autoIncrement: true,
         },
+        flag: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
         imageUrl: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -20,8 +24,6 @@ const Image = sequelize.define(
                 model: "Product",
                 key: "id",
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE',
         },
     },
     {

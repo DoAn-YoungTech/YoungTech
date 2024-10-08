@@ -9,6 +9,10 @@ const Account = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
+        }, 
+        flag: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
         },
         userName: {
             type: DataTypes.STRING,

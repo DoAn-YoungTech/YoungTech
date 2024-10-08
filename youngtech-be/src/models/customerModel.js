@@ -9,6 +9,10 @@ const Customer = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
+        }, 
+        flag: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
         },
         fullName: {
             type: DataTypes.STRING,

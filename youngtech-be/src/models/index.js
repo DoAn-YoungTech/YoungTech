@@ -1,5 +1,4 @@
 const Account = require("./accountModel");
-const Brand = require("./brandModel");
 const Cart = require("./cartModel");
 const CartItem = require("./cartItemModel");
 const ChildCategories = require("./childCategoriesModel");
@@ -19,7 +18,6 @@ const Image = require("./imageModel");
 
 const rootModel = {
   Account,
-  Brand,
   Customer,
   Cart,
   CartItem,
