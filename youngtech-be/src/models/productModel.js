@@ -26,21 +26,18 @@ const Product = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        status: {
+        brand: {
             type: DataTypes.STRING,
+            allowNull: false,
+        },
+        flag: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
         },
         createAt: {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW, // Thêm giá trị mặc định cho createAt
-        },
-        brand_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: "Brand",
-                key: "id",
-            },
         },
         childCategory_id: {
             type: DataTypes.INTEGER,

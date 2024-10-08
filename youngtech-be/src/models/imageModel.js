@@ -10,6 +10,10 @@ const Image = sequelize.define(
             primaryKey: true,
             autoIncrement: true,
         },
+        flag: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
         imageUrl: {
             type: DataTypes.STRING,
             allowNull: false,

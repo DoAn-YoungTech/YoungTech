@@ -14,6 +14,10 @@ const ChildCategories = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+     flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
     parentCategory_id: {
       type: DataTypes.INTEGER,
       references: {

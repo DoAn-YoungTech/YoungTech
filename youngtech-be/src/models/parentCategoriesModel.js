@@ -10,22 +10,15 @@ const ParentCategories = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+  },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    createAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
+    }
+  
   },
   {
     tableName: "ParentCategories",

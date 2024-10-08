@@ -28,7 +28,7 @@ app.use("/api", router);
 
 async function syncDatabase() {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     console.log("Database synchronized");
   } catch (err) {
     console.error("Error synchronizing database:", err);
