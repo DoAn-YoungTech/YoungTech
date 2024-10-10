@@ -1,5 +1,5 @@
-import AppLogin from '@/components/users/app.login'
-import "../style/app.login.css"
+import AppLogin from '@/components/app.login'
+
 
 const PageLogin = () => {
   return (

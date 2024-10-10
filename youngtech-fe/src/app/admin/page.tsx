@@ -1,11 +1,19 @@
-import React from 'react'
+"use client"
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
-const PageAdmin = () => {
+const AdminPage = () => {
+  const router = useRouter();
+
+  
+  const handleStaffClick = () => {
+    router.push('/admin/staff'); // Điều hướng đến /admin/staff/edit
+  };
+
+
   return (
-    <div>
-      <h1>Page Admin</h1>
-    </div>
-  )
-}
+     <button onClick={handleStaffClick}>Staff</button>
+  );
+};
 
-export default PageAdmin
+export default AdminPage;

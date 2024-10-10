@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import AppHeader from "../components/users/page/app.header";
 import "./app.style.css"
 
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import Footer from "@/components/layouts/footer";
+import Header from "@/components/layouts/header";
+
 config.autoAddCss = false; 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,9 +35,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
       <>
-       {/* <AppHeader/> */}
-     
-      {children}
+       
+      <Header/>
+      <div className="w-full">
+      <main className="w-[90%] m-auto ">{children}</main>
+      </div>
+      <Footer/>
       </>
       </body>
     </html>
