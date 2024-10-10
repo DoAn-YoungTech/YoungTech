@@ -19,7 +19,7 @@ const StaffHeader = () => {
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
         {/* Logo */}
         <a className="text-2xl font-bold text-gray-800 hover:text-gray-600" href="#">
-          YONUNGTECH
+          Business
         </a>
 
         {/* Mobile Menu Toggle */}
@@ -80,14 +80,6 @@ const StaffHeader = () => {
               </Transition>
             </li>
           </ul>
-          <form className="ml-4 hidden lg:block">
-            <input
-              className="border rounded-lg p-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-          </form>
         </div>
       </div>
     </header>

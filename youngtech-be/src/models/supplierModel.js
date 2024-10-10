@@ -10,6 +10,10 @@ const Supplier = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+  },
     supplierName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -31,6 +35,7 @@ const Supplier = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+
   },
   {
     tableName: "Supplier",
