@@ -1,5 +1,4 @@
 const sequelize = require('../configs/db');
-const { getAllChildCategories, updateChildCategories } = require('../controllers/childCategoriesController');
 
 const childCategoriesRepository = {
     getAllChildCategories : async () =>{
