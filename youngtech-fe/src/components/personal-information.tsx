@@ -1,4 +1,4 @@
-export default function PersonalInfo(){
+export default function PersonalInfo() {
     return (
         <div>
             Personal Info
