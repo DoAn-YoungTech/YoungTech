@@ -18,18 +18,19 @@ const invoiceRepository = {
     const [result] = await sequelize.query(query, { replacements: data });
     return result;
   },
-  deleteInvoice : async (id) => {
+  deleteInvoice: async (id) => {
     const query = `DELETE FROM inputInvoice WHERE id = :id`;
-    const [result] = await sequelize.query(query , {replacements : {id}})
-    return result ;
+    const [result] = await sequelize.query(query, { replacements: { id } });
+    return result;
   },
 
-  updateInvoice : async (id, data) => {
+  updateInvoice: async (id, data) => {
     const query = `UPDATE inputInvoice SET invoiceDate =:invoiceDate , totalAmount = :totalAmount ,
-     status=:status , supplier_id =:supplier_id , employee_id = :employee_id WHERE id =:id`
-     const [result] = await sequelize.query(query , {replacements : {...data , id}})
-     return result
-  } 
- 
+     status=:status , supplier_id =:supplier_id , employee_id = :employee_id WHERE id =:id`;
+    const [result] = await sequelize.query(query, {
+      replacements: { ...data, id },
+    });
+    return result;
+  },
 };
 module.exports = invoiceRepository;

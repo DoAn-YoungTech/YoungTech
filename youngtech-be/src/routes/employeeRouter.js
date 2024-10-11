@@ -1,16 +1,12 @@
 const express = require('express');
-
 const employeeRouter = express.Router();
-const employeeController = require('../controllers/employeeController')
+const employeeController = require('../controllers/employeeController'); // Import controller
 
-employeeRouter.get('/' , employeeController.getAllEmployee ) 
+// Define routes with valid callbacks
+employeeRouter.get('/', employeeController.getAllEmployee);
+employeeRouter.post('/', employeeController.createEmployee);
+employeeRouter.get('/:id', employeeController.getEmployeeById);
+employeeRouter.put('/:id', employeeController.updateEmployee);
+employeeRouter.delete('/:id', employeeController.deleteEmployee);
 
-employeeRouter.post('/' , employeeController.createEmployee ) 
-
-employeeRouter.delete('/:id' ,employeeController.deleteEmployee  ) 
-
-employeeRouter.put('/:id' ,  employeeController.updateEmployee) 
-
-employeeRouter.get('/:id' , employeeController.getEmployeeById )
-
-module.exports = employeeRouter
+module.exports = employeeRouter;
