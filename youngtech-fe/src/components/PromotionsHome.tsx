@@ -25,7 +25,7 @@ const PromotionsHome = () => {
   
     </div>
   <div className=" px-5 grid justify-center items-center  grid-cols-2 lg:grid-cols-5 gap-2">
-    <AppItemProduct/>
+    <AppItemProduct  />
     <AppItemProduct/>
     <AppItemProduct/>
     <AppItemProduct/>

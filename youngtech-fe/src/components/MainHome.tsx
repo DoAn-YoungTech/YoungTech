@@ -6,16 +6,17 @@ import PromotionsHome from "./PromotionsHome"
 import Suggestion from "./SuggestionHome"
 import PanasonicBrandHome from "./Panasonic-brand/PanasonicBrandHome"
 import PromotionBooth from "./Promotion-booth/PromotionBooth"
-
-
+import Menu from "./menu/Menu"
 
 
 const MainHome: React.FC = () => {
   return (
    <>
+  
     <Banner/>
-    <Categories/>
-    <PromotionsHome/>
+    <Menu/>
+    <Categories  />
+    <PromotionsHome />
     <BannerTwo/>
     <Suggestion/>
     <PanasonicBrandHome/>

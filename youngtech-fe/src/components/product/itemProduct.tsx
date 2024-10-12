@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
-const AppItemProduct: React.FC = () => {
+const AppItemProduct = () => {
   return (
-    <div className='flex w-full group flex-col my-3 hover:shadow-lg border px-3 rounded-lg py-3'>
+    <div className='flex group flex-col my-3 hover:shadow-lg border px-3 rounded-lg py-3'>
               <p className='mb-5 overflow-hidden text-[11px] w-[70px]  flex justify-center bg-slate-200'>Trả góp 0%</p>
               
   <Image 

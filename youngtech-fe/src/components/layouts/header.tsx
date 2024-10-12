@@ -4,7 +4,7 @@ import { faBars,faMagnifyingGlass,faUser,faCartShopping,faLocationDot,faChevronR
 import Link from 'next/link'
 
 const Header: React.FC = () => {
-   const handleClickHome = ()=>{}
+   
   return (
    
  <>
