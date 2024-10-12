@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 
-const StaffHeader = () => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -86,4 +86,4 @@ const StaffHeader = () => {
   );
 };
 
-export default StaffHeader;
+export default Header;

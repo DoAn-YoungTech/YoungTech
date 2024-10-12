@@ -18,7 +18,7 @@ const Sidebar = () => {
                 </li>
                 <li className={`flex items-center ${pathname === "/admin/sell" ? "text-blue-500" : "text-gray-700"} hover:text-blue-500 transition-colors`}>
                     <FontAwesomeIcon icon={faUsers} className="mr-2" />
-                    <Link href="/admin/manager-staff">Quản lý nhân viên</Link>
+                    <Link href="/admin/employeeManagement">Quản lý nhân viên</Link>
                 </li>
                 <li className={`flex items-center ${pathname === "#" ? "text-blue-500" : "text-gray-700"} hover:text-blue-500 transition-colors`}>
                     <FontAwesomeIcon icon={faUserTie} className="mr-2" />
