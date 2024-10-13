@@ -1,8 +1,9 @@
 
 
+
 const ProductList = () => {
   return (
-     <h1>PageProduct</h1>
+    <h1>Page Products</h1>
   );
 };
 

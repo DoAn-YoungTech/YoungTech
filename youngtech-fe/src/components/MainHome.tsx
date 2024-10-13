@@ -14,7 +14,6 @@ const MainHome: React.FC = () => {
    <>
   
     <Banner/>
-    <Menu/>
     <Categories  />
     <PromotionsHome />
     <BannerTwo/>

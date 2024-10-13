@@ -12,11 +12,13 @@ const BannerTwo = () => {
             layout="responsive"
             width={600}
             height={200}
+            className='w-[40%]'
           />
         </div>
 
         <div className="w-1/2">
           <Image 
+          className='w-[48%]'
             src="/images/bannerTwo2.png" 
             alt="Banner 2" 
             layout="responsive"
