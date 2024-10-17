@@ -14,8 +14,7 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const topHeader = document.getElementById("topHeader")?.offsetHeight || 0;
-      console.log(topHeader);
-      console.log("Y" + window.scrollY);
+
       setIsSticky(window.scrollY > topHeader);
     };
     window.addEventListener("scroll", handleScroll);
@@ -132,7 +131,7 @@ const Header = () => {
                     </li>
                     <li className="ml-[20px]">
                       <Link
-                        href="/"
+                        href="/cart"
                         className="block px-3 py-[41px] transition-all duration-300 border-b-2 hover:border-b-red-700 border-transparent"
                       >
                         <BsCart className="text-[25px]" />
