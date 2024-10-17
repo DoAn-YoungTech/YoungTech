@@ -174,8 +174,6 @@ const Page = () => {
   };
   const handleDeleteAll = () => {
     setConfirmDeleteAll(true);
-    // setCart([]);
-    // setSelectProduct([]);
   };
   const handleConfirmDeleteAll = () => {
     setCart([]);

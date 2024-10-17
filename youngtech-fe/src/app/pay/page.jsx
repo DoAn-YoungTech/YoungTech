@@ -89,9 +89,6 @@ const CheckBox = ({ label, defaultChecked }) => {
     </>
   );
 };
-const textFont = {
-  fontFamily: "Roboto",
-};
 
 const Page = () => {
   return (
@@ -321,19 +318,7 @@ const Page = () => {
         <div className="cart-price w-[38%]">
           <div className="total-price">
             <h3 className="title text-[20px] font-semibold">Sản phẩm</h3>
-            <div className="cart_empty mt-[20px]">
-              <h3 className="text-red-500 text-[14px] text-center">
-                Giỏ hàng của bạn hiện đang trống. Hãy mua sắm ngay nhé!
-              </h3>
-              <LuShoppingCart className="mx-auto text-red-500 mt-3 text-[2rem]" />
-              <div className="mt-[20px] text-center">
-                <Link href="/product" className=" ">
-                  <button className="  py-2 px-4 rounded-xl border border-gray-300 text-[14px] bg-gray-300 hover:bg-black hover:text-white text-red-500  font-semibold">
-                    Mua Hàng nào
-                  </button>
-                </Link>
-              </div>
-            </div>
+
             <div className="productsList mt-[20px]">
               <div className="header flex justify-between items-center">
                 <div className="chooseAll_product flex items-center ">
@@ -421,6 +406,9 @@ const Page = () => {
       </div>
     </section>
   );
+};
+const textFont = {
+  fontFamily: "Roboto",
 };
 
 export default Page;
