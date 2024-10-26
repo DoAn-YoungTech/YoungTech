@@ -1,4 +1,4 @@
-const childCategoriesService = require("../services/childCategoriesServices");
+const childCategoriesService = require("../services/childCategoriesService");
 
 const childCategoriesController = {
     getAllChildCategories: async (req, res) => {
@@ -15,7 +15,7 @@ const childCategoriesController = {
             const id = req.params.id;
             const result = await childCategoriesService.getChildCategoriesById(id);
             if(!result){
-                res.status(404).json({message: "Parnet child categories by id not found"});
+                res.status(404).json({message: " Child categories by id not found"});
             }else{
                 res.status(200).json({message: "Success", data: result});
             }

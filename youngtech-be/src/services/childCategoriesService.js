@@ -1,4 +1,4 @@
-const childCategoriesRepository = require ("../repositories/childCategoriesRepositories");
+const childCategoriesRepository = require ("../repositories/childCategoriesRepositori");
 
 const childCategoriesService = {
         getAllChildCategories: async () => {
