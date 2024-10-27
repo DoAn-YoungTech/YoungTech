@@ -6,14 +6,13 @@ const API_URL_EMP = `${API_URL}/employees`;
 
 export interface Employee {
     id?: number;
+    flag: boolean;
     fullName: string;
     profilePicture: string;
-    email: string;
-    password: string;
+    dateOfBirth: string;
     phoneNumber: string;
-    dayOfBirth: string;
     position: string;
-    accountId?: number;
+    account_id: number | null;
 }
 
 interface EmployeeState {

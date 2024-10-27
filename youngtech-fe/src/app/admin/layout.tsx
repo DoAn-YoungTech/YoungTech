@@ -19,10 +19,10 @@ export default function RootLayout({
 
     return (
         <>
-            <Header toggleSidebar={toggleSidebar} />
+            <Header/>
             <div className="flex">
                 {isSidebarOpen && <Sidebar />}
-                <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? "p-10" : ""}`}>
+                <div className={`flex-1 transition-all duration-300 mt-20 ${isSidebarOpen ? "p-10" : ""}`}>
                     {children}
                 </div>
             </div>
