@@ -302,8 +302,9 @@ export default function EmployeePage() {
     return (
         <>
             <ToastContainer />
-            <div className="flex justify-between items-center mb-4">
-                <InputText className="border border-solid"
+            <div className="flex justify-between items-center mb-6 p-4">
+                <InputText
+                    className="border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-100 py-2 px-4"
                     placeholder="Tìm kiếm nhân viên..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -311,11 +312,11 @@ export default function EmployeePage() {
                 <Button
                     label="Thêm nhân viên"
                     icon="pi pi-plus"
-                    className="p-button-success"
+                    className="ml-4 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-200 flex items-center justify-center py-2 px-4"
                     onClick={openAddPopup}
                 />
             </div>
-
+            
             <DataTable
                 value={filteredEmployees}
                 paginator
