@@ -9,6 +9,9 @@ const ordersRoutes = require('./orderRoutes');
 const orderDetailRoutes = require('./orderDetailRoutes');
 const cartRoutes = require('./orderRoutes');
 const cartItemRoutes = require('./cartItemRoutes');
+const customerRoutes = require("./customerRoutes")
+
+
 router.use("/suppliers", supplierRoutes);
 router.use('/invoices' , invoiceRouters);
 router.use('/employees'  , employeeRouter );
@@ -18,4 +21,6 @@ router.use('/orders', ordersRoutes);
 router.use('/orderdetail', orderDetailRoutes);
 router.use ('/cart', cartRoutes);
 router.use('/cartitem', cartItemRoutes)
+router.use('/customers'  , customerRoutes);
+
 module.exports = router;

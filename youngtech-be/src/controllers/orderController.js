@@ -1,6 +1,6 @@
 const orderService = require("../services/orderService");
 const orderDetailService = require("../services/orderDetailService"); // Thêm service orderDetail
-
+const customerService = require("../services/customerService");
 const OrderController = {
   getAllOrder: async (req, res) => {
     try {
@@ -18,13 +18,20 @@ const OrderController = {
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
-
+  
       // Lấy chi tiết sản phẩm trong đơn hàng
       const orderDetails = await orderDetailService.getOrderDetailById(id);
-
+  
+      // Lấy thông tin khách hàng từ customer_id
+      const customer = await customerService.getCustomerById(order.customer_id);
+  
       res.status(200).json({
         message: "Success",
-        data: {order,orderDetails,}  // Trả về cả order và chi tiết order
+        data: {
+          order,
+          orderDetails,
+          customer // Trả về thêm thông tin khách hàng
+        }
       });
     } catch (err) {
       res.status(500).json({ message: "Invalid order", error: err.message });
