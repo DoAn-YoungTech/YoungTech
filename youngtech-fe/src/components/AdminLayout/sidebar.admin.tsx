@@ -7,11 +7,13 @@ import "primeicons/primeicons.css";
 
 const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isSalesDropdownOpen, setIsSalesDropdownOpen] = useState(false); // State cho dropdown
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
   const toggleSidebar = () => setIsCollapsed((prev) => !prev);
-  const toggleSalesDropdown = () => setIsSalesDropdownOpen((prev) => !prev); // Hàm để toggle dropdown
+  const toggleDropdown = (label: string) => {
+    setOpenDropdown((prev) => (prev === label ? null : label));
+  };
 
   const items = [
     {
@@ -28,17 +30,22 @@ const Sidebar: React.FC = () => {
       label: "Quản lý bán hàng",
       icon: "pi pi-cart-minus",
       href: "/admin/sale",
-      isDropdown: true, // Đánh dấu mục là dropdown
+      isDropdown: true,
       subItems: [
-        { label: "Bán hàng", href: "/admin/sale/selling", icon: "pi pi-shopping-cart" },
-        { label: "Xử lý đơn", href: "/admin/sale/orders", icon: "pi pi-check-circle" },
-        { label: "Hóa đơn", href: "/admin/sale/invoices", icon: "pi pi-file" },
+        { label: "Đơn hàng", href: "/admin/sale/order", icon: "pi pi-shopping-cart" },
+        { label: "Chi tiết đơn hàng", href: "/admin/sale/orderDetail", icon: "pi pi-check-circle" },
       ],
     },
     {
       label: "Quản lý kinh doanh",
       icon: "pi pi-briefcase",
       href: "/admin/business",
+      isDropdown: true,
+      subItems: [
+        { label: "Hoá đơn bán hàng", href: "/admin/business/output-invoice", icon: "pi pi-file" },
+        { label: "Quản lý sản phẩm", href: "/admin/business/product", icon: "pi pi-box" },
+        { label: "Quản lý khách hàng", href: "/admin/business/customer", icon: "pi pi-user" },        
+      ],
     },
     {
       label: "Quản lý danh mục sản phẩm",
@@ -83,17 +90,17 @@ const Sidebar: React.FC = () => {
             <div key={index}>
               {item.isDropdown ? (
                 <>
-                  <button 
-                    onClick={toggleSalesDropdown}
+                  <button
+                    onClick={() => toggleDropdown(item.label)}
                     className={`flex items-center ${pathname.startsWith(item.href) ? "text-blue-500" : "text-gray-700"}`}
                   >
                     <i className={`${item.icon} text-lg`} />
                     <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{item.label}</span>
                   </button>
-                  {isSalesDropdownOpen && (
+                  {openDropdown === item.label && (
                     <div className="ml-6 mt-2 space-y-2">
                       {item.subItems.map((subItem, subIndex) => (
-                        <Link 
+                        <Link
                           key={subIndex}
                           href={subItem.href}
                           className={`flex items-center ${pathname === subItem.href ? "text-blue-500" : "text-gray-700"}`}
@@ -106,8 +113,8 @@ const Sidebar: React.FC = () => {
                   )}
                 </>
               ) : (
-                <Link 
-                  href={item.href} 
+                <Link
+                  href={item.href}
                   className={`flex items-center ${pathname === item.href ? "text-blue-500" : "text-gray-700"}`}
                 >
                   <i className={`${item.icon} text-lg`} />

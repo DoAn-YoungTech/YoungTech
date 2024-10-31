@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createEmployee, fetchEmployees, updateEmployee, deleteEmployee } from "@/slices/employee.slice";
+import { createEmployee, fetchEmployees, updateEmployee } from "@/slices/employee.slice";
 import { RootState, AppDispatch } from "@/store";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -11,7 +11,6 @@ import { InputText } from "primereact/inputtext";
 import { Employee } from "@/slices/employee.slice";
 import { storage } from "@/connect";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { InputSwitch } from "primereact/inputswitch";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from 'primereact/calendar';
 import { format } from 'date-fns';
@@ -26,6 +25,7 @@ export default function EmployeePage() {
     const [isPopupAddOpen, setPopupAddOpen] = useState(false);
     const [isPopupEditOpen, setPopupEditOpen] = useState(false);
     const [isPopupViewOpen, setPopupViewOpen] = useState(false);
+    const [isTrashView, setIsTrashView] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState<Employee>({
         flag: false,
         fullName: '',
@@ -44,7 +44,7 @@ export default function EmployeePage() {
 
     const openAddPopup = () => {
         setSelectedEmployee({
-            flag: false,
+            flag: true,
             fullName: '',
             profilePicture: '',
             dateOfBirth: '',
@@ -102,162 +102,138 @@ export default function EmployeePage() {
         return downloadURL;
     };
 
-    const handleAddEmployee = async () => {
-        if (!selectedEmployee.fullName) {
+    const validateEmployee = (employee: Employee, isEdit = false) => {
+        if (!employee.fullName) {
             toast.error("Tên nhân viên không được để trống!");
-            return;
+            return false;
         }
-
-        if (selectedEmployee.fullName.length < 2) {
+        if (employee.fullName.length < 2) {
             toast.error("Tên nhân viên phải có ít nhất 2 ký tự!");
-            return;
+            return false;
         }
 
-        if (!selectedEmployee.phoneNumber) {
+        if (!employee.phoneNumber) {
             toast.error("Số điện thoại không được để trống!");
-            return;
-        }
-
-        if (!selectedEmployee.phoneNumber) {
-            toast.error("Số điện thoại không được để trống!");
-            return;
-        }
-
-        if (isPhoneNumberExist(selectedEmployee.phoneNumber)) {
-            toast.error("Số điện thoại đã tồn tại!");
-            return;
+            return false;
         }
 
         const phonePattern = /^0\d{9}$/;
-        if (!phonePattern.test(selectedEmployee.phoneNumber)) {
+        if (!phonePattern.test(employee.phoneNumber)) {
             toast.error("Số điện thoại phải đủ 10 chữ số, bắt đầu bằng số 0!");
-            return;
+            return false;
         }
-        if (!/^\d+$/.test(selectedEmployee.phoneNumber)) {
+        if (!/^\d+$/.test(employee.phoneNumber)) {
             toast.error("Số điện thoại chỉ được chứa chữ số!");
-            return;
+            return false;
         }
 
-        if (!imageFile) {
-            toast.error("Vui lòng chọn hình ảnh cho nhân viên!");
-            return;
+        if (!isEdit || employee.phoneNumber !== data.find(emp => emp.id === employee.id)?.phoneNumber) {
+            if (isPhoneNumberExist(employee.phoneNumber)) {
+                toast.error("Số điện thoại đã tồn tại!");
+                return false;
+            }
         }
 
-        if (!selectedEmployee.dateOfBirth) {
+        if (!employee.dateOfBirth) {
             toast.error("Ngày sinh không được để trống!");
-            return;
+            return false;
         }
-        const dateOfBirth = new Date(selectedEmployee.dateOfBirth);
+        const dateOfBirth = new Date(employee.dateOfBirth);
         const today = new Date();
         if (dateOfBirth >= today) {
             toast.error("Ngày sinh không hợp lệ! Ngày sinh phải là một ngày trong quá khứ.");
-            return;
+            return false;
         }
 
-        if (!selectedEmployee.position) {
+        if (!employee.position) {
             toast.error("Vai trò không được để trống!");
-            return;
+            return false;
         }
         const validPositions = ["Nhân viên bán hàng", "Nhân viên kinh doanh", "Thủ kho"];
-        if (!validPositions.includes(selectedEmployee.position)) {
+        if (!validPositions.includes(employee.position)) {
             toast.error("Vai trò không hợp lệ! Vui lòng chọn một vai trò từ danh sách.");
-            return;
+            return false;
         }
 
-        try {
-            const profilePicture = await handleImageUpload();
-            if (!profilePicture) {
-                toast.error("Tải lên hình ảnh thất bại!");
-                return;
+        if (!isEdit) {
+            if (!imageFile) {
+                toast.error("Vui lòng chọn hình ảnh cho nhân viên!");
+                return false;
             }
+            if (imageFile.size > 1 * 1024 * 1024) {
+                toast.error("Kích thước hình ảnh phải dưới 1MB!");
+                return false;
+            }
+            const allowedTypes = ["image/jpeg", "image/png"];
+            if (!allowedTypes.includes(imageFile.type)) {
+                toast.error("Chỉ chấp nhận định dạng JPEG hoặc PNG!");
+                return false;
+            }
+        }
 
-            await dispatch(createEmployee({ ...selectedEmployee, profilePicture })).unwrap();
-            toast.success("Thêm nhân viên thành công!");
+        return true;
+    };
+
+    const getEmployeeProfilePicture = async () => {
+        if (!imageFile) return null;
+        const profilePicture = await handleImageUpload();
+        if (!profilePicture) {
+            toast.error("Tải lên hình ảnh thất bại!");
+            return null;
+        }
+        return profilePicture;
+    };
+
+    const handleSaveEmployee = async (isEdit: boolean) => {
+        if (!validateEmployee(selectedEmployee, isEdit)) return;
+
+        const profilePicture = imageFile ? await getEmployeeProfilePicture() : selectedEmployee.profilePicture;
+        if (imageFile && !profilePicture) return;
+
+        const employeeData = { ...selectedEmployee, profilePicture: profilePicture || '' };
+
+        try {
+            if (isEdit) {
+                await dispatch(updateEmployee(employeeData)).unwrap();
+                toast.success("Cập nhật nhân viên thành công!");
+            } else {
+                await dispatch(createEmployee(employeeData)).unwrap();
+                toast.success("Thêm nhân viên thành công!");
+            }
             closePopup();
         } catch (error) {
-            toast.error("Thêm nhân viên thất bại!");
+            toast.error(isEdit ? "Cập nhật nhân viên thất bại!" : "Thêm nhân viên thất bại!");
         }
     };
 
-    const handleEditEmployee = async () => {
-        if (!selectedEmployee.phoneNumber) {
-            toast.error("Số điện thoại không được để trống!");
-            return;
-        }
+    const handleTrashToggle = () => {
+        setIsTrashView(!isTrashView);
+    };
 
-        if (isPhoneNumberExist(selectedEmployee.phoneNumber) &&
-            selectedEmployee.phoneNumber !== data.find(employee => employee.id === selectedEmployee.id)?.phoneNumber) {
-            toast.error("Số điện thoại đã tồn tại!");
-            return;
-        }
+    const handleAddEmployee = () => handleSaveEmployee(false);
+    const handleEditEmployee = () => handleSaveEmployee(true);
 
-        if (!selectedEmployee.fullName) {
-            toast.error("Tên nhân viên không được để trống!");
-            return;
-        }
-        if (selectedEmployee.fullName.length < 2) {
-            toast.error("Tên nhân viên phải có ít nhất 2 ký tự!");
-            return;
-        }
 
-        if (!selectedEmployee.phoneNumber) {
-            toast.error("Số điện thoại không được để trống!");
-            return;
-        }
-        const phonePattern = /^0\d{9}$/;
-        if (!phonePattern.test(selectedEmployee.phoneNumber)) {
-            toast.error("Số điện thoại phải đủ 10 chữ số, bắt đầu bằng số 0!");
-            return;
-        }
-        if (!/^\d+$/.test(selectedEmployee.phoneNumber)) {
-            toast.error("Số điện thoại chỉ được chứa chữ số!");
-            return;
-        }
-
-        if (!selectedEmployee.dateOfBirth) {
-            toast.error("Ngày sinh không được để trống!");
-            return;
-        }
-        const dateOfBirth = new Date(selectedEmployee.dateOfBirth);
-        const today = new Date();
-        if (dateOfBirth >= today) {
-            toast.error("Ngày sinh không hợp lệ! Ngày sinh phải là một ngày trong quá khứ.");
-            return;
-        }
-
-        if (!selectedEmployee.position) {
-            toast.error("Vai trò không được để trống!");
-            return;
-        }
-        const validPositions = ["Nhân viên bán hàng", "Nhân viên kinh doanh", "Thủ kho"];
-        if (!validPositions.includes(selectedEmployee.position)) {
-            toast.error("Vai trò không hợp lệ! Vui lòng chọn một vai trò từ danh sách.");
-            return;
-        }
+    const handleDeleteEmployee = async (employee: Employee) => {
+        const confirmed = window.confirm(`Bạn chắc chắn muốn xóa nhân viên ${employee.fullName} chứ?`);
+        if (!confirmed) return;
 
         try {
-            const profilePicture = imageFile ? await handleImageUpload() : selectedEmployee.profilePicture;
-            if (!profilePicture && imageFile) {
-                toast.error("Tải lên hình ảnh thất bại!");
-                return;
-            }
-            await dispatch(updateEmployee({ ...selectedEmployee, profilePicture: profilePicture || '' })).unwrap();
-            toast.success("Cập nhật nhân viên thành công!");
-            closePopup();
+            await dispatch(updateEmployee({ ...employee, flag: false })).unwrap();
+            toast.dark("Xoá nhân viên thành công!");
         } catch (error) {
-            toast.error("Cập nhật nhân viên thất bại!");
+            toast.error("Xóa nhân viên thất bại!");
         }
     };
 
-    const handleDeleteEmployee = async (id: number) => {
-        const confirmDelete = window.confirm("Bạn chắc chắn muốn xoá nhân viên này chứ?");
-        if (confirmDelete) {
-            try {
-                await dispatch(deleteEmployee(id)).unwrap();
-                toast.success("Xoá nhân viên thành công!");
-            } catch (error) {
-                toast.error("Xoá nhân viên thất bại!");
-            }
+    const handleRestoreEmployee = async (employee: Employee) => {
+        const confirmed = window.confirm(`Bạn chắc chắn muốn khôi phục nhân viên ${employee.fullName} chứ?`);
+        if (!confirmed) return;
+        try {
+            await dispatch(updateEmployee({ ...employee, flag: true })).unwrap();
+            toast.success("Khôi phục nhân viên thành công!");
+        } catch (error) {
+            toast.error("Khôi phục nhân viên thất bại!");
         }
     };
 
@@ -265,7 +241,7 @@ export default function EmployeePage() {
         employee.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         employee.phoneNumber.includes(searchQuery));
 
-    const actionBodyTemplate = (employee: Employee) => {
+    const actionBodyTemplateTrue = (employee: Employee) => {
         return (
             <>
                 <Button
@@ -283,12 +259,27 @@ export default function EmployeePage() {
                 <Button
                     icon="pi pi-trash"
                     className="p-button-sm p-button-text text-red-500 hover:text-red-700"
-                    onClick={() => handleDeleteEmployee(employee.id!)}
+                    onClick={() => handleDeleteEmployee(employee)}
                     tooltip="Xóa"
+                />
+
+            </>
+        );
+    };
+
+    const actionBodyTemplateFalse = (employee: Employee) => {
+        return (
+            <>
+                <Button
+                    icon="pi pi-refresh"
+                    className="p-button-sm p-button-text text-red-500 hover:text-red-700"
+                    onClick={() => handleRestoreEmployee(employee)}
+                    tooltip="Khôi phục"
                 />
             </>
         );
     };
+
     const roleOptions = [
         { label: "Nhân viên bán hàng", value: "Nhân viên bán hàng" },
         { label: "Nhân viên kinh doanh", value: "Nhân viên kinh doanh" },
@@ -316,34 +307,74 @@ export default function EmployeePage() {
                     onClick={openAddPopup}
                 />
             </div>
-            
-            <DataTable
-                value={filteredEmployees}
-                paginator
-                rows={10}
-                className="mt-4"
-            >
-                <Column field="id" header="STT" body={(_, { rowIndex }) => rowIndex + 1} style={{ textAlign: 'center', width: '5rem' }} />
-                <Column field="fullName" header="Tên nhân viên" />
-                <Column field="phoneNumber" header="SĐT" body={(rowData) => rowData.phoneNumber} />
-                <Column field="position" header="Vai trò" />
-                <Column
-                    field="flag"
-                    header="Flag"
-                    style={{ textAlign: 'center' }}
-                    body={(rowData) => (
-                        <i
-                            className={`pi ${rowData.flag ? 'pi-check-circle text-green-500' : 'pi-times-circle text-red-500'}`}
-                            title={rowData.flag ? 'Hoạt động' : 'Không hoạt động'}
-                        />
-                    )}
+            {!isTrashView && (
+                <DataTable
+                    value={filteredEmployees.filter(employee => employee.flag === true)}
+                    paginator
+                    rows={10}
+                    className="mt-4"
+                >
+                    <Column field="id" header="STT" body={(_, { rowIndex }) => rowIndex + 1} style={{ textAlign: 'center', width: '5rem' }} />
+                    <Column field="fullName" header="Tên nhân viên" />
+                    <Column field="phoneNumber" header="SĐT" body={(rowData) => rowData.phoneNumber} />
+                    <Column field="position" header="Vai trò" />
+                    <Column
+                        field="flag"
+                        header="Flag"
+                        style={{ textAlign: 'center' }}
+                        body={(rowData) => (
+                            <i
+                                className={`pi ${rowData.flag ? 'pi-check-circle text-green-500' : 'pi-times-circle text-red-500'}`}
+                                title={rowData.flag ? 'Hoạt động' : 'Không hoạt động'}
+                            />
+                        )}
+                    />
+                    <Column
+                        body={(rowData) => actionBodyTemplateTrue(rowData)}
+                        header="Thao tác"
+                        style={{ textAlign: 'center', width: '12rem' }}
+                    />
+                </DataTable>
+            )}
+
+            {isTrashView && (
+                <DataTable
+                    value={filteredEmployees.filter(employee => employee.flag === !true)}
+                    paginator
+                    rows={10}
+                    className="mt-4"
+                >
+                    <Column field="id" header="STT" body={(_, { rowIndex }) => rowIndex + 1} style={{ textAlign: 'center', width: '5rem' }} />
+                    <Column field="fullName" header="Tên nhân viên" />
+                    <Column field="phoneNumber" header="SĐT" body={(rowData) => rowData.phoneNumber} />
+                    <Column field="position" header="Vai trò" />
+                    <Column
+                        field="flag"
+                        header="Flag"
+                        style={{ textAlign: 'center' }}
+                        body={(rowData) => (
+                            <i
+                                className={`pi ${rowData.flag ? 'pi-check-circle text-green-500' : 'pi-times-circle text-red-500'}`}
+                                title={rowData.flag ? 'Hoạt động' : 'Không hoạt động'}
+                            />
+                        )}
+                    />
+                    <Column
+                        body={(rowData) => actionBodyTemplateFalse(rowData)}
+                        header="Thao tác"
+                        style={{ textAlign: 'center', width: '12rem' }}
+                    />
+                </DataTable>
+            )}
+            <div className="flex justify-between items-center mb-6 p-4">
+                <div></div>
+                <Button
+                    icon={isTrashView ? "pi pi-arrow-left" : "pi pi-trash"}
+                    title={isTrashView ? "Quay lại danh sách" : "Xem dữ liệu thùng rác"}
+                    className="p-button-rounded p-button-text"
+                    onClick={handleTrashToggle}
                 />
-                <Column
-                    body={(rowData) => actionBodyTemplate(rowData)}
-                    header="Thao tác"
-                    style={{ textAlign: 'center', width: '12rem' }}
-                />
-            </DataTable>
+            </div>
 
             <Dialog header="Thêm Nhân Viên" visible={isPopupAddOpen} style={{ width: '450px' }} onHide={closePopup}>
                 <div className="p-fluid space-y-4">
@@ -439,11 +470,6 @@ export default function EmployeePage() {
                         />
                     </div>
 
-                    <div className="p-field flex items-center space-x-2">
-                        <label className="font-semibold">Trạng thái</label>
-                        <InputSwitch checked={selectedEmployee.flag} onChange={(e) => setSelectedEmployee({ ...selectedEmployee, flag: e.value })} />
-                    </div>
-
                     <Button label="Lưu" icon="pi pi-check" className="mt-2 p-button-success rounded-md" onClick={handleAddEmployee} disabled={isUploading} />
                 </div>
             </Dialog>
@@ -526,12 +552,6 @@ export default function EmployeePage() {
                             className="border border-solid w-full rounded-md"
                         />
                     </div>
-
-                    <div className="p-field flex items-center space-x-2">
-                        <label className="font-semibold">Trạng thái</label>
-                        <InputSwitch checked={selectedEmployee.flag} onChange={(e) => setSelectedEmployee({ ...selectedEmployee, flag: e.value })} />
-                    </div>
-
                     <Button label="Cập nhật" icon="pi pi-check" className="mt-2 p-button-success rounded-md" onClick={handleEditEmployee} disabled={isUploading} />
                 </div>
             </Dialog>

@@ -51,13 +51,6 @@ export const updateEmployee = createAsyncThunk(
     }
 );
 
-export const deleteEmployee = createAsyncThunk(
-    'employees/delete',
-    async (id: number) => {
-        await axios.delete(`${API_URL_EMP}/${id}`);
-        return id;
-    }
-);
 
 const employeeSlice = createSlice({
     name: "employees",
@@ -92,12 +85,6 @@ const employeeSlice = createSlice({
             .addCase(updateEmployee.rejected, (state, action) => {
                 console.error('Lỗi khi cập nhật Employee:', action.error);
             })
-            .addCase(deleteEmployee.fulfilled, (state, action) => {
-                state.data = state.data.filter((item: Employee) => item.id !== action.payload);
-            })
-            .addCase(deleteEmployee.rejected, (state, action) => {
-                console.error('Lỗi khi xóa Employee:', action.error);
-            });
     },
 });
 
