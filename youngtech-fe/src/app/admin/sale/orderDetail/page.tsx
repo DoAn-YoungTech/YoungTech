@@ -1,5 +1,9 @@
-export default function Home(){
-    return <>
-    <h1>Order detail</h1>
-    </>
+import OrderDetailPage from "@/components/sale/orderDetail";
+
+export default function Home() {
+    return (
+        <>
+            <OrderDetailPage />
+        </>
+    )
 }
