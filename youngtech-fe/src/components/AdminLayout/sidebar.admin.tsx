@@ -32,8 +32,16 @@ const Sidebar: React.FC = () => {
       href: "/admin/sale",
       isDropdown: true,
       subItems: [
-        { label: "Đơn hàng", href: "/admin/sale/order", icon: "pi pi-shopping-cart" },
-        { label: "Chi tiết đơn hàng", href: "/admin/sale/orderDetail", icon: "pi pi-check-circle" },
+        {
+          label: "Đơn hàng",
+          href: "/admin/sale/order",
+          icon: "pi pi-shopping-cart",
+        },
+        {
+          label: "Chi tiết đơn hàng",
+          href: "/admin/sale/orderDetail",
+          icon: "pi pi-check-circle",
+        },
       ],
     },
     {
@@ -42,9 +50,21 @@ const Sidebar: React.FC = () => {
       href: "/admin/business",
       isDropdown: true,
       subItems: [
-        { label: "Hoá đơn bán hàng", href: "/admin/business/output-invoice", icon: "pi pi-file" },
-        { label: "Quản lý sản phẩm", href: "/admin/business/product", icon: "pi pi-box" },
-        { label: "Quản lý khách hàng", href: "/admin/business/customer", icon: "pi pi-user" },        
+        {
+          label: "Hoá đơn bán hàng",
+          href: "/admin/business/output-invoice",
+          icon: "pi pi-file",
+        },
+        {
+          label: "Quản lý sản phẩm",
+          href: "/admin/business/product",
+          icon: "pi pi-box",
+        },
+        {
+          label: "Quản lý khách hàng",
+          href: "/admin/business/customer",
+          icon: "pi pi-user",
+        },
       ],
     },
     {
@@ -70,7 +90,11 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className={`flex ${isCollapsed ? "w-20" : "w-60"} transition-width duration-300`}>
+    <div
+      className={`flex ${
+        isCollapsed ? "w-20" : "w-60"
+      } transition-width duration-300`}
+    >
       <div
         className={`bg-white shadow-lg h-screen p-4 fixed top-0 left-0 z-10 flex flex-col items-center transition-all duration-300`}
       >
@@ -78,10 +102,18 @@ const Sidebar: React.FC = () => {
           onClick={toggleSidebar}
           className="mt-4 mb-8 p-2 rounded-full text-blue-600 bg-gray-100 hover:bg-gray-200 transition"
         >
-          <i className={`pi ${isCollapsed ? "pi-angle-right" : "pi-angle-left"} text-xl`} />
+          <i
+            className={`pi ${
+              isCollapsed ? "pi-angle-right" : "pi-angle-left"
+            } text-xl`}
+          />
         </button>
         <div className="mb-6">
-          <h2 className={`${isCollapsed ? "hidden" : "text-3xl font-bold text-blue-600"}`}>
+          <h2
+            className={`${
+              isCollapsed ? "hidden" : "text-3xl font-bold text-blue-600"
+            }`}
+          >
             YoungTech
           </h2>
         </div>
@@ -92,10 +124,16 @@ const Sidebar: React.FC = () => {
                 <>
                   <button
                     onClick={() => toggleDropdown(item.label)}
-                    className={`flex items-center ${pathname.startsWith(item.href) ? "text-blue-500" : "text-gray-700"}`}
+                    className={`flex items-center ${
+                      pathname.startsWith(item.href)
+                        ? "text-blue-500"
+                        : "text-gray-700"
+                    }`}
                   >
                     <i className={`${item.icon} text-lg`} />
-                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{item.label}</span>
+                    <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                      {item.label}
+                    </span>
                   </button>
                   {openDropdown === item.label && (
                     <div className="ml-6 mt-2 space-y-2">
@@ -103,10 +141,18 @@ const Sidebar: React.FC = () => {
                         <Link
                           key={subIndex}
                           href={subItem.href}
-                          className={`flex items-center ${pathname === subItem.href ? "text-blue-500" : "text-gray-700"}`}
+                          className={`flex items-center ${
+                            pathname === subItem.href
+                              ? "text-blue-500"
+                              : "text-gray-700"
+                          }`}
                         >
                           <i className={`${subItem.icon} text-lg`} />
-                          <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{subItem.label}</span>
+                          <span
+                            className={`${isCollapsed ? "hidden" : "ml-2"}`}
+                          >
+                            {subItem.label}
+                          </span>
                         </Link>
                       ))}
                     </div>
@@ -115,18 +161,21 @@ const Sidebar: React.FC = () => {
               ) : (
                 <Link
                   href={item.href}
-                  className={`flex items-center ${pathname === item.href ? "text-blue-500" : "text-gray-700"}`}
+                  className={`flex items-center ${
+                    pathname === item.href ? "text-blue-500" : "text-gray-700"
+                  }`}
                 >
                   <i className={`${item.icon} text-lg`} />
-                  <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>{item.label}</span>
+                  <span className={`${isCollapsed ? "hidden" : "ml-2"}`}>
+                    {item.label}
+                  </span>
                 </Link>
               )}
             </div>
           ))}
         </div>
       </div>
-      <div className={`flex-1 ml-${isCollapsed ? "20" : "60"}`}>
-      </div>
+      <div className={`flex-1 ml-${isCollapsed ? "20" : "60"}`}></div>
     </div>
   );
 };

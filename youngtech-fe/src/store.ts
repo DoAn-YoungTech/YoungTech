@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import employeeReduce from "@/slices/employee.slice"
-import orderReduce from "@/slices/order.slice"
+import employeeReduce from "@/slices/employee.Slice";
+import orderReduce from "@/slices/order.Slice";
 
 export const store = configureStore({
     reducer: {

@@ -1,9 +1,9 @@
-import OrderPage from "@/components/sale/order"
+import OrderPage from "@/components/sale/order";
 
 export default function Home() {
-    return (
-        <>
-            <OrderPage />
-        </>
-    )
+  return (
+    <>
+      <OrderPage />
+    </>
+  );
 }

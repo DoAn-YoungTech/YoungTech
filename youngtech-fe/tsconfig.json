@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/AdminLayout/header.admin.tsx", "src/components/AdminLayout/sidebar.admin.tsx", "src/app/not-found.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/adminLayout/header.Admin.tsx", "src/components/adminLayout/sidebar.Admin.tsx", "src/app/not-found.tsx"],
   "exclude": ["node_modules"]
 }
