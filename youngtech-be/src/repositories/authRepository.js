@@ -8,6 +8,8 @@ const authRepository = {
       replacements: { userName, email, password: hashPassword },
     });
     return result;
+
+
   },
   findUserByEmail: async (email) => {
     const query = `SELECT * FROM account WHERE email = :email`;
@@ -18,3 +20,4 @@ const authRepository = {
   },
 };
 module.exports = authRepository;
+

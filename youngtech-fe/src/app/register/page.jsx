@@ -104,3 +104,9 @@ const Page = () => {
   );
 };
 export default Page;
+
+const btn = {
+  padding: "2px 4px",
+  border: "1px solid black",
+  fontSize: "14px",
+};
