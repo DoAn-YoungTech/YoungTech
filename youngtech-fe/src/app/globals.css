@@ -21,6 +21,7 @@ li {
   margin: 0;
 }
 
+<<<<<<< HEAD
 .select {
   width: 100%;
   min-width: 15ch;
@@ -34,3 +35,16 @@ li {
   background-color: #fff;
   background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
 }
+=======
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+>>>>>>> 8a040609cf6f5fbba3a26e9f5fa415f1183bdb6d

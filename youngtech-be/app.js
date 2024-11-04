@@ -8,7 +8,7 @@ var logger = require("morgan");
 const router = require("./src/routes");
 const sequelize = require("./src/configs/db");
 const defineAssociations = require("./src/models/defineAssociations");
-// const rootModel = require("./src/models");
+const rootModel = require("./src/models");
 
 defineAssociations();
 var app = express();
