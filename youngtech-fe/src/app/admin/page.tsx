@@ -1,7 +1,7 @@
-export default function AdminHome() {
-  return (
+export default function Home() {
+  return <>
     <div>
-      <h1 className="text-center text-2xl text-gray-500">Trang chủ</h1>
+      Admin Home
     </div>
-  );
+  </>
 }
