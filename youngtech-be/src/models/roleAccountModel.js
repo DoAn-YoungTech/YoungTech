@@ -1,9 +1,8 @@
 // models/userModel.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/db");
-
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configs/db');
 const roleAccount = sequelize.define(
-  "roleAccount",
+  'roleAccount',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,20 +12,20 @@ const roleAccount = sequelize.define(
     role_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Role", // 'Customer' refers to table name
-        key: "id",
+        model: 'Role', // 'Customer' refers to table name
+        key: 'id',
       },
     },
     account_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Account", // 'Customer' refers to table name
-        key: "id",
+        model: 'Account', // 'Customer' refers to table name
+        key: 'id',
       },
     },
   },
   {
-    tableName: "RoleAccount",
+    tableName: 'RoleAccount',
     timestamps: false,
   }
 );

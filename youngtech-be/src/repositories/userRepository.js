@@ -8,13 +8,27 @@ const userRepository = {
     return result;
   },
 
+  // GET USER BY ID
+  getUserById: async (id) => {
+    const query = `SELECT * FROM account WHERE id=:id`;
+    const [result] = await sequelize.query(query, { replacements: { id } });
+    return result[0];
+  },
+
   // DELETE USER BY ID
   deleteUserById: async (id) => {
     const query = `DELETE FROM account WHERE id=:id`;
     const [result] = await sequelize.query(query, {
-      replacements: { id },
+      replacements: { id }
     });
+
     return result;
-  },
+  }
+  // viewInformationPersonal
+
+  // viewInformationPersonal: async () => {
+  //   const query = `SELECT * FROM account user `
+  // }
 };
+
 module.exports = userRepository;

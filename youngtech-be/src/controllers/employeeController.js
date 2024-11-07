@@ -49,7 +49,7 @@ const employeeController = {
       const result = await employeeService.getEmployeeById(id);
       if (!result) {
         res.status(404).json({
-          message: `Can't get employee id  ${id} ! Please check again ...`,
+          message: `Can't get employee id  ${id} ! Please check again ...`
         });
       } else {
         res.status(200).json({ message: `Get employee id  ${id} Success` });
@@ -71,7 +71,7 @@ const employeeController = {
     } catch (err) {
       res.status(500).json({ message: `err ${err}` });
     }
-  },
+  }
 };
 
 module.exports = employeeController;

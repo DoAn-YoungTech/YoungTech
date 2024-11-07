@@ -8,21 +8,20 @@ const ParentCategories = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     flag: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
-  },
+      allowNull: false
+    },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     }
-  
   },
   {
     tableName: "ParentCategories",
-    timestamps: false,
+    timestamps: false
   }
 );
 
