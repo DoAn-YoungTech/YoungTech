@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-import Image from "next/image";
-import Carousel from "./components/Carousel";
-import MenuCategory from "./components/MenuCategory";
-import HotPromotion from "./components/HotPromotion";
-import BestProduct from "./components/BestProducts";
-export default function Home() {
-  return (
-    <>
-      <Carousel />
-      <div id="main-content" className="lg:container mx-auto">
-        <MenuCategory />
-        <BestProduct />
-        <HotPromotion />
-=======
 import Link from "next/link";
 
 export default function Home() {
@@ -25,7 +10,6 @@ export default function Home() {
         >
           Vào trang quản trị
         </Link>
->>>>>>> 8a040609cf6f5fbba3a26e9f5fa415f1183bdb6d
       </div>
     </>
   );
