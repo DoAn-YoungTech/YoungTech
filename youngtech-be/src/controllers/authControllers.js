@@ -1,7 +1,7 @@
-const bcrypt = require("bcrypt");
-const authService = require("../services/authService");
-const jwt = require("jsonwebtoken");
-const { roleAccount } = require("../models");
+const bcrypt = require('bcrypt');
+const authService = require('../services/authService');
+const jwt = require('jsonwebtoken');
+const { roleAccount } = require('../models');
 
 const authController = {
   register: async (req, res) => {
@@ -20,16 +20,26 @@ const authController = {
       const account = await authService.register(userName, email, hashPassword);
       console.log(account);
       if (!account) {
-        return res.status(404).json({ message: "Registration failed" });
+        return res.status(404).json({ message: 'Registration failed' });
       }
 
+      //add user id to role account
       const defaultRoleId = 1;
       const roleIds = req.body.roleIds || [defaultRoleId];
       await authService.assignRolesToAccount(roleIds, account);
 
-      res.status(201).json({ message: "Register success !" });
+      // add user to customer
+      const addUserCustomer = await authService.userIdCustomer(account);
+
+      if (!addUserCustomer) {
+        return res
+          .status(403)
+          .json({ message: 'Can not add account_id in customer ' });
+      }
+
+      return res.status(201).json({ message: 'Register success !' });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      return res.status(500).json({ message: err.message });
     }
   },
 
@@ -41,7 +51,7 @@ const authController = {
       // secret key
       process.env.accessSecretKey,
       // option
-      { expiresIn: "30d" }
+      { expiresIn: '30d' }
     );
   },
 
@@ -52,7 +62,7 @@ const authController = {
       // secret key
       process.env.refreshToken,
       // option
-      { expiresIn: "365d" }
+      { expiresIn: '365d' }
     );
   },
 
@@ -65,14 +75,14 @@ const authController = {
       if (!user) {
         return res
           .status(404)
-          .json({ message: "Email use not exit , Please try again !" });
+          .json({ message: 'Email use not exit , Please try again !' });
       }
 
       // then => compare pass login === pass on database ,use bcrypt
       const comparePass = await bcrypt.compare(password, user.password);
 
       if (!comparePass) {
-        return res.status(404).json({ message: "Password wrong!" });
+        return res.status(404).json({ message: 'Password wrong!' });
       }
 
       if (user && comparePass) {
@@ -88,7 +98,7 @@ const authController = {
         if (!saveRefreshToken) {
           return res
             .status(403)
-            .json({ message: "Error saving refresh token" });
+            .json({ message: 'Error saving refresh token' });
         }
 
         const { password, ...others } = user;
@@ -104,7 +114,7 @@ const authController = {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.status(401).json({ message: "You are not authentication" });
+      return res.status(401).json({ message: 'You are not authentication' });
     }
 
     const checkRefreshTokenExist = await authService.checkRefreshTokenExist(
@@ -114,19 +124,19 @@ const authController = {
     if (!checkRefreshTokenExist) {
       return res
         .status(403)
-        .json({ message: "Refresh token not exist in data" });
+        .json({ message: 'Refresh token not exist in data' });
     }
 
     if (new Date() > new Date(checkRefreshTokenExist.expires_at)) {
       return res
         .status(403)
-        .json({ message: "Refresh token has expires ! Please Logout " });
+        .json({ message: 'Refresh token has expires ! Please Logout ' });
     }
     // check refresh token match jwt and check refresh  token is exist in data
 
     jwt.verify(refreshToken, process.env.refreshToken, async (err, user) => {
       if (err) {
-        return res.status(403).json({ message: "Invalid Refresh token" });
+        return res.status(403).json({ message: 'Invalid Refresh token' });
       }
 
       const newAccessToken = authController.generateAccessToken(user);
@@ -136,16 +146,16 @@ const authController = {
         await authService.deleteRefreshTokenOld(refreshToken);
 
         await authService.saveNewRefreshToken(user.id, newRefreshToken);
-        
+
         return res.status(200).json({
           accessToken: newAccessToken,
-          refreshToken: newRefreshToken
+          refreshToken: newRefreshToken,
         });
       } catch (error) {
-        console.error("Error refreshing token:", error);
+        console.error('Error refreshing token:', error);
         res
           .status(500)
-          .json({ message: "Token refresh failed. Please try again later." });
+          .json({ message: 'Token refresh failed. Please try again later.' });
       }
     });
 
@@ -160,7 +170,7 @@ const authController = {
     console.log(`refreshToken ${refreshToken}`);
 
     if (!refreshToken) {
-      return res.status(401).json({ message: "You are not authentication" });
+      return res.status(401).json({ message: 'You are not authentication' });
     }
 
     // check refresh token exist or not
@@ -170,7 +180,7 @@ const authController = {
     if (!checkRefreshToken) {
       return res
         .status(403)
-        .json({ message: "refresh token not found . Please login again !" });
+        .json({ message: 'refresh token not found . Please login again !' });
     }
 
     // if refresh token exist in data delete it
@@ -179,11 +189,11 @@ const authController = {
     );
 
     if (deleteRefreshToken) {
-      return res.status(200).json({ message: "Logged out success!" });
+      return res.status(200).json({ message: 'Logged out success!' });
     } else {
       return res.status(500).json({ message: `Login Failed` });
     }
-  }
+  },
 };
 
 module.exports = authController;

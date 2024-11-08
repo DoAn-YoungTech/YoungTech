@@ -1,10 +1,10 @@
-const sequelize = require("../configs/db");
+const sequelize = require('../configs/db');
 
 const authRepository = {
   register: async (userName, email, hashPassword) => {
     const query = `INSERT INTO account (userName , email , password) VALUES (:userName , :email , :password)`;
     await sequelize.query(query, {
-      replacements: { userName, email, password: hashPassword }
+      replacements: { userName, email, password: hashPassword },
     });
     const [result] = await sequelize.query(`SELECT LAST_INSERT_ID() as id`);
     const accountId = result[0].id;
@@ -14,7 +14,7 @@ const authRepository = {
   findUserByEmail: async (email) => {
     const query = `SELECT * FROM account WHERE email = :email`;
     const [result] = await sequelize.query(query, {
-      replacements: { email }
+      replacements: { email },
     });
     return result[0];
   },
@@ -22,7 +22,7 @@ const authRepository = {
   assignRolesToAccount: async (roleIds, account) => {
     const values = roleIds
       .map((roleId) => `(${roleId}, ${account})`)
-      .join(", ");
+      .join(', ');
     const query = `INSERT INTO roleaccount (role_id , account_id) VALUES ${values}`;
     const [result] = await sequelize.query(query);
     return result;
@@ -34,7 +34,7 @@ const authRepository = {
     const data = {
       user_id: userId,
       refresh_token: refreshToken,
-      expires_at: expiresAt
+      expires_at: expiresAt,
     };
     const [result] = await sequelize.query(query, { replacements: data });
     return result;
@@ -43,7 +43,7 @@ const authRepository = {
   checkRefreshTokenExist: async (refreshToken) => {
     const query = `SELECT * FROM refreshtoken WHERE refresh_token = :refresh_token`;
     const [result] = await sequelize.query(query, {
-      replacements: { refresh_token: refreshToken }
+      replacements: { refresh_token: refreshToken },
     });
     return result[0];
   },
@@ -51,7 +51,7 @@ const authRepository = {
   deleteRefreshTokenOld: async (refreshToken) => {
     const query = `DELETE FROM refreshtoken WHERE refresh_token = :refresh_token`;
     const [result] = await sequelize.query(query, {
-      replacements: { refresh_token: refreshToken }
+      replacements: { refresh_token: refreshToken },
     });
     return result;
   },
@@ -62,7 +62,7 @@ const authRepository = {
     const data = {
       user_id: userId,
       refresh_token: newRefreshToken,
-      expires_at: newExpires
+      expires_at: newExpires,
     };
     const [result] = await sequelize.query(query, { replacements: data });
     return result;
@@ -72,7 +72,7 @@ const authRepository = {
     const query = `SELECT * FROM refreshtoken WHERE refresh_token = :refresh_token`;
 
     const [result] = await sequelize.query(query, {
-      replacements: { refresh_token: refreshToken }
+      replacements: { refresh_token: refreshToken },
     });
     return result[0];
   },
@@ -80,10 +80,24 @@ const authRepository = {
   deleteRefreshTokenLogout: async (refreshToken) => {
     const query = `DELETE FROM refreshtoken WHERE refresh_token = :refresh_token`;
     const [result] = await sequelize.query(query, {
-      replacements: { refresh_token: refreshToken }
+      replacements: { refresh_token: refreshToken },
     });
     return result;
-  }
+  },
+
+  userIdCustomer: async (account) => {
+    const query = `INSERT INTO customer (fullName , phoneNumber, address , account_id) VALUES (:fullName ,:phoneNumber , :address, :account_id)`;
+    const data = {
+      fullName: '',
+      phoneNumber: '',
+      address: '',
+      account_id: account,
+    };
+    const [result] = await sequelize.query(query, {
+      replacements: data,
+    });
+    return result;
+  },
 };
 
 module.exports = authRepository;

@@ -1,6 +1,4 @@
 const sequelize = require('../configs/db');
-const { createEmployee } = require('../services/employeeService');
-
 const employeeRepository = {
   getAllEmployee: async () => {
     const query = `SELECT * FROM employee`;
@@ -15,3 +13,5 @@ const employeeRepository = {
     return result;
   },
 };
+
+module.exports = employeeRepository;

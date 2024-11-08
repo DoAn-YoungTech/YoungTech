@@ -1,34 +1,58 @@
-const sequelize = require("../configs/db");
+const sequelize = require('../configs/db');
 const userRepository = {
-  // GET ALL USER
-
-  getAllUser: async () => {
-    const query = `SELECT * FROM account`;
-    const [result] = await sequelize.query(query);
-    return result;
-  },
-
-  // GET USER BY ID
-  getUserById: async (id) => {
-    const query = `SELECT * FROM account WHERE id=:id`;
-    const [result] = await sequelize.query(query, { replacements: { id } });
+  // viewInformationPersonal
+  viewInformationPersonal: async (userId) => {
+    const query = `SELECT * FROM customer WHERE account_id= :account_id`;
+    const [result] = await sequelize.query(query, {
+      replacements: { account_id: userId },
+    });
     return result[0];
   },
-
-  // DELETE USER BY ID
-  deleteUserById: async (id) => {
-    const query = `DELETE FROM account WHERE id=:id`;
+  // check user exist
+  checkUserExist: async (userId) => {
+    const query = `SELECT * FROM customer WHERE account_id =:account_id`;
     const [result] = await sequelize.query(query, {
-      replacements: { id }
+      replacements: { account_id: userId },
+    });
+    return result[0];
+  },
+  // enter information
+  enterInformation: async (fullName, phoneNumber, address, userID) => {
+    const data = {
+      fullName: fullName,
+      phoneNumber: phoneNumber,
+      address: address,
+    };
+
+    const query = `UPDATE customer SET fullName = :fullName, phoneNumber = :phoneNumber, address = :address WHERE account_id = :account_id`;
+
+    const [result] = await sequelize.query(query, {
+      replacements: {
+        ...data, // Spread the properties of data (fullName, phoneNumber, address)
+        account_id: userID, // Make sure account_id is explicitly mapped to userID
+      },
     });
 
     return result;
-  }
-  // viewInformationPersonal
+  },
 
-  // viewInformationPersonal: async () => {
-  //   const query = `SELECT * FROM account user `
-  // }
+  // checkUserIdChangePassWord
+  checkUserIdChangePassWord: async (userId) => {
+    const query = `SELECT password FROM account WHERE id=:id`;
+    const [result] = await sequelize.query(query, {
+      replacements: { id: userId },
+    });
+    return result[0].password;
+  },
+
+  // update password by id user
+  updateNewPassword: async (hashNewPassword, userId) => {
+    const query = `UPDATE account SET password=:password WHERE id=:id`;
+    const [result] = await sequelize.query(query, {
+      replacements: { password: hashNewPassword, id: userId },
+    });
+    return result;
+  },
 };
 
 module.exports = userRepository;

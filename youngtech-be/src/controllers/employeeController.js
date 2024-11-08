@@ -1,4 +1,4 @@
-const employeeService = require("../services/employeeService");
+const employeeService = require('../services/employeeService');
 const employeeController = {
   getAllEmployee: async (req, res) => {
     try {
@@ -6,7 +6,7 @@ const employeeController = {
       if (!result) {
         res.status(404).json({ message: `Can not get all employee` });
       } else {
-        res.status(201).json({ message: "Get all employee success!" });
+        res.status(201).json({ message: 'Get all employee success!' });
       }
     } catch (err) {
       res.status(500).json({ message: `error server ${err.message}` });
@@ -22,7 +22,7 @@ const employeeController = {
           .status(404)
           .json({ message: `Can't update employee ! Please Check again.` });
       } else {
-        res.status(201).json({ message: "Update employee successfully !" });
+        res.status(201).json({ message: 'Update employee successfully !' });
       }
     } catch (err) {
       res.status(500).json({ message: `Error server : ${err.message}` });
@@ -49,7 +49,7 @@ const employeeController = {
       const result = await employeeService.getEmployeeById(id);
       if (!result) {
         res.status(404).json({
-          message: `Can't get employee id  ${id} ! Please check again ...`
+          message: `Can't get employee id  ${id} ! Please check again ...`,
         });
       } else {
         res.status(200).json({ message: `Get employee id  ${id} Success` });
@@ -64,14 +64,14 @@ const employeeController = {
       console.log(data);
       const result = await employeeService.createEmployee(data);
       if (!result) {
-        res.status(404).json({ message: "Can not create employee" });
+        res.status(404).json({ message: 'Can not create employee' });
       } else {
-        res.status(200).json({ message: "create employee success" });
+        res.status(200).json({ message: 'create employee success' });
       }
     } catch (err) {
       res.status(500).json({ message: `err ${err}` });
     }
-  }
+  },
 };
 
 module.exports = employeeController;
