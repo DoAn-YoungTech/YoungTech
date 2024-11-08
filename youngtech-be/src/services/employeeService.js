@@ -1,3 +1,4 @@
+ 
 const employeeRepository = require("../repositories/employeeRepository");
 
 const employeeService = {
@@ -9,17 +10,16 @@ const employeeService = {
     return await employeeRepository.createEmployee(data);
   },
 
-  updateEmployee: async (id, data) => {
-    return await employeeRepository.updateEmployee(id, data);
+  updateEmployee : async (id,data) => {
+      return await employeeRepository.updateEmployee( id, data);
   },
-
-  deleteEmployee: async (id) => {
-    return await employeeRepository.deleteEmployee(id);
+  deleteEmployee : async (id) => {
+      return await employeeRepository.deleteEmployee(id)
   },
-
-  getEmployeeById: async (id, data) => {
-    return await employeeRepository.getEmployeeById(id, data);
+  getEmployeeById : async (id , data) => {
+      return await employeeRepository.getEmployeeById(id , data)
   }
 };
 
 module.exports = employeeService;
+ 
