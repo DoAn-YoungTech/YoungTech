@@ -1,9 +1,9 @@
 // models/userModel.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configs/db');
 
 const Supplier = sequelize.define(
-  "Supplier",
+  'Supplier',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,7 +13,7 @@ const Supplier = sequelize.define(
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-  },
+    },
     supplierName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -35,10 +35,9 @@ const Supplier = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
   },
   {
-    tableName: "Supplier",
+    tableName: 'Supplier',
     timestamps: false,
   }
 );

@@ -13,15 +13,13 @@ const { Role } = require("./roleModel");
 const { Supplier } = require("./supplierModel");
 const { roleAccount } = require("./roleAccountModel");
 const { Employee } = require("./employeeModel");
-const {Image} = require("./imageModel");
-const {Product} = require("./productModel");
+const { Image } = require("./imageModel");
+const { Product } = require("./productModel");
 
 const defineAssociations = () => {
-
   // Product - Image: One-to-Many
   Product.hasMany(Image, { foreignKey: "product_id" });
   Image.belongsTo(Product, { foreignKey: "product_id" });
-
 
   // Account - Customer: One-to-One
   Account.hasOne(Customer, { foreignKey: "account_id" });
@@ -42,7 +40,6 @@ const defineAssociations = () => {
   // CartItem - Product: One-to-One
   Product.hasMany(CartItem, { foreignKey: "product_id" });
   CartItem.belongsTo(Product, { foreignKey: "product_id" });
-
 
   // Comment - Product: One-to-Many
   Product.hasMany(Comment, { foreignKey: "product_id" });
@@ -72,7 +69,6 @@ const defineAssociations = () => {
   Customer.hasMany(OutInvoice, { foreignKey: "customer_id" });
   OutInvoice.belongsTo(Customer, { foreignKey: "customer_id" });
 
-
   Supplier.hasMany(Product, { foreignKey: "supplier_id" });
   Product.belongsTo(Supplier, { foreignKey: "supplier_id" });
 
@@ -80,21 +76,18 @@ const defineAssociations = () => {
   Employee.hasMany(InputInvoice, { foreignKey: "employee_id" });
   InputInvoice.belongsTo(Employee, { foreignKey: "employee_id" });
 
-
-
   // Product - Category: One-to-One
   ChildCategories.hasMany(Product, { foreignKey: "childCategory_id" });
   Product.belongsTo(ChildCategories, { foreignKey: "childCategory_id" });
 
   // ParentCategories - ChildCategories: One-to-Many
   ParentCategories.hasMany(ChildCategories, {
-    foreignKey: "parentCategory_id",
+    foreignKey: "parentCategory_id"
   });
   ChildCategories.belongsTo(ParentCategories, {
-    foreignKey: "parentCategory_id",
+    foreignKey: "parentCategory_id"
   });
 
-  
   // Account - RoleAccount: One-to-ManProduct.y
   Account.hasMany(roleAccount, { foreignKey: "accouProduct.nt_id" });
   roleAccount.belongsTo(Account, { foreignKey: "account_id" });

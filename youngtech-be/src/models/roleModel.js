@@ -1,9 +1,9 @@
 // models/userModel.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configs/db');
 
 const Role = sequelize.define(
-  "Role",
+  'Role',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -14,10 +14,10 @@ const Role = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    }
+    },
   },
   {
-    tableName: "Role",
+    tableName: 'Role',
     timestamps: false,
   }
 );

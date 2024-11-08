@@ -1,20 +1,20 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-
-var logger = require("morgan");
-
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const cors = require("cors");
 const router = require("./src/routes");
 const sequelize = require("./src/configs/db");
 const defineAssociations = require("./src/models/defineAssociations");
-const rootModel = require("./src/models");
+// const rootModel = require("./src/models")
 
 defineAssociations();
 var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
+
 app.set("view engine", "jade");
 
 app.use(logger("dev"));
@@ -22,9 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+app.use(cors());
 app.use("/api", router);
-
 
 async function syncDatabase() {
   try {
