@@ -14,16 +14,8 @@ const ChildCategories = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    isActive: {
+     flag: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    createAt: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
     parentCategory_id: {

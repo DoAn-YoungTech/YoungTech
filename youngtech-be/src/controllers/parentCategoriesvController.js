@@ -56,8 +56,8 @@ const parentCategoriesController = {
   deleteParentCategories: async (req, res) => {
     try {
       const id = req.params.id;
-      // Thay vì xóa hoàn toàn, bạn cập nhật trường is_deleted thành true
-      const result = await parentCategoriesService.updateParentCategories(id, { is_deleted: true });
+      // Thay vì xóa hoàn toàn, bạn cập nhật trường flag thành true
+      const result = await parentCategoriesService.deleteParentCategories(id, { flag: true });
       
       if (!result) {
         res.status(404).json({ message: "Parent category not found" });
@@ -67,7 +67,25 @@ const parentCategoriesController = {
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
-  }  
+  },
+    
+  restoreParentCategories: async (req, res) => {
+    try {
+      const id = req.params.id;
+
+      // Gọi service để khôi phục lại
+      const result = await parentCategoriesService.restoreParentCategories(id);
+
+      if (!result) {
+        res.status(404).json({ message: "Parent category not found or already restored" });
+      } else {
+        res.status(200).json({ message: "Parent category restored successfully!" });
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Internal Server Error", error: err.message });
+    }
+  },
+  
 };
 
 module.exports = parentCategoriesController;

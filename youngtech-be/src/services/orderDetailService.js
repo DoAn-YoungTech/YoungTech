@@ -1,14 +1,17 @@
-const orderDetailRepository = require("../repositories/orderDetailRepositori");
+const orderDetailRepository = require("../repositories/orderDetailRepository");
 
 const orderDetailService = {
+    // Lấy tất cả chi tiết đơn hàng
     getAllOrderDetail: async () => {  
         return await orderDetailRepository.getAllOrderDetail();
     },
 
+    // Lấy chi tiết đơn hàng theo ID
     getOrderDetailById: async (id) => {
         return await orderDetailRepository.getOrderDetailById(id);
     },
 
+    // Tạo chi tiết đơn hàng
     createOrderDetail: async (data) => {
         // Kiểm tra xem dữ liệu có đầy đủ không (ví dụ: order_id, product_id phải tồn tại)
         if (!data.order_id || !data.product_id) {
@@ -17,13 +20,20 @@ const orderDetailService = {
         return await orderDetailRepository.createOrderDetail(data);
     },
 
+    // Cập nhật chi tiết đơn hàng
     updateOrderDetail: async (id, data) => {
+        // Có thể thêm kiểm tra ở đây nếu cần
         return await orderDetailRepository.updateOrderDetail(id, data);
     },
 
+    // Xóa mềm chi tiết đơn hàng
     deleteOrderDetail: async (id) => {
-        const data = { is_deleted: true };
-        return await orderDetailRepository.deleteOrderDetail(id, data);
+        const data = { flag: true };
+        const result = await orderDetailRepository.deleteOrderDetail(id, data);
+        if (!result) {
+            throw new Error("Order detail not found for deletion."); // Thông báo lỗi nếu không tìm thấy chi tiết
+        }
+        return result;
     },
 };
 

@@ -1,6 +1,6 @@
 const sequelize = require("../configs/db");
 
-const orderDetailRepositori ={
+const orderDetailRepository ={
     getAllOrderDetail: async ()=>{
         const query = `SELECT * FROM orderdetail`;
         const [result] = await sequelize.query(query);
@@ -19,7 +19,7 @@ const orderDetailRepositori ={
         return result;
     },
     deleteOrderDetail: async (id, data) => {
-        const query = `UPDATE orderdetail SET is_deleted = true WHERE id = :id`;
+        const query = `UPDATE orderdetail SET flag = true WHERE id = :id`;
         const [result] = await sequelize.query(query, {replacements:{...data,id}});
         return result;
     },
@@ -32,4 +32,4 @@ const orderDetailRepositori ={
     },
 };
 
-module.exports = orderDetailRepositori;
+module.exports = orderDetailRepository;

@@ -11,11 +11,15 @@ const parentCategoriesService = {
     return await parentCategoriesRepository.updateParentCategories(id, data);
   },
   deleteParentCategories: async (id) => {
-    const data = { is_deleted: true };  // Dữ liệu xóa mềm
-    return await parentCategoriesRepository.updateParentCategories(id, data);
+    const data = { flag: true };  // Dữ liệu xóa mềm
+    return await parentCategoriesRepository.deleteParentCategories(id, data);
   },
   getParentCategoriesById: async (id) => {
     return await parentCategoriesRepository.getParentCategoriesById(id);
+  },
+  restoreParentCategories: async (id) => {
+    // Gọi repository để thực hiện việc khôi phục
+    return await parentCategoriesRepository.restoreParentCategories(id);
   },
 };
 

@@ -10,9 +10,17 @@ const Order = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+  },
     orderDate: {
       type: DataTypes.DATE,
       allowNull: false,
+    },
+    succesDate: {
+      type: DataTypes.DATE,
+      allowNull: false
     },
     totalAmount: {
       type: DataTypes.INTEGER,

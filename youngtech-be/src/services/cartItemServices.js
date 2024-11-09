@@ -12,14 +12,19 @@ const cartItemService = {
   createCartItem: async (data) => {
     return await cartItemRepository.createCartItem(data);
   },
-
+  
   deleteCartItem: async (id) => {
-    const data = { is_deleted: true }
-    return await cartItemRepository.deleteCartItem(id, data); // Xóa mềm
+    return await cartItemRepository.deleteCartItem(id); // Xóa cứng
   },
+
 
   updateCartItem: async (id, data) => {
     return await cartItemRepository.updateCartItem(id, data);
+  },
+
+  clearCartItemsAfterOrder: async (cartId) => {
+    // Cập nhật trạng thái hoặc xóa các mục trong giỏ hàng khi đã chuyển thành đơn hàng
+    return await cartItemRepository.clearCartItemsAfterOrder(cartId);
   }
 };
 

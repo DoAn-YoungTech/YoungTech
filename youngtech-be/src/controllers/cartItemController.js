@@ -33,7 +33,6 @@ const CartItemController = {
       res.status(500).json({ message: "Error creating cart item", error: err.message });
     }
   },
-
   deleteCartItem: async (req, res) => {
     try {
       const id = req.params.id;
@@ -42,12 +41,14 @@ const CartItemController = {
       if (!result) {
         res.status(404).json({ message: "CartItem not found" });
       } else {
-        res.status(200).json({ message: "CartItem marked as deleted successfully!" });
+        res.status(200).json({ message: "CartItem deleted successfully!" });
       }
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
   },
+  
+
   updateCartItem: async (req, res) => {
     try {
       const id = req.params.id;
@@ -57,6 +58,17 @@ const CartItemController = {
     } catch (err) {
       res.status(500).json({ message: "Error updating cart item", error: err.message });
     }
+  },
+
+  clearCartItemsAfterOrder: async (req, res) => {
+    try {
+      const { cartId } = req.body; // Nhận cartId từ yêu cầu
+      await cartItemService.clearCartItemsAfterOrder(cartId);
+      res.status(200).json({ message: "Cart items cleared successfully" });
+    } catch (err) {
+      res.status(500).json({ message: "Error clearing cart items", error: err.message });
+    }
   }
 };
-module.exports = CartItemController
+
+module.exports = CartItemController;

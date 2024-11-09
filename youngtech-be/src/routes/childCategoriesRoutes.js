@@ -9,5 +9,5 @@ childCategoriesRoutes.post('/', childCategoriesController.createChildCategories)
 childCategoriesRoutes.get('/:id', childCategoriesController.getChildCategoriesById);
 childCategoriesRoutes.put('/:id', childCategoriesController.updateChildCategories);
 childCategoriesRoutes.delete('/:id', childCategoriesController.deleteChildCategories);
-
+childCategoriesRoutes.put('/:id/restore', childCategoriesController.restoreChildCategories);
 module.exports = childCategoriesRoutes; // Export đúng cách

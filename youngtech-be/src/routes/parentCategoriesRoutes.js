@@ -8,5 +8,5 @@ parentCategoriesRoutes.post('/', parentCategoriesController.createParentCategori
 parentCategoriesRoutes.get('/:id', parentCategoriesController.getParentCategoriesById);
 parentCategoriesRoutes.put('/:id', parentCategoriesController.updateParentCategories);
 parentCategoriesRoutes.delete('/:id', parentCategoriesController.deleteParentCategories);
-
+parentCategoriesRoutes.put('/:id/restore', parentCategoriesController.restoreParentCategories);
 module.exports = parentCategoriesRoutes;

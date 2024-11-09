@@ -18,9 +18,12 @@ const childCategoriesService = {
     },
 
     deleteChildCategories: async (id) => {
-        const data = { is_deleted: true };  // Dữ liệu xóa mềm
-    return await childCategoriesRepository.updateChildCategories(id, data);
-    }
+        const data = { flag: true };  // Dữ liệu xóa mềm
+    return await childCategoriesRepository.deleteChildCategories(id, data);
+    },
+    restoreChildCategories: async (id) => {
+        return await childCategoriesRepository.restoreChildCategories(id);
+    },
 };
 
 module.exports = childCategoriesService;

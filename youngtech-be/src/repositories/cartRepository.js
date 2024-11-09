@@ -14,23 +14,29 @@ const cartRepository = {
   },
 
   createCart: async (data) => {
-    const query = `INSERT INTO cart (status, createAt, updateAt, customer_id)
-                   VALUES (:status, :createAt, :updateAt, :customer_id)`;
+    const query = `INSERT INTO cart (customer_id)
+                   VALUES (:customer_id)`; // Chỉ chèn customer_id
     const [result] = await sequelize.query(query, { replacements: data });
-    return result;
+    return { id: result.insertId }; // Trả về ID của giỏ hàng vừa tạo
   },
 
-  deleteCart: async (id) => {
-    const query = `UPDATE cart SET is_deleted = true WHERE id = :id`; // Áp dụng xóa mềm
-    const [result] = await sequelize.query(query, { replacements: { id } });
-    return result;
-  },
+deleteCart: async (id) => {
+  const query = `DELETE FROM cart WHERE id = :id`; // Câu lệnh xóa cứng
+  const [result] = await sequelize.query(query, { replacements: { id } });
+  return result;
+},
 
   updateCart: async (id, data) => {
     const query = `UPDATE cart 
-                   SET status = :status, createAt = :createAt, updateAt = :updateAt, customer_id = :customer_id
-                   WHERE id = :id`; // Cập nhật dữ liệu, không phân biệt đã bị xóa mềm hay chưa
+                   SET customer_id = :customer_id
+                   WHERE id = :id`; // Cập nhật customer_id
     const [result] = await sequelize.query(query, { replacements: { ...data, id } });
+    return result;
+  },
+
+  getCartItemsById: async (id) => { // Thêm phương thức mới này
+    const query = `SELECT * FROM cart_items WHERE cart_id = :id`; // Giả sử bảng cart_items chứa cart_id
+    const [result] = await sequelize.query(query, { replacements: { id } });
     return result;
   }
 };

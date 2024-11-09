@@ -2,12 +2,21 @@ const express = require('express');
 const orderRoutes = express.Router();
 const orderController = require('../controllers/orderController');
 
+// Lấy tất cả đơn hàng
 orderRoutes.get('/', orderController.getAllOrder);
+
+// Lấy đơn hàng theo ID
 orderRoutes.get('/:id', orderController.getOrderById);
-orderRoutes.post('/', orderController.createOrder);
+
+// Tạo đơn hàng mới từ giỏ hàng
+orderRoutes.post('/', orderController.createOrder); // Đảm bảo rằng createOrder xử lý việc tạo đơn hàng từ giỏ
+
+// Cập nhật đơn hàng theo ID
 orderRoutes.put('/:id', orderController.updateOrder);
+
+// Xóa mềm đơn hàng theo ID
 orderRoutes.delete('/:id', orderController.deleteOrder);
-// Endpoint mới để hoàn tất đơn hàng và chuyển thành hóa đơn
-orderRoutes.post('/:id/complete', orderController.completeOrder);
+
+orderRoutes.put('/:id/restore',orderController.restoreOrder);
 
 module.exports = orderRoutes;

@@ -1,5 +1,4 @@
 const { Account } = require("./accountModel");
-const { Brand } = require("./brandModel");
 const { Cart } = require("./cartModel");
 const { CartItem } = require("./cartItemModel");
 const { ChildCategories } = require("./childCategoriesModel");
@@ -10,13 +9,20 @@ const { Order } = require("./orderModel");
 const { OrderDetail } = require("./orderDetailModel");
 const { OutInvoice } = require("./outInvoiceModel");
 const { ParentCategories } = require("./parentCategoriesModel");
-const { Product } = require("./productModel");
 const { Role } = require("./roleModel");
 const { Supplier } = require("./supplierModel");
 const { roleAccount } = require("./roleAccountModel");
 const { Employee } = require("./employeeModel");
+const {Image} = require("./imageModel");
+const {Product} = require("./productModel");
 
 const defineAssociations = () => {
+
+  // Product - Image: One-to-Many
+  Product.hasMany(Image, { foreignKey: "product_id" });
+  Image.belongsTo(Product, { foreignKey: "product_id" });
+
+
   // Account - Customer: One-to-One
   Account.hasOne(Customer, { foreignKey: "account_id" });
   Customer.belongsTo(Account, { foreignKey: "account_id" });
@@ -36,6 +42,7 @@ const defineAssociations = () => {
   // CartItem - Product: One-to-One
   Product.hasMany(CartItem, { foreignKey: "product_id" });
   CartItem.belongsTo(Product, { foreignKey: "product_id" });
+
 
   // Comment - Product: One-to-Many
   Product.hasMany(Comment, { foreignKey: "product_id" });
@@ -65,17 +72,15 @@ const defineAssociations = () => {
   Customer.hasMany(OutInvoice, { foreignKey: "customer_id" });
   OutInvoice.belongsTo(Customer, { foreignKey: "customer_id" });
 
-  // InputInvoice - Supplier: One-to-One
-  Supplier.hasMany(InputInvoice, { foreignKey: "supplier_id" });
-  InputInvoice.belongsTo(Supplier, { foreignKey: "supplier_id" });
+
+  Supplier.hasMany(Product, { foreignKey: "supplier_id" });
+  Product.belongsTo(Supplier, { foreignKey: "supplier_id" });
 
   // InputInvoice - Employee: One-to-One
   Employee.hasMany(InputInvoice, { foreignKey: "employee_id" });
   InputInvoice.belongsTo(Employee, { foreignKey: "employee_id" });
 
-  // Product - Brand: One-to-One
-  Brand.hasMany(Product, { foreignKey: "brand_id" });
-  Product.belongsTo(Brand, { foreignKey: "brand_id" });
+
 
   // Product - Category: One-to-One
   ChildCategories.hasMany(Product, { foreignKey: "childCategory_id" });
@@ -89,8 +94,9 @@ const defineAssociations = () => {
     foreignKey: "parentCategory_id",
   });
 
-  // Account - RoleAccount: One-to-Many
-  Account.hasMany(roleAccount, { foreignKey: "account_id" });
+  
+  // Account - RoleAccount: One-to-ManProduct.y
+  Account.hasMany(roleAccount, { foreignKey: "accouProduct.nt_id" });
   roleAccount.belongsTo(Account, { foreignKey: "account_id" });
 
   // Role - RoleAccount: One-to-Many

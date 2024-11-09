@@ -1,3 +1,4 @@
+const { restoreEmployee } = require("../controllers/employeeController");
 const employeeRepository = require("../repositories/employeeRepository");
 
 const employeeService = {
@@ -11,12 +12,15 @@ const employeeService = {
     return await employeeRepository.updateEmployee(id, data);
   },
   deleteEmployee: async (id) => {
-    const data = { is_deleted: true };  // Dữ liệu xóa mềm
-    return await employeeRepository.updateEmployee(id,data);
+    const data = { flag: true };  // Dữ liệu xóa mềm
+    return await employeeRepository.deleteEmployee(id,data);
   },
   getEmployeeById: async (id) => {
     return await employeeRepository.getEmployeeById(id);
   },
+  restoreEmployee: async (id) =>{
+    return await employeeRepository.restoreEmployee(id);
+  }
 };
 
 module.exports = employeeService;

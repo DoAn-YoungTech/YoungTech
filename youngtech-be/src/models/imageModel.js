@@ -1,38 +1,35 @@
-// models/userModel.js
+// models/imageModel.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/db");
 
-const Account = sequelize.define(
-    "Account",
+const Image = sequelize.define(
+    "Image",
     {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-        }, 
+        },
         flag: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
-        userName: {
+        imageUrl: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
         },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        product_id: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: "Product",
+                key: "id",
+            },
         },
     },
     {
-        tableName: "Account",
+        tableName: "Image",
         timestamps: false,
     }
 );
 
-module.exports = { Account, sequelize };
+module.exports = { Image, sequelize };

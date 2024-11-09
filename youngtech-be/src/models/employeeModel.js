@@ -10,6 +10,10 @@ const Employee = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+  },
     fullName: {
       type: DataTypes.STRING,
       allowNull: false,

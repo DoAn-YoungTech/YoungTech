@@ -54,7 +54,7 @@ const childCategoriesController = {
     deleteChildCategories: async (req,res) =>{
         try{
             const id = req.params.id;
-            const result = await childCategoriesService.updateChildCategories(id, {is_deleted: true});
+            const result = await childCategoriesService.deleteChildCategories(id, {flag: true});
             if (!result) {
                 res.status(404).json({message: "Child categories not found"});
             }else{
@@ -63,6 +63,21 @@ const childCategoriesController = {
         }catch(err){
             res.status(500).json({message: "Internal Server Error", error: err.message});
         }
-    }
+    },
+
+    restoreChildCategories: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const result = await childCategoriesService.restoreChildCategories(id, {flag: false});
+            if (!result) {
+                res.status(404).json({message: "Child categories not found"});
+            } else{
+                res.status(200).json({message: "Child categories restored successfully!"});
+            }
+        } catch (err) {
+            res.status(500).json({message: "Internal Server Error", error: err.message});
+        }
+    },
+
 };
  module.exports = childCategoriesController;

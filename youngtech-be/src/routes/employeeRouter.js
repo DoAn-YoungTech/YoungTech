@@ -8,5 +8,5 @@ employeeRouter.post('/', employeeController.createEmployee);
 employeeRouter.get('/:id', employeeController.getEmployeeById);
 employeeRouter.put('/:id', employeeController.updateEmployee);
 employeeRouter.delete('/:id', employeeController.deleteEmployee);
-
+employeeRouter.put('/:id/restore', employeeController.restoreEmployee);
 module.exports = employeeRouter;
