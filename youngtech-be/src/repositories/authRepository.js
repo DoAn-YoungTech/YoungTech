@@ -18,7 +18,6 @@ const authRepository = {
     });
     return result[0];
   },
-
   assignRolesToAccount: async (roleIds, account) => {
     const values = roleIds
       .map((roleId) => `(${roleId}, ${account})`)
@@ -97,6 +96,22 @@ const authRepository = {
       replacements: data,
     });
     return result;
+  },
+
+  getRoleId: async (userId) => {
+    const query = `SELECT role_id FROM roleaccount WHERE account_id=:account_id`;
+    const [result] = await sequelize.query(query, {
+      replacements: { account_id: userId },
+    });
+    return result[0].role_id;
+  },
+
+  getRoleName: async (getRoleId) => {
+    const query = `SELECT roleName FROM role WHERE id=:id`;
+    const [result] = await sequelize.query(query, {
+      replacements: { id: getRoleId },
+    });
+    return result[0].roleName;
   },
 };
 

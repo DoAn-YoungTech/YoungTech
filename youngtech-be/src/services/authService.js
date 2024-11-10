@@ -40,6 +40,19 @@ const authService = {
   userIdCustomer: async (account) => {
     return await authRepository.userIdCustomer(account);
   },
+  // get getRoleId
+  getRoleId: async (userId) => {
+    return await authRepository.getRoleId(userId);
+  },
+
+  // getRoleName
+  getRoleName: async (getRoleId) => {
+    return await authRepository.getRoleName(getRoleId);
+  },
+
+  // viewingListEmployee
+
+ 
 };
 
 module.exports = authService;

@@ -44,10 +44,10 @@ const authController = {
   },
 
   //generateAccessToken
-  generateAccessToken: (user) => {
+  generateAccessToken: (user, getRoleName) => {
     return jwt.sign(
       // payload
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, role: getRoleName },
       // secret key
       process.env.accessSecretKey,
       // option
@@ -78,6 +78,23 @@ const authController = {
           .json({ message: 'Email use not exit , Please try again !' });
       }
 
+      // get role_id by account_id
+      const getRoleId = await authService.getRoleId(user.id);
+      console.log('Role id ', getRoleId);
+
+      if (!getRoleId) {
+        return res
+          .status(403)
+          .json({ message: 'Account id not exist in role account' });
+      }
+
+      // get role name by role_id
+      const getRoleName = await authService.getRoleName(getRoleId);
+      if (!getRoleName) {
+        return res.status(404).json({ message: 'Role name not found' });
+      }
+      console.log('role name', getRoleName);
+      // if true save role in payload token account
       // then => compare pass login === pass on database ,use bcrypt
       const comparePass = await bcrypt.compare(password, user.password);
 
@@ -86,7 +103,10 @@ const authController = {
       }
 
       if (user && comparePass) {
-        const accessToken = authController.generateAccessToken(user);
+        const accessToken = authController.generateAccessToken(
+          user,
+          getRoleName
+        );
         const refreshToken = authController.refreshToken(user);
 
         // save refresh token in data
