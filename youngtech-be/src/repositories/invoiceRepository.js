@@ -6,7 +6,6 @@ const invoiceRepository = {
     const [result] = await sequelize.query(query);
     return result;
   },
-
   getInvoiceById: async (id) => {
     const query = `SELECT * FROM inputInvoice WHERE id = :id `;
     const [result] = await sequelize.query(query, { replacements: { id } });

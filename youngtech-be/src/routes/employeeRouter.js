@@ -1,16 +1,41 @@
 const express = require('express');
-
+const middlewareController = require('../controllers/middlewareController');
 const employeeRouter = express.Router();
 const employeeController = require('../controllers/employeeController');
 
-employeeRouter.get('/', employeeController.getAllEmployee);
+employeeRouter.post(
+  '/createEmployee',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['admin']),
+  employeeController.createEmployee
+);
 
-employeeRouter.post('/', employeeController.createEmployee);
+employeeRouter.get(
+  '/viewingListEmployee',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['admin']),
+  employeeController.viewingListEmployee
+);
 
-employeeRouter.delete('/:id', employeeController.deleteEmployee);
+employeeRouter.put(
+  '/updateInformationEmployee/:accountId',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['admin']),
+  employeeController.updateInformationEmployee
+);
 
-employeeRouter.put('/:id', employeeController.updateEmployee);
+employeeRouter.get(
+  '/viewOnlyEmployee/:id',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['admin']),
+  employeeController.viewOnlyEmployee
+);
 
-employeeRouter.get('/:id', employeeController.getEmployeeById);
+employeeRouter.delete(
+  '/deleteEmployeeById/:id',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['admin']),
+  employeeController.deleteEmployeeById
+);
 
 module.exports = employeeRouter;

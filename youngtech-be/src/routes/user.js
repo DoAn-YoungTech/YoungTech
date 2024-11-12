@@ -1,25 +1,22 @@
-const express = require("express");
+const express = require('express');
 const user = express.Router();
-const userController = require("../controllers/userController");
-const middlewareController = require("../controllers/middlewareController");
-
-//GET ALL USER
+const userController = require('../controllers/userController');
+const middlewareController = require('../controllers/middlewareController');
 
 user.get(
-  "/getAllUser",
-  middlewareController.verifyToken,
-  userController.getAllUser
-);
-// GET USER ID
-
-user.get("/getUserById/:id", userController.getUserById);
-// DELETE USER BY ID
-
-user.delete("/deleteUserById/:id", userController.deleteUserById);
-
-user.get(
-  "/viewPersonalUser",
+  '/viewPersonalUser',
   middlewareController.verifyToken,
   userController.profile
+);
+user.patch(
+  '/enterInfoPersonalUser',
+  middlewareController.verifyToken,
+  userController.createInformationPersonal
+);
+
+user.put(
+  '/changePassword',
+  middlewareController.verifyToken,
+  userController.changePassword
 );
 module.exports = user;

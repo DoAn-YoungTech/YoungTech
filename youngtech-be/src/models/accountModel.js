@@ -1,37 +1,38 @@
 // models/userModel.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configs/db');
 
 const Account = sequelize.define(
-  "Account",
+  'Account',
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     flag: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      defaultValue: true,
     },
     userName: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   },
   {
-    tableName: "Account",
-    timestamps: false
+    tableName: 'Account',
+    timestamps: false,
   }
 );
 
