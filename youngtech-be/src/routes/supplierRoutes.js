@@ -1,4 +1,3 @@
-
 const express = require("express");
 const supplierController = require("../controllers/supplierController");
 const supplierRoutes = express.Router();

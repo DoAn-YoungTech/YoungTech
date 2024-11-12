@@ -1,26 +1,25 @@
 const supplierRepository = require("../repositories/supplierRepository");
 
 const supplierService = {
+  getAllSuppliers: async () => {
+    return await supplierRepository.getAllSuppliers();
+  },
 
-    getAllSuppliers: async () => {
-        return await supplierRepository.getAllSuppliers();
-    },
+  createSupplier: async (supplierData) => {
+    return await supplierRepository.createSupplier(supplierData);
+  },
 
-    createSupplier: async (supplierData) => {
-        return await supplierRepository.createSupplier(supplierData);
-    },
+  updateSupplier: async (id, supplierData) => {
+    return await supplierRepository.updateSupplier(id, supplierData);
+  },
 
-    updateSupplier: async (id, supplierData) => {
-        return await supplierRepository.updateSupplier(id, supplierData);
-    },
+  deleteSupplier: async (id) => {
+    return await supplierRepository.deleteSupplier(id);
+  },
 
-    deleteSupplier: async (id) => {
-        return await supplierRepository.deleteSupplier(id);
-    },
-
-    getSupplierById: async (id) => {
-        return await supplierRepository.getSupplierById(id);
-    },
+  getSupplierById: async (id) => {
+    return await supplierRepository.getSupplierById(id);
+  }
 };
 
 module.exports = supplierService;

@@ -1,9 +1,9 @@
 // models/userModel.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configs/db');
 
 const ParentCategories = sequelize.define(
-  "ParentCategories",
+  'ParentCategories',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,15 +13,17 @@ const ParentCategories = sequelize.define(
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-  },
+
+      defaultValue: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
-  
+    },
+
   },
   {
-    tableName: "ParentCategories",
+    tableName: 'ParentCategories',
     timestamps: false,
   }
 );

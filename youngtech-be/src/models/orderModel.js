@@ -8,7 +8,11 @@ const Order = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
+    },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
     },
     flag: {
       type: DataTypes.BOOLEAN,
@@ -16,7 +20,11 @@ const Order = sequelize.define(
   },
     orderDate: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: false
+    },
+    succesDate: {
+      type: DataTypes.DATE,
+      allowNull: false
     },
     succesDate: {
       type: DataTypes.DATE,
@@ -24,17 +32,16 @@ const Order = sequelize.define(
     },
     totalAmount: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: false
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-
+      allowNull: false
+    }
   },
   {
     tableName: "Order",
-    timestamps: false,
+    timestamps: false
   }
 );
 

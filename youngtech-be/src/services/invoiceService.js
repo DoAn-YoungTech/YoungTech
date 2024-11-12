@@ -1,3 +1,4 @@
+
 const invoiceRepository = require("../repositories/invoiceRepository");
 
 const invoiceService = {
@@ -8,15 +9,18 @@ const invoiceService = {
   getInvoiceById: async (id) => {
     return await invoiceRepository.getInvoiceById(id);
   },
+
   createInvoice: async (data) => {
     return await invoiceRepository.createInvoice(data);
   },
+
   deleteInvoice: async (id) => {
     return await invoiceRepository.deleteInvoice(id);
   },
+
   updateInvoice: async (id, data) => {
     return await invoiceRepository.updateInvoice(id, data);
-  },
+  }
 };
 
 module.exports = invoiceService;

@@ -8,27 +8,27 @@ const ChildCategories = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     childCateName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
-     flag: {
+    flag: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      allowNull: false
     },
     parentCategory_id: {
       type: DataTypes.INTEGER,
       references: {
         model: "ParentCategories", // 'Employee' refers to table name
-        key: "id",
-      },
-    },
+        key: "id"
+      }
+    }
   },
   {
     tableName: "ChildCategories",
-    timestamps: false,
+    timestamps: false
   }
 );
 

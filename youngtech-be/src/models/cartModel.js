@@ -1,3 +1,4 @@
+
 // models/userModel.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/db");
@@ -8,21 +9,22 @@ const Cart = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
 
     customer_id: {
       type: DataTypes.INTEGER,
       references: {
         model: "Customer", // 'Comment' refers to table name
-        key: "id",
-      },
-    },
+        key: "id"
+      }
+    }
   },
   {
     tableName: "Cart",
-    timestamps: false,
+    timestamps: false
   }
 );
 
 module.exports = { Cart, sequelize };
+

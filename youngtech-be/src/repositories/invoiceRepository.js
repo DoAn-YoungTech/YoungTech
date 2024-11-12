@@ -1,4 +1,5 @@
-const sequelize = require("../configs/db");
+
+const sequelize = require('../configs/db');
 
 const invoiceRepository = {
   getAllInvoice: async () => {
@@ -11,13 +12,14 @@ const invoiceRepository = {
     const [result] = await sequelize.query(query, { replacements: { id } });
     return result[0];
   },
+
   createInvoice: async (data) => {
-    console.log(`Repository ${data}`);
     const query = `INSERT INTO inputInvoice (invoiceDate , totalAmount , status , supplier_id , employee_id )
          VALUES (:invoiceDate, :totalAmount , :status ,:supplier_id , :employee_id)`;
     const [result] = await sequelize.query(query, { replacements: data });
     return result;
   },
+
   deleteInvoice: async (id) => {
     const query = `DELETE FROM inputInvoice WHERE id = :id`;
     const [result] = await sequelize.query(query, { replacements: { id } });

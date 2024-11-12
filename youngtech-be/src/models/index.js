@@ -16,6 +16,8 @@ const Supplier = require("./supplierModel");
 const roleAccount = require("./roleAccountModel");
 const Image = require("./imageModel");
 
+const RefreshToken = require("./refreshToken");
+
 const rootModel = {
   Account,
   Customer,
@@ -33,7 +35,9 @@ const rootModel = {
   Role,
   Supplier,
   roleAccount,
-  Image
+
+  Image,
+  RefreshToken
 };
 
 module.exports = rootModel;

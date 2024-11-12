@@ -8,7 +8,11 @@ const Employee = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
+    },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
     },
     flag: {
       type: DataTypes.BOOLEAN,
@@ -17,36 +21,36 @@ const Employee = sequelize.define(
     fullName: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: true
     },
     profilePicture: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     dateOfBirth: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: false
     },
     phoneNumber: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: true
     },
     position: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     account_id: {
       type: DataTypes.INTEGER,
       references: {
         model: "Account", // 'Employee' refers to table name
-        key: "id",
-      },
-    },
+        key: "id"
+      }
+    }
   },
   {
     tableName: "Employee",
-    timestamps: false,
+    timestamps: false
   }
 );
 

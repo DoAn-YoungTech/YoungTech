@@ -1,135 +1,125 @@
-const employeeService = require("../services/employeeService");
 
+const authService = require('../services/authService');
+const employeeService = require('../services/employeeService');
+const authController = require('./authControllers');
 const employeeController = {
-  getAllEmployee: async (req, res) => {
-    try {
-      // Lấy tham số phân trang từ query (mặc định là page 1 và limit 10)
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 2;
-  
-      // Tính toán offset dựa trên page và limit
-      const offset = (page - 1) * limit;
-  
-      // Gọi service để lấy danh sách nhân viên với phân trang
-      const result = await employeeService.getAllEmployee({ offset, limit });
-  
-      if (!result || result.data.length === 0) {
-        return res.status(404).json({ message: "No employees found" });
-      }
-  
-      // Trả về kết quả phân trang
-      res.json({
-        message: "All employees",
-        data: result.data,
-        pagination: {
-          page,
-          limit,
-          totalItems: result.totalItems,
-          totalPages: Math.ceil(result.totalItems / limit),
-        },
-      });
-    } catch (err) {
-      res.status(500).json({ message: "Internal Server Error", error: err.message });
-    }
-  },
-
-  getEmployeeById: async (req, res) => {
+ 
+  // delete employee by id
+  deleteEmployeeById: async (req, res) => {
     try {
       const id = req.params.id;
-      const result = await employeeService.getEmployeeById(id);
-      if (!result) {
-        res.status(404).json({ message: "Employee by id not found" });
-      } else {
-        res.status(200).json({ message: "Success", data: result });
+      if (!id) {
+        return res.status(404).json({ message: 'User employee not fount' });
       }
+      const result = await employeeService.deleteEmployeeById(id);
+      console.log(result);
+      if (!result) {
+        return res.status(403).json({ message: 'Can not Delete !' });
+      }
+      res.status(200).json({ message: '  delete success!' });
     } catch (err) {
-      res
-        .status(500)
-        .json({ message: "Internal Server Error", error: err.message });
+      res.status(500).json({ message: err.message });
+    }
+  },
+  //only admin can viewing list employee
+  viewingListEmployee: async (req, res) => {
+    try {
+      const result = await employeeService.viewingListEmployee();
+      if (!result) {
+        return res.status(404).json({ message: 'Can not found' });
+      }
+      res.status(200).json({ message: result });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
     }
   },
 
-  updateEmployee: async (req, res) => {
+  // view a employee by id
+  viewOnlyEmployee: async (req, res) => {
     try {
       const id = req.params.id;
-      const data = req.body;
-      const result = await employeeService.updateEmployee(id, data);
-      if (!result) {
-        res.status(404).json({ message: "Employee not found for update" });
-      } else {
-        res.status(200).json({ message: "Update successful", data: result });
+      if (!id) {
+        return res.status(404).json({ message: 'user employee not fount' });
       }
+
+      const result = await employeeService.viewOnlyEmployee(id);
+      if (!result) {
+        return res.status(404).json({ message: 'can not found employee!' });
+      }
+      res.status(200).json({ message: result });
     } catch (err) {
-      res
-        .status(500)
-        .json({ message: "Internal Server Error", error: err.message });
+      res.status(500).json({ message: err.message });
     }
   },
-
+  //only admin can create Employee
   createEmployee: async (req, res) => {
     try {
+      //get user id
+      const userId = req.user.id;
       const data = req.body;
-  
-      // Kiểm tra các giá trị trong body
+      // check data exist in body
       if (
-        !data.fullName || !data.profilePicture || !data.dateOfBirth ||
-        !data.phoneNumber || !data.position || !data.account_id
+        (data.fullName == '' || data.profilePicture == '',
+        data.dateOfBirth == '',
+        data.phoneNumber == '',
+        data.position == '')
       ) {
-        return res.status(400).json({ message: "Value is empty! Please check again." });
+        return res
+          .status(404)
+          .json({ message: 'Value is empty !Please check again .' });
       }
-  
-      // Kiểm tra xem account_id đã tồn tại trong bảng employee chưa
-      const checkUserExist = await employeeService.checkUserExist(data.account_id);
-      if (checkUserExist) {
-        return res.status(400).json({ message: "Employee with this account ID already exists!" });
+      // check user id exist  in table employee if not exist => create
+      const checkUserExist = await employeeService.checkUserExist(userId);
+      console.log(`checkUserExist ${checkUserExist}`);
+
+      if (!checkUserExist) {
+        return res.status(404).json({ message: 'Employee exist !' });
       }
-  
-      // Tạo nhân viên mới nếu account_id chưa tồn tại
-      const result = await employeeService.createEmployee(data);
+
+      console.log(data);
+
+      const result = await employeeService.createEmployee(data, userId);
+
+      console.log(`Insert into employee`, result);
       if (!result) {
-        res.status(400).json({ message: "Create employee failed!" });
-      } else {
-        res.status(201).json({ message: "Employee created successfully!", data: result });
+        return res.status(404).json({ message: 'Insert employee fail !' });
       }
+
+      res.status(200).json({ message: 'create employee success' });
     } catch (err) {
-      res.status(500).json({ message: "Internal Server Error", error: err.message });
+      res.status(500).json({ message: `err ${err}` });
     }
   },
-  
-  deleteEmployee: async (req, res) => {
+  //update information employee
+  updateInformationEmployee: async (req, res) => {
     try {
-      const id = req.params.id;
-      const result = await employeeService.deleteEmployee(id); // Gọi service để thực hiện xóa mềm
-      if (!result) {
-        res.status(404).json({ message: "Employee not found" });
-      } else {
-        res
-          .status(200)
-          .json({ message: "Employee marked as deleted successfully!" });
-      }
-    } catch (err) {
-      res
-        .status(500)
-        .json({ message: "Internal Server Error", error: err.message });
-    }
-  },
-  restoreEmployee: async (req, res) => {
-    try {
-        const id = req.params.id;
-
-        // Gọi service để khôi phục lại
-        const result = await employeeService.restoreEmployee(id);
-
-        if (!result) {
-            res.status(404).json({ message: "Employee not found or already restored" });
-        } else {
-            res.status(200).json({ message: "Employee restored successfully!" });
+      // update account id
+      const accountId = req.params.accountId;
+      const data = req.body;
+      console.log(`data`, data);
+      console.log(`account_id `, accountId);
+      if (
+        (data.fullName == '' || data.profilePicture == '',
+        data.dateOfBirth == '',
+        data.phoneNumber == '',
+        data.position == '')
+      )
+        if (!accountId) {
+          return res.status(404).json({ message: 'Account id is not found !' });
         }
-    } catch (err) {
-        res.status(500).json({ message: "Internal Server Error", error: err.message });
-    }
-}
 
+      const updateInformationEmployee =
+        await employeeService.updateInformationEmployee(data, accountId);
+      if (!updateInformationEmployee) {
+        return res.status(403).json({ message: 'Update employee fail !' });
+      }
+
+      res.status(200).json({ message: 'update employee success !' });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  },
 };
 
 module.exports = employeeController;
+
