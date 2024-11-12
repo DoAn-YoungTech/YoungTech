@@ -14,7 +14,15 @@ const Order = sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: false
     },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+  },
     orderDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    succesDate: {
       type: DataTypes.DATE,
       allowNull: false
     },

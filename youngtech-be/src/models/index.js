@@ -15,6 +15,7 @@ const Role = require("./roleModel");
 const Supplier = require("./supplierModel");
 const roleAccount = require("./roleAccountModel");
 const Image = require("./imageModel");
+
 const RefreshToken = require("./refreshToken");
 
 const rootModel = {
@@ -34,6 +35,7 @@ const rootModel = {
   Role,
   Supplier,
   roleAccount,
+
   Image,
   RefreshToken
 };

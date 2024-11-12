@@ -1,3 +1,4 @@
+
 // models/userModel.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/db");
@@ -26,3 +27,4 @@ const Cart = sequelize.define(
 );
 
 module.exports = { Cart, sequelize };
+

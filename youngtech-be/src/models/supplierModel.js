@@ -13,6 +13,7 @@ const Supplier = sequelize.define(
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+
     },
     supplierName: {
       type: DataTypes.STRING,
@@ -35,6 +36,7 @@ const Supplier = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+
   },
   {
     tableName: 'Supplier',
