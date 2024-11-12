@@ -1,15 +1,36 @@
 const orderDetailService = require("../services/orderDetailService");
 
 const orderDetailController = {
-  // Lấy tất cả chi tiết đơn hàng
-  getAllOrderDetail: async (req, res) => {
-    try {
-      const result = await orderDetailService.getAllOrderDetail();
-      res.json({ message: "All Order Details", data: result });
-    } catch (err) {
-      res.status(500).json({ message: "Invalid Order Details", error: err.message });
+// Lấy tất cả chi tiết đơn hàng với phân trang
+getAllOrderDetail: async (req, res) => {
+  try {
+    // Lấy page và limit từ query, mặc định page = 1 và limit = 10 nếu không có
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    // Gọi service với các tham số phân trang
+    const result = await orderDetailService.getAllOrderDetail({ offset, limit });
+
+    if (result.data.length === 0) {
+      return res.status(404).json({ message: "No order details found" });
     }
-  },
+
+    res.status(200).json({
+      message: "All Order Details",
+      data: result.data,
+      pagination: {
+        currentPage: page,
+        pageSize: limit,
+        totalItems: result.totalItems,
+        totalPages: Math.ceil(result.totalItems / limit)
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Invalid Order Details", error: err.message });
+  }
+},
+
 
   // Lấy chi tiết đơn hàng theo ID
   getOrderDetailById: async (req, res) => {

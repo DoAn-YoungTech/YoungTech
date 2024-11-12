@@ -1,11 +1,19 @@
 const sequelize = require("../configs/db");
 
 const orderDetailRepository ={
-    getAllOrderDetail: async ()=>{
-        const query = `SELECT * FROM orderdetail`;
-        const [result] = await sequelize.query(query);
-        return result;
-    },
+    getAllOrderDetail: async ({ offset, limit }) => {
+        const query = `SELECT * FROM orderdetail LIMIT :limit OFFSET :offset`;
+        const [result] = await sequelize.query(query, { replacements: { limit, offset } });
+      
+        // Truy vấn tổng số bản ghi để tính tổng số trang
+        const countQuery = `SELECT COUNT(*) as total FROM orderdetail`;
+        const [countResult] = await sequelize.query(countQuery);
+      
+        return {
+          data: result,
+          totalItems: countResult[0].total
+        };
+      },
     getOrderDetailById: async (id) => {
         const query = `SELECT * FROM orderdetail WHERE id = :id`;
         const [result] = await sequelize.query(query,{replacements: {id}});

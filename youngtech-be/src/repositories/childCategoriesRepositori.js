@@ -1,11 +1,20 @@
 const sequelize = require('../configs/db');
 
 const childCategoriesRepository = {
-    getAllChildCategories : async () =>{
-        const query = `SELECT * FROM childcategories`;
-        const [result] = await sequelize.query(query)
-        return result;
-    },
+getAllChildCategories: async ({ offset, limit }) => {
+    const query = `SELECT * FROM childcategories LIMIT :limit OFFSET :offset`;
+    const [result] = await sequelize.query(query, { replacements: { limit, offset } });
+
+    // Truy vấn tổng số bản ghi để tính tổng số trang
+    const countQuery = `SELECT COUNT(*) as total FROM childcategories`;
+    const [countResult] = await sequelize.query(countQuery);
+
+    return {
+        data: result,
+        totalItems: countResult[0].total
+    };
+},
+
     getChildCategoriesById : async (id) => {
         const query = `SELECT * FROM childcategories WHERE id = :id`;
         const [result] = await sequelize.query(query, {replacements: {id}});

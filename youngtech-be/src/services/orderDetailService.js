@@ -2,9 +2,10 @@ const orderDetailRepository = require("../repositories/orderDetailRepository");
 
 const orderDetailService = {
     // Lấy tất cả chi tiết đơn hàng
-    getAllOrderDetail: async () => {  
-        return await orderDetailRepository.getAllOrderDetail();
-    },
+    getAllOrderDetail: async ({ offset, limit }) => {
+        return await orderDetailRepository.getAllOrderDetail({ offset, limit });
+      },
+      
 
     // Lấy chi tiết đơn hàng theo ID
     getOrderDetailById: async (id) => {

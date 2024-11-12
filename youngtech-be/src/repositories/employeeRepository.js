@@ -1,10 +1,21 @@
 const sequelize = require('../configs/db');
 
 const employeeRepository = {
-    getAllEmployee : async () => {
-        const query = `SELECT * FROM employee`;
-        const [result] = await sequelize.query(query)
-        return result;
+    getAllEmployee: async ({ offset, limit }) => {
+        const query = `SELECT * FROM employee LIMIT :limit OFFSET :offset`;
+        const [result] = await sequelize.query(query, {
+            replacements: { limit, offset }
+        });
+    
+        // Lấy tổng số nhân viên để tính tổng số trang
+        const totalQuery = `SELECT COUNT(*) AS totalItems FROM employee`;
+        const [totalResult] = await sequelize.query(totalQuery);
+        const totalItems = totalResult[0].totalItems;
+    
+        return {
+            data: result,
+            totalItems
+        };
     },
     getEmployeeById: async (id) => {
         const query = `SELECT * FROM employee WHERE id = :id`;
@@ -41,5 +52,11 @@ const employeeRepository = {
         const [result] = await sequelize.query(query, {replacements : {...data, id}});
         return result  ;
     },
+       // Thêm hàm checkUserExist để kiểm tra account_id
+       checkUserExist: async (account_id) => {
+        const query = `SELECT 1 FROM employee WHERE account_id = :account_id LIMIT 1`;
+        const [result] = await sequelize.query(query, { replacements: { account_id } });
+        return result.length > 0; // Trả về true nếu tìm thấy nhân viên với account_id, false nếu không
+    }
 };
 module.exports = employeeRepository;

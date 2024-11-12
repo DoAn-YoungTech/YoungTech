@@ -1,9 +1,10 @@
 const childCategoriesRepository = require ("../repositories/childCategoriesRepositori");
 
 const childCategoriesService = {
-        getAllChildCategories: async () => {
-            return await childCategoriesRepository.getAllChildCategories();
-        },
+getAllChildCategories: async ({ offset, limit }) => {
+    return await childCategoriesRepository.getAllChildCategories({ offset, limit });
+},
+
 
         getChildCategoriesById: async (id, data) => {
         return await childCategoriesRepository.getChildCategoriesById(id, data);

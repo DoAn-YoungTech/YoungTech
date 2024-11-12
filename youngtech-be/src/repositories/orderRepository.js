@@ -18,6 +18,7 @@ const orderRepository = {
     const [result] = await sequelize.query(query, { replacements: { id } });
     return result[0];
   },
+  
   createOrder: async (data) => {
     console.log(`Repository ${JSON.stringify(data)}`);
     

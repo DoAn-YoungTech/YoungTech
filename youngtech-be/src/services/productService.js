@@ -1,12 +1,12 @@
 const productRepository = require('../repositories/productRepository');
 
 const productService = {
-    getAllProduct: async ()=>{
-        return await productRepository.getAllProduct();
+    getAllProduct: async ({ offset, limit })=>{
+        return await productRepository.getAllProduct({ offset, limit });
     },
     
     getProductById: async (id) => {
-        return await productRepository.getAllProductById(id);
+        return await productRepository.getProductById(id);
     },
 
     createProduct: async (data) => {
@@ -14,18 +14,16 @@ const productService = {
     },
 
     deleteProduct: async (id) => {
-        const data = { flag: true }
+        const data = { flag: true }; // Dữ liệu xóa mềm
         return await productRepository.deleteProduct(id, data); // Xóa mềm
     },
-
+      
+    restoreProduct: async (id) => {
+        return await productRepository.restoreProduct(id);
+    },
     updateProduct: async (id, data) => {
         return await productRepository.updateProduct(id, data);
-    },
-
-     // Hàm mới để lấy sản phẩm dựa trên danh sách childCategoryIds
-     getProductsByChildCategoryIds: async (childCategoryIds) => {
-        return await productRepository.getProductsByChildCategoryIds(childCategoryIds);
-    }
+      },
  };
 
  module.exports = productService;

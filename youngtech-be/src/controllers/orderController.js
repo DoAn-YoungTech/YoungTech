@@ -1,4 +1,3 @@
-const { updateOrder } = require("../repositories/orderRepository");
 const orderService = require("../services/orderService");
 
 const OrderController = {

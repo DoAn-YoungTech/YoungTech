@@ -11,8 +11,8 @@ productRoutes.post("/", productController.createProduct);
 productRoutes.put("/:id", productController.updateProduct);
 
 productRoutes.delete("/:id", productController.deleteProduct);
-
-// Route mới để lấy sản phẩm theo danh mục cha
-productRoutes.get("/parent-category/:parentCategoryId", productController.getProductsByParentCategory)
+ 
+productRoutes.put("/:id/restore", productController.restoreProduct)
+// productRoutes.put('/:id/restore', productController.restoreProduct);
 
 module.exports = productRoutes;
