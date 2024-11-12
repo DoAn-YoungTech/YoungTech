@@ -1,4 +1,3 @@
-const authController = require('../controllers/authControllers');
 const authRepository = require('../repositories/authRepository');
 const authService = {
   register: async (userName, email, hashPassword) => {
@@ -37,9 +36,9 @@ const authService = {
     return await authRepository.deleteRefreshTokenLogout(refreshToken);
   },
 
-  userIdCustomer: async (account) => {
-    return await authRepository.userIdCustomer(account);
-  },
+  // userIdCustomer: async (account) => {
+  //   return await authRepository.userIdCustomer(account);
+  // },
   // get getRoleId
   getRoleId: async (userId) => {
     return await authRepository.getRoleId(userId);
@@ -51,8 +50,6 @@ const authService = {
   },
 
   // viewingListEmployee
-
- 
 };
 
 module.exports = authService;

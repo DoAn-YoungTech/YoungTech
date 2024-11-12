@@ -84,19 +84,19 @@ const authRepository = {
     return result;
   },
 
-  userIdCustomer: async (account) => {
-    const query = `INSERT INTO customer (fullName , phoneNumber, address , account_id) VALUES (:fullName ,:phoneNumber , :address, :account_id)`;
-    const data = {
-      fullName: '',
-      phoneNumber: '',
-      address: '',
-      account_id: account,
-    };
-    const [result] = await sequelize.query(query, {
-      replacements: data,
-    });
-    return result;
-  },
+  // userIdCustomer: async (account) => {
+  //   const query = `INSERT INTO customer (fullName , phoneNumber, address , account_id) VALUES (:fullName ,:phoneNumber , :address, :account_id)`;
+  //   const data = {
+  //     fullName: '',
+  //     phoneNumber: '',
+  //     address: '',
+  //     account_id: account,
+  //   };
+  //   const [result] = await sequelize.query(query, {
+  //     replacements: data,
+  //   });
+  //   return result;
+  // },
 
   getRoleId: async (userId) => {
     const query = `SELECT role_id FROM roleaccount WHERE account_id=:account_id`;

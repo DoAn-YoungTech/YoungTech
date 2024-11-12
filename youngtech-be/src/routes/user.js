@@ -8,7 +8,7 @@ user.get(
   middlewareController.verifyToken,
   userController.profile
 );
-user.put(
+user.patch(
   '/enterInfoPersonalUser',
   middlewareController.verifyToken,
   userController.createInformationPersonal

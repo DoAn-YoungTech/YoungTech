@@ -14,8 +14,8 @@ const userController = {
         message: 'User not found < Please Enter information personal !',
       });
     }
-
-    res.status(200).json({ message: viewInformationPersonal });
+    const { id, ...other } = viewInformationPersonal;
+    res.status(200).json({ message: other });
   },
   // enter information personal
   createInformationPersonal: async (req, res) => {
@@ -23,10 +23,10 @@ const userController = {
     try {
       const userId = req.user.id;
       console.log(userId);
-      const { fullName, phoneNumber, address } = req.body;
+      const { userName, email  } = req.body;
       // check in data exist userID
 
-      if ((fullName === '' || phoneNumber === '', address === '')) {
+      if ((userName === '' || email === '' )) {
         return res
           .status(403)
           .json({ message: 'Please enter information personal! ' });
@@ -43,9 +43,7 @@ const userController = {
       // Start enter information userId
 
       const enterInformation = await userService.enterInformation(
-        fullName,
-        phoneNumber,
-        address,
+        userName, email, 
         userId
       );
 

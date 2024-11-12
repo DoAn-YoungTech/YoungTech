@@ -1,8 +1,13 @@
 const roleRepository = require("../repositories/roleRepository");
 
 const roleService = {
-  createRole: async (role) => {
-    return await roleRepository.createRole(role);
+  createRole: async (roleName) => {
+    return await roleRepository.createRole(roleName);
+  },
+
+  // check role name exists 
+  checkRole: async (roleName) => {
+    return await roleRepository.checkRole(roleName);
   },
 
   // get all role

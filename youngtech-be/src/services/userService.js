@@ -13,13 +13,8 @@ const userService = {
 
   // enter information personal
 
-  enterInformation: async (fullName, phoneNumber, address, userId) => {
-    return await userRepository.enterInformation(
-      fullName,
-      phoneNumber,
-      address,
-      userId
-    );
+  enterInformation: async (userName, email, userId) => {
+    return await userRepository.enterInformation(userName, email, userId);
   },
 
   //checkUserIdChangePassWord

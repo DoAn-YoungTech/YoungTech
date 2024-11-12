@@ -1,12 +1,11 @@
 const bcrypt = require('bcrypt');
 const authService = require('../services/authService');
 const jwt = require('jsonwebtoken');
-const { roleAccount } = require('../models');
 
 const authController = {
   register: async (req, res) => {
     try {
-      const { userName, email, password } = req.body;
+      const { userName, email, password  } = req.body;
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
       // check email
@@ -29,13 +28,13 @@ const authController = {
       await authService.assignRolesToAccount(roleIds, account);
 
       // add user to customer
-      const addUserCustomer = await authService.userIdCustomer(account);
+      // const addUserCustomer = await authService.userIdCustomer(account);
 
-      if (!addUserCustomer) {
-        return res
-          .status(403)
-          .json({ message: 'Can not add account_id in customer ' });
-      }
+      // if (!addUserCustomer) {
+      //   return res
+      //     .status(403)
+      //     .json({ message: 'Can not add account_id in customer ' });
+      // }
 
       return res.status(201).json({ message: 'Register success !' });
     } catch (err) {

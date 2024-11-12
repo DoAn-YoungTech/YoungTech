@@ -9,7 +9,7 @@ const RefreshToken = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    user_id: {
+    account_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
