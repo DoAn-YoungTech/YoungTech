@@ -1012,6 +1012,20 @@
     
   
   
+  ],
+  "login":[
+    {
+      "id":1,
+      "username":"thanhnv",
+      "password":"12345",
+      "role":"user"
+    },
+    {
+      "id":2,
+      "username":"admin",
+      "password":"12345",
+      "role":"admin"
+    }
   ]
 
   

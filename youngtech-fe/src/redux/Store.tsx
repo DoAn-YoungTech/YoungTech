@@ -10,6 +10,8 @@ const rootReducer = combineReducers({
   products: productReducer,
   categories_parent: categoryParentReducer,
   categories_child: categoryChildReducer,
+
+
  
 });
 
