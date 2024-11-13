@@ -13,6 +13,7 @@ productRoutes.put("/:id", productController.updateProduct);
 productRoutes.delete("/:id", productController.deleteProduct);
  
 productRoutes.put("/:id/restore", productController.restoreProduct)
-// productRoutes.put('/:id/restore', productController.restoreProduct);
 
+productRoutes.get("/childCategory/:childCategoryId", productController.getProductByChildCategory);
+productRoutes.get("/parentCategory/:parentCategoryId", productController.getProductByParentCategory);
 module.exports = productRoutes;

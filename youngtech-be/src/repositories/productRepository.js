@@ -22,6 +22,13 @@ const productRepository = {
         const [result] = await sequelize.query(query, { replacements: { id } });
         return result[0];  // Trả về sản phẩm đầu tiên trong kết quả
     },
+    
+    // Thêm hàm mới để lấy sản phẩm theo childCategory_id
+    getProductByChildCategory: async (childCategoryId) => {
+        const query = `SELECT * FROM product WHERE childCategory_id = :childCategoryId`;
+        const [result] = await sequelize.query(query, { replacements: { childCategoryId } });
+        return result; // Trả về danh sách các sản phẩm tìm thấy
+    },
 
     createProduct: async () =>{
         const query = `INSERT INTO product (productName, productPrice, description, quantity, brand, childCategory_id,supplier_id ) 
