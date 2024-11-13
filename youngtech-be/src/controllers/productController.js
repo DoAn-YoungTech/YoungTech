@@ -44,7 +44,39 @@ const productController = {
       return res.status(500).json({ message: 'Internal Server Error', error: err.message });
     }
   },
-  
+
+  getProductByChildCategory: async (req, res) => {
+    try {
+      const childCategoryId = req.params.childCategoryId;
+      const result = await productService.getProductByChildCategory(childCategoryId);
+
+      if (!result || result.length === 0) {
+        return res.status(404).json({ message: 'No products found for the given child category ID' });
+      }
+
+      return res.status(200).json({ message: 'Success', data: result });
+    } catch (err) {
+      console.error(err); // Log lỗi khi có sự cố
+      return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+    }
+ },
+ 
+ getProductByParentCategory: async (req, res) => {
+  try {
+    const parentCategoryId = req.params.parentCategoryId;
+    const result = await productService.getProductByParentCategory(parentCategoryId);
+
+    if (!result || result.length === 0) {
+      return res.status(404).json({ message: 'No products found for the given parent category ID' });
+    }
+
+    return res.status(200).json({ message: 'Success', data: result });
+  } catch (err) {
+    console.error(err); // Log lỗi khi có sự cố
+    return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+  }
+},
+
   updateProduct: async (req, res) => {
     try {
       const id = req.params.id;
