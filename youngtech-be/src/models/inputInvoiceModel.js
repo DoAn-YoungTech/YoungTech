@@ -21,6 +21,10 @@ const InputInvoice = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    linkPdf: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
 
     employee_id: {
       type: DataTypes.INTEGER,

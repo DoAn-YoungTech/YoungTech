@@ -1,4 +1,5 @@
 const productService = require('../services/productService');
+const validateProductAttributes = require('../validate/productValidator')
 
 const productController = {
   getAllProduct: async (req, res) => {
@@ -133,7 +134,20 @@ const productController = {
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
+  },
+
+  validateProduct: async (req, res) => {
+    const { productName, productPrice, description, quantity, brand, childCategory_id, supplier_id } = req.query;
+
+    const errors = validateProductAttributes({ productName, productPrice, description, quantity, brand, childCategory_id, supplier_id });
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ errors });
+    }
+
+    res.status(200).json({ message: "Product data is valid." });
   }
+
 };
 
 module.exports = productController;

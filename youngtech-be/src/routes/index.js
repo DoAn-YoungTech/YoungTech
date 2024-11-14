@@ -9,7 +9,9 @@ const user = require('./user');
 const auth = require('./auth');
 const admin = require('./admin');
 const roles = require('./roles');
+const inputInvoiceRoutes = require('./inputInvoiceRoutes');
 const router = express.Router();
+
 
 router.use('/suppliers', supplierRoutes);
 router.use('/invoices', invoiceRouters);
@@ -20,4 +22,5 @@ router.use('/user', user);
 router.use('/admin', admin);
 router.use('/roles', roles);
 router.use('/product', productRoutes);
+router.use('/inputinvoice', inputInvoiceRoutes);
 module.exports = router;
