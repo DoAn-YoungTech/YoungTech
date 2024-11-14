@@ -1,4 +1,5 @@
 // models/userModel.js
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../configs/db');
 
@@ -47,4 +48,4 @@ const Customer = sequelize.define(
   }
 );
 
-module.exports = { Customer, sequelize };
+module.exports = {Customer, sequelize};

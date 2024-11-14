@@ -1,3 +1,4 @@
+
 const sequelize = require('../configs/db');
 
 const customerRepository = {

@@ -1,3 +1,4 @@
+
 const { Account } = require('./accountModel');
 const { Cart } = require('./cartModel');
 const { CartItem } = require('./cartItemModel');
@@ -21,7 +22,6 @@ const defineAssociations = () => {
   // Product - Image: One-to-Many
   Product.hasMany(Image, { foreignKey: 'product_id' });
   Image.belongsTo(Product, { foreignKey: 'product_id' });
-
   // Account - Customer: One-to-One
   Account.hasOne(Customer, { foreignKey: 'account_id' });
   Customer.belongsTo(Account, { foreignKey: 'account_id' });
@@ -41,6 +41,7 @@ const defineAssociations = () => {
   // CartItem - Product: One-to-One
   Product.hasMany(CartItem, { foreignKey: 'product_id' });
   CartItem.belongsTo(Product, { foreignKey: 'product_id' });
+
 
   // Comment - Product: One-to-Many
   Product.hasMany(Comment, { foreignKey: 'product_id' });
@@ -70,6 +71,7 @@ const defineAssociations = () => {
   Customer.hasMany(OutInvoice, { foreignKey: 'customer_id' });
   OutInvoice.belongsTo(Customer, { foreignKey: 'customer_id' });
 
+
   Supplier.hasMany(Product, { foreignKey: 'supplier_id' });
   Product.belongsTo(Supplier, { foreignKey: 'supplier_id' });
 
@@ -92,6 +94,7 @@ const defineAssociations = () => {
   ChildCategories.belongsTo(ParentCategories, {
     foreignKey: 'parentCategory_id',
   });
+
 
   // Account - RoleAccount: One-to-many
   Account.hasMany(roleAccount, { foreignKey: 'account_id' });

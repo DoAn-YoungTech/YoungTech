@@ -1,3 +1,4 @@
+ 
 const { query } = require('express');
 const sequelize = require('../configs/db');
 const cartRepository = {
@@ -183,3 +184,4 @@ const cartRepository = {
 };
 
 module.exports = cartRepository;
+ 
