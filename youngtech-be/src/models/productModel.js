@@ -33,6 +33,7 @@ const Product = sequelize.define(
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true,
     },
     createAt: {
       type: DataTypes.DATE,

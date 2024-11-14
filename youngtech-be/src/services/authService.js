@@ -35,11 +35,12 @@ const authService = {
   deleteRefreshTokenLogout: async (refreshToken) => {
     return await authRepository.deleteRefreshTokenLogout(refreshToken);
   },
-
-  // userIdCustomer: async (account) => {
-  //   return await authRepository.userIdCustomer(account);
-  // },
+  
+  userIdCustomer: async (account) => {
+    return await authRepository.userIdCustomer(account);
+  },
   // get getRoleId
+  
   getRoleId: async (userId) => {
     return await authRepository.getRoleId(userId);
   },

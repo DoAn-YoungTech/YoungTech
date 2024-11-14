@@ -7,8 +7,9 @@ const user = require('./user');
 const auth = require('./auth');
 const admin = require('./admin');
 const roles = require('./roles');
+const cart = require('./cart')
 const router = express.Router();
-
+ 
 router.use('/suppliers', supplierRoutes);
 router.use('/invoices', invoiceRouters);
 router.use('/employees', employeeRouter);
@@ -17,4 +18,5 @@ router.use('/auth', auth);
 router.use('/user', user);
 router.use('/admin', admin);
 router.use('/roles', roles);
+router.use('/cart', cart)
 module.exports = router;
