@@ -29,13 +29,21 @@ const productRepository = {
         const [result] = await sequelize.query(query, { replacements: { childCategoryId } });
         return result; // Trả về danh sách các sản phẩm tìm thấy
     },
-
-    createProduct: async () =>{
-        const query = `INSERT INTO product (productName, productPrice, description, quantity, brand, childCategory_id,supplier_id ) 
-        VALUES (:productName, :productPrice, :description, :quantity, :brand, :childCategory_id, :supplier_id)`;
-        const [result] = await sequelize.query(query, { replacements: data });
+    createProduct: async (data) => {
+        const flag = data.flag || false; // Mặc định flag là false
+        const createAt = new Date();    // Mặc định createdAt là thời gian hiện tại
+    
+        const query = `
+            INSERT INTO product (productName, productPrice, description, quantity, brand, childCategory_id, supplier_id, flag, createAt) 
+            VALUES (:productName, :productPrice, :description, :quantity, :brand, :childCategory_id, :supplier_id, :flag, :createAt)
+        `;
+        
+        const [result] = await sequelize.query(query, { replacements: { ...data, flag, createAt } });
         return result;
     },
+    
+
+
     deleteProduct: async (id) => {
         const query = `UPDATE product SET flag = true WHERE id = :id`;
         const [result] = await sequelize.query(query, { replacements: { id } });
