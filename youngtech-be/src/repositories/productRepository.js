@@ -30,12 +30,6 @@ const productRepository = {
         return result; // Trả về danh sách các sản phẩm tìm thấy
     },
 
-    createProduct: async () =>{
-        const query = `INSERT INTO product (productName, productPrice, description, quantity, brand, childCategory_id,supplier_id ) 
-        VALUES (:productName, :productPrice, :description, :quantity, :brand, :childCategory_id, :supplier_id)`;
-        const [result] = await sequelize.query(query, { replacements: data });
-        return result;
-    },
     deleteProduct: async (id) => {
         const query = `UPDATE product SET flag = true WHERE id = :id`;
         const [result] = await sequelize.query(query, { replacements: { id } });
@@ -48,23 +42,36 @@ const productRepository = {
         return result;
     },
       
-    updateProduct: async (id, data) => {
-        const query = `UPDATE product 
-                       SET productName = :productName, 
-                           productPrice = :productPrice, 
-                           description = :description, 
-                           quantity = :quantity, 
-                           brand = :brand, 
-                           childCategory_id = :childCategory_id, 
-                           supplier_id = :supplier_id 
-                       WHERE id = :id`;
-        
-        const [result] = await sequelize.query(query, { replacements: { ...data, id } });
-        return result;
+    getProductByName: async (productName) => {
+        const query = `SELECT * FROM product WHERE productName = :productName AND flag = true`;
+        const [result] = await sequelize.query(query, {
+          replacements: { productName }
+        });
+        return result[0]; 
       },
+    
+  
+      updateProduct: async (id, data) => {
+        const query = `UPDATE product SET quantity = :quantity WHERE id = :id`;
+        await sequelize.query(query, { replacements: { ...data, id } });
+      },
+    
+      
+      createProduct: async (productData) => {
+        const query = `INSERT INTO product (productName, quantity, description, productPrice, brand, childCategory_id, supplier_id, flag, createAt) 
+          VALUES (:productName, :quantity, :description, :productPrice, :brand, :childCategory_id, :supplier_id, true, :createAt)`;
+        
+        productData.createAt = new Date();
+    
+        await sequelize.query(query, { replacements: productData });
+    }
+
+
+    };
+    
       
 
 
-};
+
 
 module.exports = productRepository;
