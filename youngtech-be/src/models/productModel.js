@@ -33,6 +33,7 @@ const Product = sequelize.define(
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true,
     },
     createAt: {
       type: DataTypes.DATE,
@@ -60,4 +61,4 @@ const Product = sequelize.define(
   }
 );
 
-module.exports = { Product, sequelize };
+module.exports = {Product, sequelize};
