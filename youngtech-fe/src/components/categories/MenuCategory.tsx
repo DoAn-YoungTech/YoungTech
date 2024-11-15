@@ -61,7 +61,7 @@ const MenuCategory = () => {
             style={textColor}
             className="p-0 z-100 fixed top-[100px] left-0 w-[50%] h-screen border bg-white shadow-2xl"
           >
-            {DataCategory.map((cate: any) => (
+            {data.map((cate: any) => (
               <li key={cate.id} className=" w-full">
                 <button
                   type="button"

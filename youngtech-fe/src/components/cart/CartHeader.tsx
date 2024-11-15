@@ -5,10 +5,10 @@ const CartHeader: React.FC = () => (
     <input type="checkbox" className="mr-2" />
     <span className="font-semibold">Sản Phẩm</span>
     </div>
-    <div className=" w-[10%] text-center">Đơn Giá</div>
-    <div className="w-[10%] text-center">Số Lượng</div>
-    <div className="w-[10%] text-center">Số Tiền</div>
-    <div className="w-[10%] text-center">Thao Tác</div>
+    <div className=" w-[10%] text-center hidden lg:block">Đơn Giá</div>
+    <div className="w-[10%] text-center hidden lg:block">Số Lượng</div>
+    <div className="w-[10%] text-center hidden lg:block">Số Tiền</div>
+    <div className="w-[10%] text-center hidden lg:block">Thao Tác</div>
   </div>
 );
 
