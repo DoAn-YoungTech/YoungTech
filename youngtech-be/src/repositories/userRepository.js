@@ -21,7 +21,7 @@ const userRepository = {
     const data = {
       userName: userName,
       email: email,
-    }; 
+    };
     const query = `UPDATE account SET userName = :userName, email = :email  WHERE id = :id`;
 
     const [result] = await sequelize.query(query, {

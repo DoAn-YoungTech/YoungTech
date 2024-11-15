@@ -145,7 +145,6 @@ const cartController = {
       return res.status(500).json({ message: err });
     }
   },
-
   // edit  cart
   editCart: async (req, res) => {
     try {
@@ -171,5 +170,6 @@ const cartController = {
       res.status(500).json({ message: err });
     }
   },
+  
 };
 module.exports = cartController;
