@@ -14,24 +14,24 @@ const Customer = sequelize.define(
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: true,
     },
     fullName: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: false,
       defaultValue: '',
     },
     phoneNumber: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: false,
       defaultValue: '',
     },
     address: {
       type: DataTypes.STRING,
       allowNull: true,
-      unique: true,
+      unique: false,
       defaultValue: '',
     },
     account_id: {

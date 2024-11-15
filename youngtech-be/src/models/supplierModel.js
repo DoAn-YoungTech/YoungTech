@@ -12,8 +12,8 @@ const Supplier = sequelize.define(
     },
     flag: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
-
+      allowNull: false, 
+      defaultValue: true, 
     },
     supplierName: {
       type: DataTypes.STRING,

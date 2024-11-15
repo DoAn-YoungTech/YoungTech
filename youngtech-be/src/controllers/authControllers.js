@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const authController = {
   register: async (req, res) => {
     try {
-      const { userName, email, password  } = req.body;
+      const { userName, email, password } = req.body;
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
       // check email
@@ -15,8 +15,8 @@ const authController = {
           .status(403)
           .json({ message: `Email exist ! Please create new email !` });
       }
-
       const account = await authService.register(userName, email, hashPassword);
+      //id
       console.log(account);
       if (!account) {
         return res.status(404).json({ message: 'Registration failed' });
@@ -28,17 +28,17 @@ const authController = {
       await authService.assignRolesToAccount(roleIds, account);
 
       // add user to customer
-      // const addUserCustomer = await authService.userIdCustomer(account);
+      const addUserCustomer = await authService.userIdCustomer(account);
 
-      // if (!addUserCustomer) {
-      //   return res
-      //     .status(403)
-      //     .json({ message: 'Can not add account_id in customer ' });
-      // }
-
+      console.log(addUserCustomer);
+      if (!addUserCustomer) {
+        return res
+          .status(403)
+          .json({ message: 'Can not add account_id in customer ' });
+      }
       return res.status(201).json({ message: 'Register success !' });
     } catch (err) {
-      return res.status(500).json({ message: err.message });
+      return res.status(500).json({ message: err });
     }
   },
 
@@ -124,7 +124,7 @@ const authController = {
         res.status(200).json({ ...others, accessToken, refreshToken });
       }
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ message: err });
     }
   },
 

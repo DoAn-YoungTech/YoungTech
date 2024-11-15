@@ -1,61 +1,95 @@
+ 
 const cartRepository = require('../repositories/cartRepository');
-const orderService = require('../services/orderService'); // Import orderService để tạo đơn hàng
-const orderDetailService = require('../services/orderDetailService'); // Import để tạo chi tiết đơn hàng
-const cartItemService = require('../services/cartItemServices'); // Import để lấy cart items
 
 const cartService = {
-  getAllCart: async () => {
-    return await cartRepository.getAllCart();
+  addCustomerToCart: async (customer_id) => {
+    return await cartRepository.addCustomerToCart(customer_id);
   },
 
-  getCartById: async (id) => {
-    return await cartRepository.getCartById(id);
+  //checkProduct
+
+  getCustomerIdByAccountId: async (user_id) => {
+    return await cartRepository.getCustomerIdByAccountId(user_id);
+  },
+  // checkCartItem
+
+  checkCartItem: async (cart_id, product_id) => {
+    return await cartRepository.checkCartItem(cart_id, product_id);
   },
 
-  createCart: async (data) => {
-    return await cartRepository.createCart(data);
+  // updateQuantity
+
+  updateQuantity: async (quantity, cart_id) => {
+    return await cartRepository.updateQuantity(quantity, cart_id);
   },
 
-  deleteCart: async (id) => {
-    return await cartRepository.deleteCart(id); // Xóa cứng
-  },
-  
-
-  updateCart: async (id, data) => {
-    return await cartRepository.updateCart(id, data);
+  //   addProToCart(quantity , cart_id , product_id)
+  addProToCart: async (quantity, cart_id, product_id) => {
+    return await cartRepository.addProToCart(quantity, cart_id, product_id);
   },
 
-  placeOrder: async (id) => {  // Thêm hàm mới này
-    const cart = await cartRepository.getCartById(id);
-    if (!cart) return null;
+  //checkCustomer(customer_id)
 
-    // Lấy tất cả các mục trong giỏ hàng
-    const cartItems = await cartItemService.getCartItemId(id);
-    if (!cartItems.length) return null;
+  checkCustomer: async (customer_id) => {
+    return await cartRepository.checkCustomer(customer_id);
+  },
 
-    // Tạo đơn hàng từ giỏ hàng
-    const orderData = {
-      customer_id: cart.customer_id,
-      status: "pending",
-      totalAmount: cart.totalAmount
-    };
-    const newOrder = await orderService.createOrder(orderData);
+  // viewCart
 
-    // Thêm các mục giỏ hàng vào chi tiết đơn hàng
-    for (const item of cartItems) {
-      const orderDetailData = {
-        order_id: newOrder.id,
-        product_id: item.product_id,
-        quantity: item.quantity,
-        price: item.price
-      };
-      await orderDetailService.createOrderDetail(orderDetailData);
-    }
+  viewCart: async (cartId) => {
+    return await cartRepository.viewCart(cartId);
+  },
 
-    // Xóa mềm giỏ hàng sau khi chuyển thành đơn hàng
-    await cartRepository.deleteCart(id, { flag: true });
-    return newOrder;
+  // getCustomerId(userId)
+
+  getCustomerId: async (userId) => {
+    return await cartRepository.getCustomerId(userId);
+  },
+
+  // getCartId(getCustomerId)
+  getCartId: async (getCustomerId) => {
+    return await cartRepository.getCartId(getCustomerId);
+  },
+
+  // removeProduct(productId)
+  removeProduct: async (productId, getCartIdByCustomerId) => {
+    return await cartRepository.removeProduct(productId, getCartIdByCustomerId);
+  },
+
+  // checkCartItem
+  checkProductExist: async (productId) => {
+    return await cartRepository.checkProductExist(productId);
+  },
+
+  // checkCustomerId(productId)
+  checkCustomerId: async (userId) => {
+    return await cartRepository.checkCustomerId(userId);
+  },
+  // getCartIdByCustomerId(customerId)
+
+  getCartIdByCustomerId: async (customerId) => {
+    return await cartRepository.getCartIdByCustomerId(customerId);
+  },
+
+  // checkCustomerExistInCart(getCustomerId)
+  checkCustomerExistInCart: async (getCustomerId) => {
+    return await cartRepository.checkCustomerExistInCart(getCustomerId)
+  },
+
+  // checkUserExist(userId)
+  checkUserExist: async (userId) => {
+   return await cartRepository.checkUserExist(userId);
+  },
+
+  // getIdCart
+  getIdCart : async (customerId) => {
+   return await cartRepository.getIdCart(customerId)
+  },
+
+  // updateProduct(getProductId) 
+  updateProduct : async (quantity, getProductId) => {
+    return await cartRepository.updateProduct(quantity, getProductId)
   }
 };
 
-module.exports = cartService;
+ 
