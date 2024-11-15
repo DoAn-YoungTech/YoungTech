@@ -1,3 +1,4 @@
+
 // models/userModel.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configs/db");
@@ -18,6 +19,10 @@ const InputInvoice = sequelize.define(
 
     totalAmount: {
       type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    linkPdf: {
+      type: DataTypes.STRING,
       allowNull: false
     },
 

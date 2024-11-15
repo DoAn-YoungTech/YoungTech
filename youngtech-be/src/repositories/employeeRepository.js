@@ -1,3 +1,4 @@
+
 const sequelize = require('../configs/db');
 const dayjs = require('dayjs');
 const employeeRepository = {
@@ -70,3 +71,4 @@ const employeeRepository = {
 };
 
 module.exports = employeeRepository;
+

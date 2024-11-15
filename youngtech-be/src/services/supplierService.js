@@ -1,8 +1,12 @@
 const supplierRepository = require("../repositories/supplierRepository");
 
 const supplierService = {
-  getAllSuppliers: async () => {
-    return await supplierRepository.getAllSuppliers();
+  getAllSuppliers: async (offset, limit) => {
+    return await supplierRepository.getAllSuppliers({ offset, limit });
+  },
+
+  getSupplierById: async (id) => {
+    return await supplierRepository.getSupplierById(id);
   },
 
   createSupplier: async (supplierData) => {
@@ -17,9 +21,11 @@ const supplierService = {
     return await supplierRepository.deleteSupplier(id);
   },
 
-  getSupplierById: async (id) => {
-    return await supplierRepository.getSupplierById(id);
+  restoreSupplier: async (id) => {
+    return await supplierRepository.restoreSupplier(id);
   }
+
+  
 };
 
 module.exports = supplierService;

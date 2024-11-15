@@ -27,7 +27,7 @@ const customerRepository = {
     }
   },
 
-  //checkAccountExist(userId) 
+  //checkAccountExist(userId)
   checkAccountExist: async (userId) => {
     try {
       const query = `SELECT * FROM customer  WHERE id = :id AND flag = ${true}`;
@@ -42,7 +42,7 @@ const customerRepository = {
     }
   },
 
-  // editCustomer(checkUserIdExist) 
+  // editCustomer(checkUserIdExist)
   editCustomer: async (customerId, updateData) => {
     let query = `UPDATE customer SET `;
     const fields = [];

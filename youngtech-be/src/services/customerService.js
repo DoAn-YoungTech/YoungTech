@@ -19,14 +19,14 @@ const customerService = {
 
   // editCustomer(checkUserIdExist)
 
-  editCustomer: async (checkUserIdExist , updateData) => {
-    return await customerRepository.editCustomer(checkUserIdExist , updateData);
+  editCustomer: async (checkUserIdExist, updateData) => {
+    return await customerRepository.editCustomer(checkUserIdExist, updateData);
   },
 
-  // deleteCustomer(checkUserIdExist) 
-  deleteCustomer : async (checkUserIdExist) => {
-    return await customerRepository.deleteCustomer(checkUserIdExist)
-  }
+  // deleteCustomer(checkUserIdExist)
+  deleteCustomer: async (checkUserIdExist) => {
+    return await customerRepository.deleteCustomer(checkUserIdExist);
+  },
 };
 
 module.exports = customerService;

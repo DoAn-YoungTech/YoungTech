@@ -13,12 +13,14 @@ const ParentCategories = sequelize.define(
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+
       defaultValue: true,
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+
   },
   {
     tableName: 'ParentCategories',

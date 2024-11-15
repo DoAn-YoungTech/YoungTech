@@ -14,6 +14,10 @@ const Employee = sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: false
     },
+    flag: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+  },
     fullName: {
       type: DataTypes.STRING,
       allowNull: false,

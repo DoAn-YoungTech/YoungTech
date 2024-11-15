@@ -16,13 +16,17 @@ customerRoutes.put(
   customerController.addInformationCustomer
 );
 
-// edit information 
+// edit information
 customerRoutes.patch(
-    '/editCustomer/:id', middlewareController.verifyToken , customerController.editCustomer
-)
+  '/editCustomer/:id',
+  middlewareController.verifyToken,
+  customerController.editCustomer
+);
 
-// delete soft 
+// delete soft
 customerRoutes.patch(
-    '/softDelete/:id', middlewareController.verifyToken , customerController.softDelete
-)
+  '/softDelete/:id',
+  middlewareController.verifyToken,
+  customerController.softDelete
+);
 module.exports = customerRoutes;
