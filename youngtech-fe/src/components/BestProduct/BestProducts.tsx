@@ -30,7 +30,7 @@ const BestProducts: React.FC = () => {
   return (
     <>
       <TitleHome title="Sản phẩm bán chạy nhất" />
-      <div className="w-full bg-white p-5">
+      <div className="w-full bg-white ">
       <ItemProducts DataProducts={visibleProducts} loading={loading}/>
       <SeeMore />
       </div>

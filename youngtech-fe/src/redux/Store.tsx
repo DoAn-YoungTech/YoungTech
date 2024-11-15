@@ -3,14 +3,14 @@ import commentReducer from './Comment/commentSlice';
 import productReducer from './Product/productSlice';
 import categoryParentReducer from './Category/categoryParentSlice';
 import categoryChildReducer from './Category/categoryChildSlice';
-
+import addRessReducer from './Address/addressSlice'
 
 const rootReducer = combineReducers({
   comments: commentReducer,
   products: productReducer,
   categories_parent: categoryParentReducer,
   categories_child: categoryChildReducer,
-
+  address : addRessReducer
 
  
 });
