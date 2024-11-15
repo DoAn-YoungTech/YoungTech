@@ -23,10 +23,11 @@ const userController = {
     try {
       const userId = req.user.id;
       console.log(userId);
-      const { userName, email  } = req.body;
+      const { userName, email } = req.body;
+      console.log(userName, email);
       // check in data exist userID
 
-      if ((userName === '' || email === '' )) {
+      if (userName === '' || email === '') {
         return res
           .status(403)
           .json({ message: 'Please enter information personal! ' });
@@ -43,9 +44,11 @@ const userController = {
       // Start enter information userId
 
       const enterInformation = await userService.enterInformation(
-        userName, email, 
+        userName,
+        email,
         userId
       );
+      console.log(enterInformation);
 
       if (!enterInformation) {
         return res
@@ -53,7 +56,7 @@ const userController = {
           .json({ message: 'Please enter information personal' });
       }
 
-      res.status(200).json({ message: 'Create information success !' });
+      res.status(200).json({ message: 'update information success !' });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
