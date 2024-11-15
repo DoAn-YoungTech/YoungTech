@@ -30,17 +30,50 @@ const productRepository = {
         return result; // Trả về danh sách các sản phẩm tìm thấy
     },
     createProduct: async (data) => {
-        const flag = data.flag || false; // Mặc định flag là false
-        const createAt = new Date();    // Mặc định createdAt là thời gian hiện tại
+        const flag = data.flag || false; // Default flag is false
+        const createAt = new Date();    // Default createdAt is current time
     
-        const query = `
-            INSERT INTO product (productName, productPrice, description, quantity, brand, childCategory_id, supplier_id, flag, createAt) 
-            VALUES (:productName, :productPrice, :description, :quantity, :brand, :childCategory_id, :supplier_id, :flag, :createAt)
-        `;
-        
-        const [result] = await sequelize.query(query, { replacements: { ...data, flag, createAt } });
-        return result;
+        // Start transaction
+        const transaction = await sequelize.transaction();
+    
+        try {
+            // Insert new product into the 'product' table
+            const productQuery = `
+                INSERT INTO product (productName, productPrice, description, quantity, brand, childCategory_id, supplier_id, flag, createAt) 
+                VALUES (:productName, :productPrice, :description, :quantity, :brand, :childCategory_id, :supplier_id, :flag, :createAt)
+            `;
+            const [productResult] = await sequelize.query(productQuery, { 
+                replacements: { ...data, flag, createAt },
+                transaction 
+            });
+    
+            // Ensure productResult contains the expected ID
+            const productId = productResult?.[0]?.id || (await sequelize.query('SELECT LAST_INSERT_ID() AS id', { type: sequelize.QueryTypes.SELECT, transaction }));
+            const product_id = productId[0].id;
+    
+            // Insert image into 'image' table with foreign key 'product_id'
+            const imageQuery = `
+                INSERT INTO image (imageUrl, flag, product_id) 
+                VALUES (:imageUrl, 0, :product_id)
+            `;
+            await sequelize.query(imageQuery, { 
+                replacements: { imageUrl: data.imageUrl, product_id },
+                transaction 
+            });
+    
+            // Commit the transaction
+            await transaction.commit();
+            return productResult;
+        } catch (error) {
+            // Rollback transaction in case of an error
+            console.error('Error during product creation:', error); // Log error details
+            await transaction.rollback();
+            throw error;
+        }
     },
+    
+    
+    
     
 
 
