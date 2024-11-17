@@ -1,8 +1,8 @@
-import EmployeeActions from "@/components/dashboard/employee/EmployeeMain"
+import EmployeeMain from "@/components/dashboard/employee/EmployeeMain"
 
 const page = () => {
   return (
-   <EmployeeActions/>
+   <EmployeeMain/>
   )
 }
 

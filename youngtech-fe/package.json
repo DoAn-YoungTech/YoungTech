@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "server": "json-server --watch data.json --port 4000"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -39,6 +40,7 @@
     "tailwind-merge": "^2.5.4",
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss-animate": "^1.0.7",
+    "youngtech-fe": "file:",
     "yup": "^1.4.0"
   },
   "devDependencies": {

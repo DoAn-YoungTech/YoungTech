@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button"; // Giữ nguyên Button
 import { Input } from "@/components/ui/input"; // Giữ nguyên Input
+import { useForm } from "react-hook-form"; // Import react-hook-form
 
 // Định nghĩa interface cho Employee
 interface Employee {
@@ -22,91 +23,102 @@ interface AddEmployeeProps {
   onAdd: (employee: Employee) => void;
 }
 
-// Chỉ định kiểu cho AddEmployee
 const AddEmployee: React.FC<AddEmployeeProps> = ({ isOpen, onClose, onAdd }) => {
-  const [fullName, setFullName] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [position, setPosition] = useState("");
-  const [account_id, setAccountId] = useState<number | null>(null);
+  // Initialize the useForm hook
+  const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<Employee>({
+    defaultValues: {
+      fullName: "",
+      profilePicture: "",
+      dateOfBirth: "",
+      phoneNumber: "",
+      position: "",
+      account_id: null,
+    },
+  });
 
-  const handleSubmit = () => {
-    // Kiểm tra tất cả các trường thông tin
-    if (!fullName || !profilePicture || !dateOfBirth || !phoneNumber || !position) {
-      alert("Vui lòng điền tất cả các trường thông tin.");
-      return;
-    }
-
-    const newEmployee: Employee = {
-      id: Date.now(),
+  // Handle form submission
+  const onSubmit = (data: Employee) => {
+    const newEmployee = {
+      ...data,
+      id: Date.now(), // Generate a unique id based on the current timestamp
       flag: true,
-      fullName,
-      profilePicture,
-      dateOfBirth: new Date(dateOfBirth),
-      phoneNumber,
-      position,
-      account_id,
+      dateOfBirth: new Date(data.dateOfBirth), // Ensure date is a Date object
     };
 
-    // Gọi hàm onAdd để thêm nhân viên
-    onAdd(newEmployee);
-    resetFields();
+    onAdd(newEmployee); // Pass the new employee to the parent
+    reset(); // Reset the form fields
+    onClose(); // Close the modal
   };
 
-  const resetFields = () => {
-    // Đặt lại các trường thông tin
-    setFullName("");
-    setProfilePicture("");
-    setDateOfBirth("");
-    setPhoneNumber("");
-    setPosition("");
-    setAccountId(null);
-    onClose(); // Đóng modal
-  };
-
-  if (!isOpen) return null; // Không hiển thị nếu không mở
+  // If the modal is not open, don't render the component
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-lg font-bold mb-4">Thêm Nhân Viên</h2>
-        <Input
-          placeholder="Họ tên"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-        />
-        <Input
-          placeholder="Ảnh đại diện"
-          value={profilePicture}
-          onChange={(e) => setProfilePicture(e.target.value)}
-        />
-        <Input
-          type="date"
-          placeholder="Ngày sinh"
-          value={dateOfBirth}
-          onChange={(e) => setDateOfBirth(e.target.value)}
-        />
-        <Input
-          placeholder="Số điện thoại"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-        />
-        <Input
-          placeholder="Chức vụ"
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
-        />
-        <Input
-          type="number"
-          placeholder="Account ID"
-          value={account_id || ""}
-          onChange={(e) => setAccountId(e.target.value ? Number(e.target.value) : null)}
-        />
-        <div className="flex justify-end mt-4">
-          <Button onClick={handleSubmit} className="mr-2">Lưu</Button>
-          <Button onClick={resetFields}>Hủy</Button>
-        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Full Name */}
+          <div>
+            <Input
+              placeholder="Họ tên"
+              {...register("fullName", { required: "Họ tên là bắt buộc" })}
+            />
+            {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName.message}</p>}
+          </div>
+
+          {/* Profile Picture */}
+          <div>
+            <Input
+              placeholder="Ảnh đại diện"
+              {...register("profilePicture", { required: "Ảnh đại diện là bắt buộc" })}
+            />
+            {errors.profilePicture && <p className="text-red-500 text-sm">{errors.profilePicture.message}</p>}
+          </div>
+
+          {/* Date of Birth */}
+          <div>
+            <Input
+              type="date"
+              placeholder="Ngày sinh"
+              {...register("dateOfBirth", { required: "Ngày sinh là bắt buộc" })}
+            />
+            {errors.dateOfBirth && <p className="text-red-500 text-sm">{errors.dateOfBirth.message}</p>}
+          </div>
+
+          {/* Phone Number */}
+          <div>
+            <Input
+              placeholder="Số điện thoại"
+              {...register("phoneNumber", { required: "Số điện thoại là bắt buộc" })}
+            />
+            {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
+          </div>
+
+          {/* Position */}
+          <div>
+            <Input
+              placeholder="Chức vụ"
+              {...register("position", { required: "Chức vụ là bắt buộc" })}
+            />
+            {errors.position && <p className="text-red-500 text-sm">{errors.position.message}</p>}
+          </div>
+
+          {/* Account ID */}
+          <div>
+            <Input
+              type="number"
+              placeholder="Account ID"
+              {...register("account_id", { valueAsNumber: true })}
+            />
+            {errors.account_id && <p className="text-red-500 text-sm">{errors.account_id.message}</p>}
+          </div>
+
+          <div className="flex justify-end mt-4">
+            <Button type="submit" className="mr-2">Lưu</Button>
+            <Button type="button" onClick={() => { reset(); onClose(); }}>Hủy</Button>
+          </div>
+        </form>
       </div>
     </div>
   );
