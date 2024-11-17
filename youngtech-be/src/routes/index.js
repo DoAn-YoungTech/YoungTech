@@ -7,6 +7,8 @@ const employeeRouter = require('./employeeRouter');
 const customerRoutes = require('./customerRoutes');
 const productRoutes = require('./productRoutes');
 const inputInvoiceRoutes = require('./inputInvoiceRoutes');
+const parentCategoriesRouters = require('./parentCategoriesRoutes')
+const childCategoriesRouters = require('./childCategoriesRoutes')
 const user = require('./user');
 const auth = require('./auth');
 const admin = require('./admin');
@@ -24,6 +26,8 @@ router.use('/admin', admin);
 router.use('/roles', roles);
 router.use('/cart', cart)
 router.use('/product', productRoutes);
+router.use('/childcategories',childCategoriesRouters);
+router.use('/parencategories',parentCategoriesRouters);
 router.use('/inputinvoice', inputInvoiceRoutes);
 module.exports = router;
  

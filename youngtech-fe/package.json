@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "server": "npx json-server --watch data.json --port 4000"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -24,6 +25,7 @@
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.3.1",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
@@ -38,9 +40,11 @@
     "react-redux": "^9.1.2",
     "react-toastify": "^10.0.6",
     "recharts": "^2.13.3",
+    "swiper": "^11.1.14",
     "tailwind-merge": "^2.5.4",
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-motion": "^0.4.3-beta",
     "vietnam-provinces": "^0.0.4",
     "yup": "^1.4.0"
   },

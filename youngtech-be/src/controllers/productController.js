@@ -5,10 +5,14 @@ const productController = {
   getAllProduct: async (req, res) => {
    try{
     // lấy tham số phân trang 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 2;
+    const page = parseInt(req.query.page) || null;
+    const limit = parseInt(req.query.limit) || null;
     // Tính toán offset dựa trên page và limit
-    const offset = (page - 1) * limit;  
+    if(page) {
+      var offset = (page - 1) * limit; 
+    } else{
+      var offset =0
+    }
     // gọi service lấy tất cả sản phẩm với phân trang
     const result = await productService.getAllProduct({ offset, limit });
     if (!result || result.data.length === 0) {

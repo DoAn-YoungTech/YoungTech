@@ -23,13 +23,12 @@ const Carousels = () => {
   return (
     <section className="category hidden lg:block w-full">
       <div className="w-full">
-        <div className="relative  h-screen" style={{ zIndex: 0 }}>
+        <div className="relative h-[500px]" style={{ zIndex: 0 }}>
           {listImage.map((item, index) => (
             <div
               key={item.id}
-              className={`absolute top-0 left-0  w-full h-full transition-opacity duration-500 ${
-                index === currentIndex ? "opacity-100" : "opacity-0" 
-               
+              className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ${
+                index === currentIndex ? "opacity-100" : "opacity-0"
               }`}
               style={{ zIndex: 0 }}
             >
