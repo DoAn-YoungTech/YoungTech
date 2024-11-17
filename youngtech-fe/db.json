@@ -1,0 +1,127 @@
+{
+  "parent-categories": [
+    {
+      "id": "1",
+      "flag": true,
+      "name": "Điện tử"
+    },
+    {
+      "id": "2",
+      "flag": false,
+      "name": "Thời trang1"
+    },
+    {
+      "id": "3",
+      "flag": true,
+      "name": "Nhà cửa"
+    },
+    {
+      "id": "4",
+      "flag": false,
+      "name": "Thực phẩm"
+    },
+    {
+      "id": "5",
+      "flag": false,
+      "name": "Sức khỏe"
+    },
+    {
+      "flag": false,
+      "name": "máy tính2",
+      "id": "6"
+    },
+    {
+      "flag": false,
+      "name": "điện thoại",
+      "id": "7"
+    },
+    {
+      "id": "718d",
+      "flag": false,
+      "name": "máy tính222"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "1",
+      "flag": true,
+      "supplierName": "ABC Supplies Com",
+      "contactName": "John Doe",
+      "phoneNumber": "123-456-7890",
+      "email": "johndoe@abcsupplies.com",
+      "address": "123 Main St, Cityville"
+    },
+    {
+      "id": "2",
+      "flag": false,
+      "supplierName": "XYZ Trading Ltd.",
+      "contactName": "Jane Smith",
+      "phoneNumber": "987-654-3210",
+      "email": "janesmith@xyztrading.com",
+      "address": "456 Market St, Townsville"
+    },
+    {
+      "id": "3",
+      "flag": true,
+      "supplierName": "Global Parts Inc.",
+      "contactName": "Alice Brown",
+      "phoneNumber": "555-123-4567",
+      "email": "alicebrown@globalparts.com",
+      "address": "789 Industrial Ave, Metropolis"
+    },
+    {
+      "id": "4",
+      "flag": false,
+      "supplierName": "Quality Goods LLC",
+      "contactName": "Bob Johnson",
+      "phoneNumber": "444-555-6666",
+      "email": "bobjohnson@qualitygoods.com",
+      "address": "321 Elm St, Smalltown"
+    },
+    {
+      "id": "5",
+      "flag": false,
+      "supplierName": "Tech Wholesale",
+      "contactName": "Charles Green",
+      "phoneNumber": "222-333-4444",
+      "email": "charlesgreen@techwholesale.com",
+      "address": "555 Tech Blvd, Innovate City"
+    },
+    {
+      "id": "6",
+      "flag": false,
+      "supplierName": "Fresh Produce Co.",
+      "contactName": "Debra White",
+      "phoneNumber": "666-777-8888",
+      "email": "debrawhite@freshproduce.com",
+      "address": "789 Orchard Ln, Farmland"
+    },
+    {
+      "id": "7",
+      "flag": true,
+      "supplierName": "Building Solutions Ltd.",
+      "contactName": "Edward King",
+      "phoneNumber": "999-000-1111",
+      "email": "edwardking@buildingsolutions.com",
+      "address": "654 Construction Rd, Builder City"
+    },
+    {
+      "id": "8",
+      "flag": false,
+      "supplierName": "Office Essentials Inc.",
+      "contactName": "Fiona Clarke",
+      "phoneNumber": "333-444-5555",
+      "email": "fionaclarke@officeessentials.com",
+      "address": "456 Corporate Dr, Business Bay"
+    },
+    {
+      "id": "9",
+      "flag": true,
+      "supplierName": "Fashion World",
+      "contactName": "George Martinez",
+      "phoneNumber": "888-999-0000",
+      "email": "georgemartinez@fashionworld.com",
+      "address": "123 Fashion Ave, Style City"
+    }
+  ]
+}
