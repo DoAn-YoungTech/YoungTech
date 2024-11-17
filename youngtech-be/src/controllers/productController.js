@@ -2,32 +2,43 @@ const productService = require('../services/productService');
 const validateProductAttributes = require('../validate/productValidator')
 
 const productController = {
+  // gọi  imageService để lấy ra danh sách ảnh, rồi cho danh sách ảnh vào product  
   getAllProduct: async (req, res) => {
-   try{
-    // lấy tham số phân trang 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 2;
-    // Tính toán offset dựa trên page và limit
-    const offset = (page - 1) * limit;  
-    // gọi service lấy tất cả sản phẩm với phân trang
-    const result = await productService.getAllProduct({ offset, limit });
-    if (!result || result.data.length === 0) {
-      return res.status(404).json({ message: 'No products found' });
+    try {
+      // lấy tham số phân trang 
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 2;
+      
+      // Tính toán offset dựa trên page và limit
+      const offset = (page - 1) * limit;  
+      
+      // gọi service lấy tất cả sản phẩm với phân trang
+      const result = await productService.getAllProduct({ offset, limit });
+      
+      if (!result || result.data.length === 0) {
+        return res.status(404).json({ message: 'No products found' });
+      }
+      
+      // Cập nhật kết quả trả về, gộp hình ảnh vào trong từng sản phẩm
+      const productsWithImages = result.data.map(product => ({
+        ...product,
+        images: product.images || []  // Nếu không có hình ảnh thì để là mảng rỗng
+      }));
+      
+      // trả về kết quả phân trang và các hình ảnh của sản phẩm
+      res.json({
+        message: 'All products',
+        data: productsWithImages,
+        pagination: {
+          page,
+          limit,
+          totalItems: result.totalItems,
+          totalPages: Math.ceil(result.totalItems / limit),
+        },
+      });
+    } catch (err) {
+      res.status(500).json({ message: 'Internal Server Error', error: err.message });
     }
-    // trả về kết quả phân trang
-    res.json({
-      message: 'All products',
-      data: result.data,
-      pagination: {
-        page,
-        limit,
-        totalItems: result.totalItems,
-        totalPages: Math.ceil(result.totalItems / limit),
-      },
-    });
-   }catch(err){
-    res.status(500).json({ message: 'Internal Server Error', error: err.message });
-   }
   },
 
   getProductById: async (req, res) => {

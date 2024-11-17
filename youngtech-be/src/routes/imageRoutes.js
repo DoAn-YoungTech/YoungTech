@@ -14,4 +14,6 @@ imageRoutes.delete("/:id", imageController.deleteImage);
 
 imageRoutes.put("/:id/restore", imageController.restoreImage);
 
+imageRoutes.get("/product/:productId", imageController.getImageByProductId);
+
 module.exports = imageRoutes;

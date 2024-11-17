@@ -9,6 +9,7 @@ const customerRoutes = require('./customerRoutes');
 const productRoutes = require('./productRoutes');
 const imageRoutes = require('./imageRoutes');
 const inputInvoiceRoutes = require('./inputInvoiceRoutes');
+const outinvoiceRoutes = require('./outinvoiceRoutes');
 const user = require('./user');
 const auth = require('./auth');
 const admin = require('./admin');
@@ -28,6 +29,7 @@ router.use('/cart', cart)
 router.use('/product', productRoutes);
 router.use('/images', imageRoutes);
 router.use('/inputinvoice', inputInvoiceRoutes);
+router.use('/outinvoice', outinvoiceRoutes);
 module.exports = router;
  
  

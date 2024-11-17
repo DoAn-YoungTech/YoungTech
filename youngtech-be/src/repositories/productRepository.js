@@ -1,34 +1,86 @@
 const sequelize = require('../configs/db');
 
 const productRepository = {
-    getAllProduct: async ({ offset, limit }) =>{
-        const query = `SELECT * FROM product LIMIT :limit OFFSET :offset`;
+    getAllProduct: async ({ offset, limit }) => {
+        // Truy vấn lấy danh sách sản phẩm với hình ảnh
+        const query = `
+        SELECT p.*, GROUP_CONCAT(pi.imageUrl) AS imageUrls
+        FROM product p
+        LEFT JOIN image pi ON p.id = pi.product_id
+        GROUP BY p.id
+        LIMIT :limit OFFSET :offset;
+
+        `;
         const [result] = await sequelize.query(query, {
             replacements: { limit, offset }
         });
     
-        // Lấy tổng số sp để tính tổng số trang
+        // Truy vấn lấy tổng số sản phẩm để tính tổng số trang
         const totalQuery = `SELECT COUNT(*) AS totalItems FROM product`;
         const [totalResult] = await sequelize.query(totalQuery);
         const totalItems = totalResult[0].totalItems;
     
+        // Nhóm các hình ảnh lại theo product_id
+        const productsWithImages = result.reduce((acc, product) => {
+            // Kiểm tra nếu sản phẩm chưa có trong accumulator
+            if (!acc[product.id]) {
+                acc[product.id] = { ...product, images: [] };
+            }
+            // Thêm hình ảnh vào mảng images của sản phẩm
+            if (product.image_url) {
+                acc[product.id].images.push(product.image_url);
+            }
+            return acc;
+        }, {});
+    
+        // Chuyển kết quả thành mảng và trả về
+        const products = Object.values(productsWithImages);
+    
         return {
-            data: result,
+            data: products,
             totalItems
         };
     },
+    
     getProductById: async (id) => {
-        const query = `SELECT * FROM product WHERE id = :id`;
+        const query = `
+            SELECT p.*, GROUP_CONCAT(pi.imageUrl) AS imageUrls
+            FROM product p
+            LEFT JOIN image pi ON p.id = pi.product_id
+            WHERE p.id = :id
+            GROUP BY p.id
+        `;
         const [result] = await sequelize.query(query, { replacements: { id } });
-        return result[0];  // Trả về sản phẩm đầu tiên trong kết quả
+        return result[0];  // Trả về sản phẩm với tất cả các hình ảnh gộp lại trong cột 'imageUrls'
     },
     
-    // Thêm hàm mới để lấy sản phẩm theo childCategory_id
+    
     getProductByChildCategory: async (childCategoryId) => {
-        const query = `SELECT * FROM product WHERE childCategory_id = :childCategoryId`;
+        const query = `
+            SELECT p.*, GROUP_CONCAT(pi.imageUrl) AS imageUrls
+            FROM product p
+            LEFT JOIN image pi ON p.id = pi.product_id
+            WHERE p.childCategory_id = :childCategoryId
+            GROUP BY p.id
+        `;
         const [result] = await sequelize.query(query, { replacements: { childCategoryId } });
-        return result; // Trả về danh sách các sản phẩm tìm thấy
+        return result; // Trả về danh sách các sản phẩm với hình ảnh của mỗi sản phẩm
     },
+    getProductByParentCategory: async (parentCategoryId) => {
+        const query = `
+            SELECT p.*, GROUP_CONCAT(pi.imageUrl) AS imageUrls
+            FROM product p
+            JOIN childcategories c ON p.childCategory_id = c.id
+            LEFT JOIN image pi ON p.id = pi.product_id
+            WHERE c.parentCategory_id = :parentCategoryId
+            GROUP BY p.id
+        `;
+        const [result] = await sequelize.query(query, {
+            replacements: { parentCategoryId }
+        });
+        return result; // Trả về danh sách các sản phẩm với hình ảnh của mỗi sản phẩm
+    },
+    
     createProduct: async (data) => {
         const flag = data.flag || false; // Default flag is false
         const createAt = new Date();    // Default createdAt is current time

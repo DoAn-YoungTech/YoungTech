@@ -1,8 +1,12 @@
 const imageRepository = require('../repositories/imageRepository');
 
 const imageService = {
-    getAllImage: async ({ offset, limit }) => {
-        return await imageRepository.getAllImage({ offset, limit });
+    getAllImage: async () => {
+        return await imageRepository.getAllImage();
+    },
+    
+    getImageByProductId: async (productId) => {
+        return await imageRepository.getImageByProductId(productId);
     },
 
     getImageById: async (id) => {

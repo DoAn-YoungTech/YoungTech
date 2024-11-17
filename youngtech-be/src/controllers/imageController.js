@@ -1,34 +1,38 @@
 const imageService = require('../services/imageService');
 
 const imageController = {
-    getAllImage: async (req, res) => {
-      try {
-        // lấy tham số phân trang 
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 2;
-        // Tính toán offset dựa trên page và limit
-        const offset = (page - 1) * limit;  
-        // gọi service lấy tất cả hình ảnh với phân trang
-        const result = await imageService.getAllImage({ offset, limit });
-        if (!result || result.data.length === 0) {
-          return res.status(404).json({ message: 'No images found' });
-        }
-        // trả về kết quả phân trang
-        res.json({
-          message: 'All images',
-          data: result.data,
-          pagination: {
-            page,
-            limit,
-            totalItems: result.totalItems,
-            totalPages: Math.ceil(result.totalItems / limit),
-          },
-        });
-      } catch (err) {
-        res.status(500).json({ message: 'Internal Server Error', error: err.message });
+  getAllImage: async (req, res) => {
+    try {
+      const result = await imageService.getAllImage();
+      if (!result || result.data.length === 0) {
+        return res.status(404).json({ message: 'No images found' });
       }
-    },
-  
+      // trả về kết quả
+      res.json({
+        message: 'All images',
+        data: result.data
+      });
+    } catch (err) {
+      res.status(500).json({ message: 'Internal Server Error', error: err.message });
+    }
+  },
+
+  // getImagebyProductId trả về danh sách ảnh
+  getImageByProductId: async (req, res) => {
+    try {
+        const productId = req.params.productId; // Lấy productId từ URL params
+        const result = await imageService.getImageByProductId(productId); // Gọi phương thức từ service
+
+        if (!result || result.length === 0) {
+            return res.status(404).json({ message: 'No images found for the given product ID' });
+        }
+
+        return res.status(200).json({ message: 'Success', data: result });
+    } catch (err) {
+        console.error(err); // Log lỗi khi có sự cố
+        return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+    }
+},
     getImageById: async (req, res) => {
       try {
         const id = req.params.id;
@@ -44,6 +48,7 @@ const imageController = {
         return res.status(500).json({ message: 'Internal Server Error', error: err.message });
       }
     },
+ 
     updateImage: async (req, res) => {
         try {
           const id = req.params.id;
@@ -60,7 +65,7 @@ const imageController = {
           return res.status(500).json({ message: 'Internal Server Error', error: err.message });
         }
       },
-      
+ 
       createImage: async (req, res) => {
         try {
           const data = req.body;
