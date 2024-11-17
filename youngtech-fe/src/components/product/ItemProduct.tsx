@@ -26,7 +26,7 @@ export const ItemProduct = ({item}) => {
             height={250}
           />
         </div>
-        <h3 className='pt-5 font-semibold transition-colors duration-500 group-hover:text-blue-600 w-full'>
+        <h3 className='pt-5 text-[14px] font-semibold transition-colors duration-500 group-hover:text-blue-600 w-full'>
           {item.product_name}
         </h3>
         <div className='print-screen pt-1 w-full flex items-center gap-2'>
@@ -36,7 +36,7 @@ export const ItemProduct = ({item}) => {
         <MemoryGb />
         <strong className='price w-full text-[16px] text-red-600'>{item.product_price}₫</strong>
         <div className='star flex items-center py-1 text-slate-500'>
-          <IoIosStar className="text-yellow-400" />
+          <IoIosStar className="text-yellow-400 text-[12px]" />
           <span className=''>{item.rating}</span> ({item.reviewCount})
         </div>
         <div data-tooltip={`-10%`} className="mt-3 button">

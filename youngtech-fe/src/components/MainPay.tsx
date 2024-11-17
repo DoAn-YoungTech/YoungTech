@@ -1,7 +1,11 @@
 import React from 'react'
 
-export const MainPay = () => {
+const MainPay = () => {
   return (
-    <div>MainPay</div>
+    <div>
+      
+    </div>
   )
 }
+
+export default MainPay

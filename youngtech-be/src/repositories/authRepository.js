@@ -29,9 +29,9 @@ const authRepository = {
 
   saveRefreshToken: async (userId, refreshToken) => {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    const query = `INSERT INTO refreshtoken (user_id, refresh_token, expires_at) VALUES (:user_id, :refresh_token, :expires_at)`;
+    const query = `INSERT INTO refreshtoken (account_id, refresh_token, expires_at) VALUES (:account_id, :refresh_token, :expires_at)`;
     const data = {
-      user_id: userId,
+      account_id: userId,
       refresh_token: refreshToken,
       expires_at: expiresAt,
     };
@@ -84,19 +84,14 @@ const authRepository = {
     return result;
   },
 
-  // userIdCustomer: async (account) => {
-  //   const query = `INSERT INTO customer (fullName , phoneNumber, address , account_id) VALUES (:fullName ,:phoneNumber , :address, :account_id)`;
-  //   const data = {
-  //     fullName: '',
-  //     phoneNumber: '',
-  //     address: '',
-  //     account_id: account,
-  //   };
-  //   const [result] = await sequelize.query(query, {
-  //     replacements: data,
-  //   });
-  //   return result;
-  // },
+  userIdCustomer: async (account) => {
+    const query = `INSERT INTO customer (account_id) VALUES (:account_id)`;
+
+    const [result] = await sequelize.query(query, {
+      replacements: { account_id: account },
+    });
+    return result;
+  },
 
   getRoleId: async (userId) => {
     const query = `SELECT role_id FROM roleaccount WHERE account_id=:account_id`;
