@@ -19,7 +19,7 @@ export const ProductHome: React.FC = () => {
 
   return (
     <>
-<ItemProducts DataProducts={data} loading={loading}/>
+{/* <ItemProducts DataProducts={data} loading={loading}/> */}
      
     </>
   );

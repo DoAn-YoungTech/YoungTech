@@ -1,20 +1,20 @@
 const sequelize = require('../configs/db');
 
 const childCategoriesRepository = {
-getAllChildCategories: async ({ offset, limit }) => {
-    const query = `SELECT * FROM childcategories LIMIT :limit OFFSET :offset`;
-    const [result] = await sequelize.query(query, { replacements: { limit, offset } });
-
-    // Truy vấn tổng số bản ghi để tính tổng số trang
-    const countQuery = `SELECT COUNT(*) as total FROM childcategories`;
-    const [countResult] = await sequelize.query(countQuery);
-
-    return {
-        data: result,
-        totalItems: countResult[0].total
-    };
-},
-
+    getAllChildCategories: async () => {
+        // Truy vấn để lấy tất cả các danh mục con
+        const query = `SELECT * FROM childcategories`;
+        const [result] = await sequelize.query(query);
+    
+        // Truy vấn tổng số bản ghi
+        const countQuery = `SELECT COUNT(*) as total FROM childcategories`;
+        const [countResult] = await sequelize.query(countQuery);
+    
+        return {
+            data: result,
+            totalItems: countResult[0].total,
+        };
+    },
     getChildCategoriesById : async (id) => {
         const query = `SELECT * FROM childcategories WHERE id = :id`;
         const [result] = await sequelize.query(query, {replacements: {id}});
@@ -54,6 +54,36 @@ getAllChildCategories: async ({ offset, limit }) => {
         const [result] = await sequelize.query(query, { replacements : {...data, id} });
         return result;
     },
+
+    getChildCategoriesByParentId: async (parentId) => {
+        const query = `SELECT * FROM childcategories WHERE parentCategory_id = :parentId`;
+        const [results] = await sequelize.query(query, { replacements: { parentId } });
+        return results;
+    },
+    getNameParentCategoriesByChildId : async (childCategoryId) => {
+        const query = `
+          SELECT 
+            parentcategories.id AS parentId,
+            parentcategories.name AS parentName,
+            childcategories.id AS childId,
+            childcategories.childCateName AS childName
+          FROM 
+            childcategories
+          JOIN 
+            parentcategories 
+          ON 
+            childcategories.parentCategory_id = parentcategories.id
+          WHERE 
+            childcategories.id = :childCategoryId
+        `;
+      
+        const [results] = await sequelize.query(query, {
+          replacements: { childCategoryId },
+        });
+      
+        return results.length > 0 ? results[0] : null;
+      }
+      
 };
 
 module.exports = childCategoriesRepository;

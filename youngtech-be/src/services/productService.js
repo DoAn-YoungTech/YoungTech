@@ -15,17 +15,8 @@ const productService = {
     },
 
     getProductByParentCategory: async (parentCategoryId) => {
-        // Lấy sản phẩm theo parentCategoryId thông qua childCategory
-        const query = `
-          SELECT p.*
-          FROM product p
-          JOIN childcategories c ON p.childCategory_id = c.id
-          WHERE c.parentCategory_id = :parentCategoryId
-        `;
-        const [result] = await sequelize.query(query, {
-          replacements: { parentCategoryId }
-        });
-        return result;
+        return await productRepository.getProductByParenCategory(parentCategoryId)
+       
       },
     createProduct: async (data) => {
         return await productRepository.createProduct(data);

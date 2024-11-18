@@ -11,7 +11,7 @@ export const ItemProducts: React.FC<ItemProductProps> = ({DataProducts,loading})
   return (
 
   <>
-   <div className="px-5 grid justify-center items-center grid-cols-2 lg:grid-cols-5 gap-2">
+   <div className="px-5 z-0  grid justify-center items-center grid-cols-2 lg:grid-cols-5 gap-2">
     {DataProducts.length === 0 ? (
         <p>Không có sản phẩm nào.</p>
       ) : DataProducts.length === 1 ? (

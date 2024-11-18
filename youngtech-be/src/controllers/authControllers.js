@@ -6,6 +6,7 @@ const authController = {
   register: async (req, res) => {
     try {
       const { userName, email, password } = req.body;
+      console.log(userName,email,password)
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
       // check email

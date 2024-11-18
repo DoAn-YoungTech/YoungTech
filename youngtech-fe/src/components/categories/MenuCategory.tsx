@@ -36,7 +36,7 @@ const MenuCategory = () => {
       {/* Menu trên màn hình desktop */}
       <div className="ml-4  hidden lg:block" id="menu">
         <ul style={textColor} className="p-0 flex items-center">
-          {data.map((cate: any) => (
+          {data && data.map((cate: any) => (
             <li key={cate.id} className="mx-4 my-0">
               <button 
                 type="button"
@@ -61,7 +61,7 @@ const MenuCategory = () => {
             style={textColor}
             className="p-0 z-100 fixed top-[100px] left-0 w-[50%] h-screen border bg-white shadow-2xl"
           >
-            {data.map((cate: any) => (
+            {data && data.map((cate: any) => (
               <li key={cate.id} className=" w-full">
                 <button
                   type="button"

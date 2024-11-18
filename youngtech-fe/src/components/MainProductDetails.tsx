@@ -1,13 +1,10 @@
-
-import React from 'react'
-
-
+"use client"
 import ImageProductDetails from './image-product-details/ImageProductDetails'
 import Breadcrumb from './Breadcrumb/Breadcrumb'
 import InfoDetailProduct from './InfoDetailProduct/InfoDetailProduct'
 import Review from './review/Review'
-
 const MainProductDetails = () => {
+
   return (
     <>
     <div className='w-full flex flex-col  justify-center items-center'>

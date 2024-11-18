@@ -1,10 +1,12 @@
 // productSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 import { ProductState } from '@/types/productTypes';
-import { fetchProducts, createProduct, updateProduct, deleteProduct } from './productThunks';
+import { fetchProducts, createProduct, updateProduct, deleteProduct,fetchProductsParen,fetchProductsChild,fetchProductsId } from './productThunks';
 
 const initialState: ProductState = {
   data: [],
+  parenProduct: [],
+  childProduct: [],
   loading: false,
   error: null,
 };
@@ -12,7 +14,9 @@ const initialState: ProductState = {
 const SliceProduct = createSlice({
   name: 'Product',
   initialState,
-  reducers: {},
+  reducers: {
+    
+  },
   extraReducers: (builder) => {
     builder
       // Fetch Products
@@ -26,6 +30,40 @@ const SliceProduct = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch products";
+      })
+
+      .addCase(fetchProductsId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchProductsId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchProductsId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch products";
+      })
+      .addCase(fetchProductsParen.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchProductsParen.fulfilled, (state, action) => {
+        state.loading = false;
+        state.parenProduct = action.payload; // Lưu dữ liệu của danh mục cha
+      })
+      .addCase(fetchProductsParen.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch parent categories";
+      })
+      .addCase(fetchProductsChild.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchProductsChild.fulfilled, (state, action) => {
+        state.loading = false;
+        state.childProduct = action.payload; // Lưu dữ liệu của danh mục cha
+      })
+      .addCase(fetchProductsChild.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch parent categories";
       })
       // Create Product
       .addCase(createProduct.fulfilled, (state, action) => {
