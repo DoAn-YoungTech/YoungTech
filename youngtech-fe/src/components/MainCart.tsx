@@ -58,9 +58,9 @@ const CartPage: React.FC = () => {
 
   return (
    
-    <div className="w-full mb-[100px]">
+    <div className="w-full  mb-[100px]">
          <Breadcrumb name="Cart"/>
-        <div className="w-[90%] m-auto">
+        <div className="lg:w-[90%] w-full m-auto">
         <CartHeader />
         {cartItems.map((item) => (
           <CartItem

@@ -1,3 +1,4 @@
+const { getChildCategoriesByParentId } = require("../repositories/childCategoriesRepositori");
 const childCategoriesService = require("../services/childCategoriesService");
 
 const childCategoriesController = {
@@ -35,6 +36,34 @@ getAllChildCategories: async (req, res) => {
         try{
             const id = req.params.id;
             const result = await childCategoriesService.getChildCategoriesById(id);
+            if(!result){
+                res.status(404).json({message: " Child categories by id not found"});
+            }else{
+                res.status(200).json({message: "Success", data: result});
+            }
+        }catch(err){
+            res.status(500).json({message: "Internal server error", error: err.message});
+        }
+    },
+
+    getChildCategoriesByParentId: async (req, res) => {
+        try{
+            const id = req.params.id;
+            const result = await childCategoriesService.getChildCategoriesByParentId(id);
+            if(!result){
+                res.status(404).json({message: " Child categories by id not found"});
+            }else{
+                res.status(200).json({message: "Success", data: result});
+            }
+        }catch(err){
+            res.status(500).json({message: "Internal server error", error: err.message});
+        }
+    },
+
+    getNameParentCategoriesByChildId: async (req, res) => {
+        try{
+            const id = req.params.id;
+            const result = await childCategoriesService.getNameParentCategoriesByChildId(id);
             if(!result){
                 res.status(404).json({message: " Child categories by id not found"});
             }else{

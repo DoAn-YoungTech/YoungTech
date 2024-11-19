@@ -3,32 +3,22 @@ const productService = require('../services/productService');
 
 const productController = {
   getAllProduct: async (req, res) => {
-    try {
-      // lấy tham số phân trang
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 2;
-      // Tính toán offset dựa trên page và limit
-      const offset = (page - 1) * limit;
-      // gọi service lấy tất cả sản phẩm với phân trang
-      const result = await productService.getAllProduct({ offset, limit });
-      if (!result || result.data.length === 0) {
-        return res.status(404).json({ message: 'No products found' });
-      }
-      // trả về kết quả phân trang
-      res.json({
-        message: 'All products',
-        data: result.data,
-        pagination: {
-          page,
-          limit,
-          totalItems: result.totalItems,
-          totalPages: Math.ceil(result.totalItems / limit),
-        },
-      });
-    } catch (err) {
-      res
-        .status(500)
-        .json({ message: 'Internal Server Error', error: err.message });
+ 
+   try{
+    // lấy tham số phân trang 
+    const page = parseInt(req.query.page) || null;
+    const limit = parseInt(req.query.limit) || null;
+    // Tính toán offset dựa trên page và limit
+    if(page) {
+      var offset = (page - 1) * limit; 
+    } else{
+      var offset =0
+    }
+    // gọi service lấy tất cả sản phẩm với phân trang
+    const result = await productService.getAllProduct({ offset, limit });
+    if (!result || result.data.length === 0) {
+      return res.status(404).json({ message: 'No products found' });
+ 
     }
   },
 
