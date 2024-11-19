@@ -1,10 +1,8 @@
-
+import CategoryParentActions from "@/components/dashboard/category-parent/CategoryParentMain"
 const page = () => {
   return (
-    <div>
-      <h1>Hello</h1>
-    </div>
+    <CategoryParentActions/>
   )
 }
 
-export default page
+export default page;
