@@ -36,13 +36,13 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen flex my-5 justify-center items-center bg-gray-100">
+    <div className="min-h-screen motion-preset-slide-right motion-duration-3000 flex my-5 justify-center items-center bg-gray-100">
       <ToastContainer />
       <div className="bg-white shadow-lg rounded-lg w-full lg:w-[90%] mx-5 overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           <Video className="hidden p-8 lg:block lg:w-[50%]" />
           <div className="w-full lg:w-[45%] p-8">
-            <h2 className="text-2xl font-bold text-center mb-8 text-gray-700">
+            <h2 className="text-2xl motion-duration-2000  motion-preset-slide-right font-bold text-center mb-8 text-gray-700">
               Đăng nhập
             </h2>
 
@@ -57,7 +57,7 @@ const Page = () => {
 
             <h5 className="text-center text-gray-500 mb-6">hoặc</h5>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form className="   " onSubmit={handleSubmit(onSubmit)}>
               {/* Email Field */}
               <div className="mb-4 relative">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -141,9 +141,9 @@ const Page = () => {
               <button
                 type="submit"
                 disabled={!checked}
-                className={`w-full py-3 text-white rounded-lg transition duration-300 ${
+                className={`w-full   py-3 text-white rounded-lg transition duration-300 ${
                   checked
-                    ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                    ? "bg-blue-600  hover:bg-blue-700 cursor-pointer"
                     : "bg-gray-300 cursor-not-allowed"
                 }`}
               >

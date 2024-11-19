@@ -1,9 +1,7 @@
-
+import SupplierActions from "@/components/dashboard/supplier/SupplierMain"
 const page = () => {
   return (
-    <div>
-      <h1>Hello</h1>
-    </div>
+    <SupplierActions/>
   )
 }
 

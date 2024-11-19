@@ -15,22 +15,22 @@ interface CategoryParent {
 const mockCategoryParents: CategoryParent[] = [
   {
     id: 1,
-    name: "Danh mục cha 1",
+    name: "Tivi",
     flag: true, // Kích hoạt
   },
   {
     id: 2,
-    name: "Danh mục cha 2",
+    name: "Điện thoại",
     flag: false, // Tạm dừng
   },
   {
     id: 3,
-    name: "Danh mục cha 3",
+    name: "Máy tính",
     flag: true, // Kích hoạt
   },
   {
     id: 4,
-    name: "Danh mục cha 4",
+    name: "Tủ lạnh",
     flag: false, // Tạm dừng
   },
 ];

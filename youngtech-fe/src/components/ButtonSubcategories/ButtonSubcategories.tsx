@@ -6,9 +6,9 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/Store";
-import { fetchCategoriesChild } from "@/redux/Category/categoryChildThunks";
 import { MdClear } from "react-icons/md";
 import { setIdCateChild } from "@/redux/Category/categoryChildSlice";
+import { fetchCategoriesChildByParentId } from "@/redux/Category/categoryChildThunks";
 
 const ButtonSubcategories = () => {
   const [isSticky, setIsSticky] = useState<boolean>(false);
@@ -19,9 +19,7 @@ const ButtonSubcategories = () => {
   const nameCategory = params.category;
   const name_category_child = params.categoryChild;
   const idCateParen = useSelector((state: RootState) => state.categories_parent.idCateParen);
-  const { data } = useSelector((state: RootState) => state.categories_child);
-  const DataCategoryID = data.filter((item) => item.parent_id === parseInt(idCateParen));
-
+  const { categoryChild } = useSelector((state: RootState) => state.categories_child);
   const handleClickDataByChild = (id: number, name: string) => {
     dispatch(setIdCateChild(id));
     const slug = slugify(name);
@@ -33,7 +31,10 @@ const ButtonSubcategories = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchCategoriesChild());
+    if(idCateParen){
+      dispatch(fetchCategoriesChildByParentId(idCateParen));
+    }
+   
   }, [dispatch]);
 
   useEffect(() => {
@@ -78,20 +79,21 @@ const ButtonSubcategories = () => {
               {name_category_child} <MdClear />
             </button>
           ) : (
-            DataCategoryID.map((item) => (
+            categoryChild.map((item) => (
               <button
                 key={item.id}
                 type="button"
-                onClick={() => handleClickDataByChild(item.id, item.name)}
+                onClick={() => handleClickDataByChild(item.id, item.childCateName)}
                 className="bg-slate-200 py-2 shadow-sm lg:text-[15px] hover:bg-slate-900 hover:text-white px-7 rounded-md sm:px-5 sm:text-xs"
               >
-                {item.name}
+                {item.childCateName}
               </button>
             ))
           )}
         </div>
       </div>
     </div>
+    
   );
 };
 

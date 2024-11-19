@@ -32,8 +32,10 @@ const Header = () => {
         <section>
           <header
             id="header"
-            className={`transition-all duration-500 backdrop-blur-md bg-white border-b-[1px] ${
-              isSticky ? "fixed top-0 bg-white w-full z-10 shadow-sm" : ""
+            className={`transition-all  z-30
+              
+              duration-500 backdrop-blur-md bg-white border-b-[1px] ${
+              isSticky ? "fixed top-0 bg-white w-full z-15 shadow-sm" : ""
             }`}
           >
             <div className="lg:container px-1 m-auto">
