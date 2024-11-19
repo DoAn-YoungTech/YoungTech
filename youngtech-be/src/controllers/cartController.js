@@ -30,6 +30,16 @@ const cartController = {
         cartId = addCustomerToCart.id;
       }
 
+      //check product in stock
+
+      const checkStock = await cartService.checkStock(product_id);
+      console.log(`Stock `, checkStock);
+      if (!checkStock || checkStock < quantity) {
+        return res.status(403).json({
+          message: 'Insufficient stock ! Please reduce quantity product !',
+        });
+      }
+
       // check if product is already in the cart
       const checkCartItem1 = await cartService.checkCartItem(
         cartId,
@@ -39,6 +49,13 @@ const cartController = {
       if (checkCartItem1) {
         // if true update quantity
         const updateQuantity = checkCartItem1.quantity + quantity;
+
+        if (updateQuantity > checkStock) {
+          return res
+            .status(403)
+            .json({ message: 'Product in stock are not enough !' });
+        }
+
         return res.json({
           message: await cartService.updateQuantity(
             updateQuantity,
@@ -155,10 +172,14 @@ const cartController = {
       const checkUserExist = await cartService.checkUserExist(userId);
       console.log(`checkUserExist ${checkUserExist}`);
       const getIdCart = await cartService.getIdCart(checkUserExist);
+      console.log(getIdCart);
       const getProductId = getIdCart.filter(
         (product) => product.product_id === product_id
       );
-      const updateProduct = await cartService.updateProduct(quantity, getProductId[0]);
+      const updateProduct = await cartService.updateProduct(
+        quantity,
+        getProductId[0]
+      );
       console.log(updateProduct);
       if (!updateProduct) {
         return res
@@ -170,6 +191,58 @@ const cartController = {
       res.status(500).json({ message: err });
     }
   },
-  
+
+  addProductToOrder: async (req, res) => {
+    try {
+      /// get id
+      const userId = req.user.id;
+      // check userId exist
+      const checkUserIdExist = await cartService.checkUserIdExist(userId);
+      console.log(checkUserIdExist);
+      if (!checkUserIdExist) {
+        return res.status(404).json({ message: 'Customer not found !' });
+      }
+      ///
+      const getCartId = await cartService.getCartId(checkUserIdExist);
+      console.log(getCartId);
+      if (!getCartId) {
+        return res.status(404).json({ message: 'Cart id not found !' });
+      }
+      const getOrder = await cartService.getOrder(getCartId);
+
+      if (!getOrder) {
+        return res.status(404).json({ message: 'order not found !' });
+      }
+      const total = getOrder.reduce((sum, item) => {
+        return sum + item.quantity * parseInt(item.price, 10);
+      }, 0);
+      console.log(`Amount total : ${total}`);
+
+      // add  order
+      const addProductToOrder = await cartService.addProductToOrder(
+        total,
+        checkUserIdExist
+      );
+      //then  add product to order detail
+
+      const addProductOrderDetail = await cartService.addProductOrderDetail(
+        getCartId
+      );
+
+      console.log(addProductToOrder);
+      if (!addProductToOrder) {
+        return res.status(403).json({
+          message: 'Can not add to product order . Please check again !',
+        });
+      }
+      // Clear or update cart
+
+      await cartService.clearUpdateCart(getCartId);
+
+      res.status(200).json({ message: addProductToOrder });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
+  },
 };
 module.exports = cartController;

@@ -14,8 +14,21 @@ cart.get(
   cartController.viewCart
 );
 
-cart.put('/editCart' , middlewareController.verifyToken , cartController.editCart)
+cart.put(
+  '/editCart',
+  middlewareController.verifyToken,
+  cartController.editCart
+);
 
+cart.put(
+  '/addProductToOrder',
+  middlewareController.verifyToken,
+  cartController.addProductToOrder
+);
 
-cart.delete('/removeProductId/:productId' , middlewareController.verifyToken , cartController.removeProductId )
+cart.delete(
+  '/removeProductId/:productId',
+  middlewareController.verifyToken,
+  cartController.removeProductId
+);
 module.exports = cart;

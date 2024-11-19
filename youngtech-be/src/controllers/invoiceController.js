@@ -9,6 +9,7 @@ const invoiceController = {
       res.json({ message: "Err" });
     }
   },
+
   getInvoiceById: async (req, res) => {
     try {
       const id = req.params.id;
@@ -62,6 +63,7 @@ const invoiceController = {
       res.json({ message: err.message });
     }
   }
+  
 };
 
 module.exports = invoiceController;

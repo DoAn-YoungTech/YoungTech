@@ -1,47 +1,42 @@
 // models/userModel.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("../configs/db");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configs/db');
 
 const Order = sequelize.define(
-  "Order",
+  'Order',
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
-    },
-    flag: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
+      autoIncrement: true,
     },
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-  },
+      defaultValue: true,
+    },
     orderDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
     succesDate: {
       type: DataTypes.DATE,
-      allowNull: false
-    },
-    succesDate: {
-      type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
     },
     totalAmount: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false
-    }
+      allowNull: false,
+      defaultValue: 'Pending',
+    },
   },
   {
-    tableName: "Order",
-    timestamps: false
+    tableName: 'Order',
+    timestamps: false,
   }
 );
 
