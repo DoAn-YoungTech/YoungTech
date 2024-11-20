@@ -1,43 +1,76 @@
-"use client";
-
-import React, { useState } from "react";
+"use client"; // Import getSession từ next-auth
+import { signIn } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { AiOutlineMail, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineLock } from "react-icons/ai";
 import { Video } from "../../components/video/Video";
-import { useForm } from "react-hook-form";
-import axios from "axios";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useSession } from "next-auth/react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+
+// Define validation schema with Yup
+const schema = yup.object({
+  email: yup
+    .string()
+    .email("Email không hợp lệ")
+    .required("Email không được để trống"),
+  password: yup.string().required("Mật khẩu không được để trống"),
+}).required();
+
+interface IFormInput {
+  email: string;
+  password: string;
+}
 
 const Page = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const router = useRouter();
+  const { data: session } = useSession();
+  
+  
+  const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({
+    resolver: yupResolver(schema), // Attach yup validation schema here
+  });
   const [checked, setChecked] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const onSubmit = async (data: any) => {
-    try {
-      const res = await axios.post("http://localhost:8000/auth/login", {
-        email: data.email,
-        password: data.password,
-      });
+  // Define the onSubmit function
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const {email,password} = data
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    })
 
-      if (res.status === 200) {
-        toast.success("Đăng nhập thành công!");
-        localStorage.setItem("access_token", res.data.access_token);
-      }
-    } catch (error: any) {
-      if (error.response) {
-        toast.error("Thông tin đăng nhập không đúng!");
+    if (res?.ok) {
+      if (session && session.user?.role === "user") {
+        toast.success("Đăng nhập thành công !")
+        setTimeout(()=>{
+          router.push("/");
+        },2000)  
       } else {
-        toast.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+        toast.success("Đăng nhập thành công !")
+        router.push("/dashboard");
       }
+    } else {
+      toast.error("Đăng nhập thất bại");
     }
+  
+
+   
+
+  
   };
 
   return (
     <div className="min-h-screen motion-preset-slide-right motion-duration-3000 flex my-5 justify-center items-center bg-gray-100">
       <ToastContainer />
+  
       <div className="bg-white shadow-lg rounded-lg w-full lg:w-[90%] mx-5 overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           <Video className="hidden p-8 lg:block lg:w-[50%]" />
@@ -57,7 +90,7 @@ const Page = () => {
 
             <h5 className="text-center text-gray-500 mb-6">hoặc</h5>
 
-            <form className="   " onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               {/* Email Field */}
               <div className="mb-4 relative">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -71,13 +104,7 @@ const Page = () => {
                     type="email"
                     placeholder="Nhập email của bạn..."
                     className="w-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    {...register("email", {
-                      required: "Email không được để trống",
-                      pattern: {
-                        value: /^\S+@\S+$/i,
-                        message: "Email không hợp lệ",
-                      },
-                    })}
+                    {...register("email")}
                   />
                 </div>
                 {errors.email && (
@@ -93,14 +120,12 @@ const Page = () => {
                   Mật khẩu
                 </label>
                 <div className="flex items-center gap-4 border rounded-lg overflow-hidden">
-                <AiOutlineLock className="ml-3 text-gray-500" size={22} />
+                  <AiOutlineLock className="ml-3 text-gray-500" size={22} />
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Nhập mật khẩu của bạn..."
                     className="w-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    {...register("password", {
-                      required: "Mật khẩu không được để trống",
-                    })}
+                    {...register("password")}
                   />
                   <button
                     type="button"
@@ -141,11 +166,7 @@ const Page = () => {
               <button
                 type="submit"
                 disabled={!checked}
-                className={`w-full   py-3 text-white rounded-lg transition duration-300 ${
-                  checked
-                    ? "bg-blue-600  hover:bg-blue-700 cursor-pointer"
-                    : "bg-gray-300 cursor-not-allowed"
-                }`}
+                className={`w-full py-3 text-white rounded-lg transition duration-300 ${checked ? "bg-blue-600 hover:bg-blue-700 cursor-pointer" : "bg-gray-300 cursor-not-allowed"}`}
               >
                 Đăng nhập
               </button>

@@ -13,7 +13,7 @@ export const ItemProduct = ({item}) => {
     const router = useRouter();
     const dispatch = useDispatch<AppDispatch>();
     const {parentName,childName} = useSelector((state:RootState) => state.categories_child.nameCategory);
-    console.log(parentName)
+
     const handlClickDetailsPro =  async (id:number,name:string,childCategory_id:number)=>{
       await  dispatch(fetchNameParentCategoriesByChildId(childCategory_id))
        if(parentName && childName && name){

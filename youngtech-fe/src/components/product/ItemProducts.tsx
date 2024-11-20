@@ -1,5 +1,8 @@
+"use client"
 import { Product } from "@/types/productTypes";
 import { ItemProduct } from "./ItemProduct";
+import Pagination from "../pagination/Pagination";
+import { useState } from "react";
 
 interface ItemProductProps {
   DataProducts: Product[]; 
@@ -7,6 +10,8 @@ interface ItemProductProps {
 }
 
 export const ItemProducts: React.FC<ItemProductProps> = ({ DataProducts, loading }) => {
+ 
+
   // Kiểm tra DataProducts có phải là mảng không và đảm bảo không phải null hoặc undefined
   const isDataValid = Array.isArray(DataProducts) && DataProducts.length > 0;
 
@@ -23,6 +28,7 @@ export const ItemProducts: React.FC<ItemProductProps> = ({ DataProducts, loading
           <ItemProduct key={item.id} item={item} />
         ))
       )}
+      
     </div>
   );
 };

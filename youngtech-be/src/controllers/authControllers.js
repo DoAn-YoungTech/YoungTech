@@ -101,7 +101,7 @@ const authController = {
         if (!comparePass) {
           return res.status(404).json({ message: 'Password wrong!' });
         }
-
+ 
         if (user && comparePass) {
           const accessToken = authController.generateAccessToken(
             user,
