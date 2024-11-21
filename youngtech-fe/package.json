@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "server": "npm json-server --watch data.json --port 4000"
+    "server": "npx json-server --watch data.json --port 4000"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -25,6 +25,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.3.1",
     "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
     "next-auth": "^4.24.8",

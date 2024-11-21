@@ -10,6 +10,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import './register.css'
 
+import { useRouter } from 'next/navigation';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 const schema = yup.object().shape({
   userName: yup.string().required('Usename là bắt buộc'),
   email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
@@ -20,6 +23,7 @@ const schema = yup.object().shape({
 });
 
 const Page = () => {
+  const router = useRouter();
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
@@ -42,9 +46,12 @@ const Page = () => {
       });
   
       if (res.status === 201) {
-        setMessage('Đăng ký thành công');
+        toast.success("Đăng ký thành công !");
+        setTimeout(()=>{
+          router.push('/login')
+        },2000);
       } else {
-        setMessage('Đăng ký thất bại');
+        toast.error("Đăng ký thất bại !")
       }
     } catch (error: any) {
       const errorMessage = typeof error.response?.data.message === 'string'
@@ -56,6 +63,7 @@ const Page = () => {
 
   return (
     <div className="w-full font-sans flex justify-center bg-gray-50 py-10">
+      <ToastContainer/>
       <div className="w-[90%] mt-5 bg-white shadow-lg rounded-lg overflow-hidden lg:flex">
         <Video className="hidden animotions-register  p-8 lg:block lg:w-[50%]" />
         <div className="w-full  lg:w-[45%] p-8">

@@ -66,68 +66,68 @@ const authController = {
     );
   },
 
-  login: async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      // find userName follow email
-      const user = await authService.findUserByEmail(email);
-      console.log(user);
-      if (!user) {
-        return res
-          .status(404)
-          .json({ message: 'Email use not exit , Please try again !' });
-      }
-
-      // get role_id by account_id
-      const getRoleId = await authService.getRoleId(user.id);
-      console.log('Role id ', getRoleId);
-
-      if (!getRoleId) {
-        return res
-          .status(403)
-          .json({ message: 'Account id not exist in role account' });
-      }
-
-      // get role name by role_id
-      const getRoleName = await authService.getRoleName(getRoleId);
-      if (!getRoleName) {
-        return res.status(404).json({ message: 'Role name not found' });
-      }
-      console.log('role name', getRoleName);
-      // if true save role in payload token account
-      // then => compare pass login === pass on database ,use bcrypt
-      const comparePass = await bcrypt.compare(password, user.password);
-
-      if (!comparePass) {
-        return res.status(404).json({ message: 'Password wrong!' });
-      }
-
-      if (user && comparePass) {
-        const accessToken = authController.generateAccessToken(
-          user,
-          getRoleName
-        );
-        const refreshToken = authController.refreshToken(user);
-
-        // save refresh token in data
-        const saveRefreshToken = await authService.saveRefreshToken(
-          user.id,
-          refreshToken
-        );
-
-        if (!saveRefreshToken) {
+    login: async (req, res) => {
+      try {
+        const { email, password } = req.body;
+        // find userName follow email
+        const user = await authService.findUserByEmail(email);
+        console.log(user);
+        if (!user) {
           return res
-            .status(403)
-            .json({ message: 'Error saving refresh token' });
+            .status(404)
+            .json({ message: 'Email use not exit , Please try again !' });
         }
 
-        const { password, ...others } = user;
-        res.status(200).json({ ...others, accessToken, refreshToken });
+        // get role_id by account_id
+        const getRoleId = await authService.getRoleId(user.id);
+        console.log('Role id ', getRoleId);
+
+        if (!getRoleId) {
+          return res
+            .status(403)
+            .json({ message: 'Account id not exist in role account' });
+        }
+
+        // get role name by role_id
+        const getRoleName = await authService.getRoleName(getRoleId);
+        if (!getRoleName) {
+          return res.status(404).json({ message: 'Role name not found' });
+        }
+        console.log('role name', getRoleName);
+        // if true save role in payload token account
+        // then => compare pass login === pass on database ,use bcrypt
+        const comparePass = await bcrypt.compare(password, user.password);
+
+        if (!comparePass) {
+          return res.status(404).json({ message: 'Password wrong!' });
+        }
+ 
+        if (user && comparePass) {
+          const accessToken = authController.generateAccessToken(
+            user,
+            getRoleName
+          );
+          const refreshToken = authController.refreshToken(user);
+
+          // save refresh token in data
+          const saveRefreshToken = await authService.saveRefreshToken(
+            user.id,
+            refreshToken
+          );
+
+          if (!saveRefreshToken) {
+            return res
+              .status(403)
+              .json({ message: 'Error saving refresh token' });
+          }
+
+          const { password, ...others } = user;
+          res.status(200).json({ ...others, accessToken, refreshToken });
+        }
+      } catch (err) {
+        res.status(500).json({ message: err });
       }
-    } catch (err) {
-      res.status(500).json({ message: err });
-    }
-  },
+    },
 
   requestRefreshToken: async (req, res) => {
     // take refresh token from user

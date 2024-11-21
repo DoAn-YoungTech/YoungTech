@@ -94,8 +94,8 @@ const productRepository = {
     
       
       createProduct: async (productData) => {
-        const query = `INSERT INTO product (productName, quantity, description, productPrice, brand, childCategory_id, supplier_id, flag, createAt) 
-          VALUES (:productName, :quantity, :description, :productPrice, :brand, :childCategory_id, :supplier_id, true, :createAt)`;
+        const query = `INSERT INTO product (productName, quantity, description, productPrice, productImage, brand, childCategory_id, supplier_id, flag, createAt) 
+          VALUES (:productName, :quantity, :description, :productPrice,: productImage, :brand, :childCategory_id, :supplier_id, true, :createAt)`;
         
         productData.createAt = new Date();
     

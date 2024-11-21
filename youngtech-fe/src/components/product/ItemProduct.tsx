@@ -13,7 +13,7 @@ export const ItemProduct = ({item}) => {
     const router = useRouter();
     const dispatch = useDispatch<AppDispatch>();
     const {parentName,childName} = useSelector((state:RootState) => state.categories_child.nameCategory);
-    console.log(parentName)
+
     const handlClickDetailsPro =  async (id:number,name:string,childCategory_id:number)=>{
       await  dispatch(fetchNameParentCategoriesByChildId(childCategory_id))
        if(parentName && childName && name){
@@ -24,13 +24,15 @@ export const ItemProduct = ({item}) => {
        }
      
     }
+    const formattedPrice = new Intl.NumberFormat('de-DE').format(item.productPrice);
   return (
    
       <div onClick={()=> handlClickDetailsPro(item.id,item.productName,item.childCategory_id)}  key={item.id} className='flex relative group flex-col my-3 hover:shadow-lg border px-3 rounded-lg py-3'>
         <p className='mb-5 overflow-hidden text-[11px] w-[70px] flex justify-center bg-slate-200'>Trả góp 0%</p>
         <div className="image h-[200px]">
           <Image
-            src={`/designImage/imageProducts/ip1.jpg`}
+
+            src={`/designImage/imageProducts/${item.productImage}`}
             alt={item.product_name}
             className='transform transition-transform duration-500 ease-in-out group-hover:-translate-y-4'
             width={200}
@@ -45,7 +47,8 @@ export const ItemProduct = ({item}) => {
           <span className='text-[12px] bg-slate-200 px-2 rounded-lg'>Super Retina XDR</span>
         </div>
         <MemoryGb />
-        <strong className='price w-full text-[16px] text-red-600'>{item.productPrice}₫</strong>
+
+        <strong className='price w-full text-[16px] text-red-600'>{formattedPrice}₫</strong>
         <div className='star flex items-center py-1 text-slate-500'>
           <IoIosStar className="text-yellow-400 text-[12px]" />
           <span className=''>{item.rating}</span> ({item.reviewCount})
