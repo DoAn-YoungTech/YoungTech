@@ -1,8 +1,10 @@
+
 import CartPage from "@/components/MainCart"
 
-
 const page = () => {
+
   return (
+    
   <CartPage/>
   )
 }

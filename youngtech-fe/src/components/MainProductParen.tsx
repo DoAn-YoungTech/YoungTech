@@ -19,7 +19,7 @@ const MainProductParen: React.FC = () => {
           <ButtonSubcategories />
         
         <ProductParen/>
-        <SeeMore />
+       
        
         </div>
     </main>
