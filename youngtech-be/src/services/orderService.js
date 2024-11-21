@@ -26,6 +26,8 @@ const orderService = {
   restoreOrder: async (id) => {
     return await orderRepository.restoreOrder(id);
   },
+
+  
 };
 
 module.exports = orderService;
