@@ -52,7 +52,7 @@ const productController = {
 
   getProductByChildCategory: async (req, res) => {
     try {
-      const childCategoryId = req.params.childCategoryId;
+      const childCategoryId = req.params.childCategoryId;z
       const result = await productService.getProductByChildCategory(childCategoryId);
 
       if (!result || result.length === 0) {
@@ -69,7 +69,10 @@ const productController = {
  getProductByParentCategory: async (req, res) => {
   try {
     const parentCategoryId = req.params.parentCategoryId;
-    const result = await productService.getProductByParentCategory(parentCategoryId);
+    const limit = parseInt(req.query.limit) ;
+    const page = parseInt(req.query.page) ;
+
+    const result = await productService. getProductByParentCategory(parentCategoryId,limit,page);
 
     if (!result || result.length === 0) {
       return res.status(404).json({ message: 'No products found for the given parent category ID' });

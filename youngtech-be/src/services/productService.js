@@ -14,8 +14,8 @@ const productService = {
         return await productRepository.getProductByChildCategory(childCategoryId);
     },
 
-    getProductByParentCategory: async (parentCategoryId) => {
-        return await productRepository.getProductByParenCategory(parentCategoryId)
+    getProductByParentCategory: async (parentCategoryId,limit,page) => {
+        return await productRepository.getProductByParentCategory(parentCategoryId,limit,page)
        
       },
     createProduct: async (data) => {

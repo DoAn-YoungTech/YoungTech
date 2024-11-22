@@ -53,19 +53,48 @@ const productRepository = {
         const [result] = await sequelize.query(query, { replacements: { childCategoryId } });
         return result; // Trả về danh sách các sản phẩm tìm thấy
     },
-    getProductByParenCategory: async (parentCategoryId) => {
-        const query = `
-          SELECT p.*
-          FROM product p
-          JOIN childcategories c ON p.childCategory_id = c.id
-          WHERE c.parentCategory_id = :parentCategoryId
+    getProductByParentCategory: async (parentCategoryId, limit = null, page = 1) => {
+        // Tính toán offset dựa trên limit và page
+        const offset = limit && page ? (page - 1) * limit : null;
+    
+        // Khởi tạo câu truy vấn cơ bản
+        let query = `
+            SELECT p.*
+            FROM product p
+            JOIN childcategories c ON p.childCategory_id = c.id
+            WHERE c.parentCategory_id = :parentCategoryId
+        `
+        if (limit  && offset ) {
+            query += ` LIMIT :limit OFFSET :offset`;
+        } else if (limit ) {
+            query += ` LIMIT :limit`;
+        }
+        // Truy vấn để tính tổng số bản ghi
+        const totalCountQuery = `
+            SELECT COUNT(*) as total
+            FROM product p
+            JOIN childcategories c ON p.childCategory_id = c.id
+            WHERE c.parentCategory_id = :parentCategoryId
         `;
+    
+        // Thực thi các truy vấn
         const [result] = await sequelize.query(query, {
-          replacements: { parentCategoryId }
+            replacements: { parentCategoryId, limit, offset },
         });
-        return result;
+        const [[totalCount]] = await sequelize.query(totalCountQuery, {
+            replacements: { parentCategoryId },
+        });
+    
+        // Trả về kết quả
+        return {
+            data: result,
+            total: totalCount.total,
+            currentPage: page,
+            totalPages: limit ? Math.ceil(totalCount.total / limit) : 1,
+        };
     },
-
+    
+    
     deleteProduct: async (id) => {
         const query = `UPDATE product SET flag = true WHERE id = :id`;
         const [result] = await sequelize.query(query, { replacements: { id } });

@@ -27,8 +27,11 @@ export const fetchProducts = createAsyncThunk(
 
 export const fetchProductsParen = createAsyncThunk(
   'products/fetchProductParen',
-  async (id) => {
-    const response = await axios.get(`${API_URL}/parentCategory/${id}`);
+  async ({id, limit,page }) => {
+    const params = {  limit,page };
+    console.log(params)
+   
+    const response = await axios.get(`${API_URL}/parentCategory/${id}`,{params});
     return response.data.data;
   }
 );

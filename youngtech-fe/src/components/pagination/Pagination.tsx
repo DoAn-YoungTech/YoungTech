@@ -1,15 +1,26 @@
+"use client";
+
 import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface PaginationProps {
-  currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Lấy trang hiện tại từ URL query, nếu không có thì mặc định là 1
+  const currentPage = parseInt(searchParams.get("page") || "1");
+
+  // Hàm xử lý khi click vào nút phân trang
   const handleClick = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      onPageChange(page);
+      // Cập nhật URL query
+      const params = new URLSearchParams(searchParams as any);
+      params.set("page", page.toString());
+      router.push(`?${params.toString()}`);
     }
   };
 
