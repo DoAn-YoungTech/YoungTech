@@ -93,9 +93,7 @@ const defineAssociations = () => {
   });
   ChildCategories.belongsTo(ParentCategories, {
     foreignKey: 'parentCategory_id',
-  });
-
-
+  }); 
   // Account - RoleAccount: One-to-many
   Account.hasMany(roleAccount, { foreignKey: 'account_id' });
   roleAccount.belongsTo(Account, { foreignKey: 'account_id' });
