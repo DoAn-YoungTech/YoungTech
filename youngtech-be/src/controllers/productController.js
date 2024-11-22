@@ -42,15 +42,10 @@ const productController = {
 
   getProductByChildCategory: async (req, res) => {
     try {
-<<<<<<< HEAD
-      const childCategoryId = req.params.childCategoryId;z
-      const result = await productService.getProductByChildCategory(childCategoryId);
-=======
       const childCategoryId = req.params.childCategoryId;
       const result = await productService.getProductByChildCategory(
         childCategoryId
       );
->>>>>>> main
 
       if (!result || result.length === 0) {
         return res.status(404).json({
@@ -65,19 +60,7 @@ const productController = {
         .status(500)
         .json({ message: 'Internal Server Error', error: err.message });
     }
-<<<<<<< HEAD
- },
- 
- getProductByParentCategory: async (req, res) => {
-  try {
-    const parentCategoryId = req.params.parentCategoryId;
-    const limit = parseInt(req.query.limit) ;
-    const page = parseInt(req.query.page) ;
-
-    const result = await productService. getProductByParentCategory(parentCategoryId,limit,page);
-=======
   },
->>>>>>> main
 
   getProductByParentCategory: async (req, res) => {
     try {
