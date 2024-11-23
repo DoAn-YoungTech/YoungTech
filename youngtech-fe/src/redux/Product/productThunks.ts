@@ -27,9 +27,14 @@ export const fetchProducts = createAsyncThunk(
 
 export const fetchProductsParen = createAsyncThunk(
   'products/fetchProductParen',
-  async (id) => {
-    const response = await axios.get(`${API_URL}/parentCategory/${id}`);
-    return response.data.data;
+  async ({ id, limit, page }: { id: number; limit: number; page: number }) => {
+    const params: { [key: string]: number } = {};
+
+    if (page) params.page = page;
+    if (limit) params.limit = limit;
+
+    const response = await axios.get(`${API_URL}/parentCategory/${id}`, { params });
+    return response.data;
   }
 );
 
@@ -42,9 +47,14 @@ export const fetchProductsId = createAsyncThunk(
 );
 export const fetchProductsChild = createAsyncThunk(
   'products/fetchProductChild',
-  async (id) => {
-    const response = await axios.get(`${API_URL}/childCategory/${id}`);
-    return response.data.data;
+  async ({ id, limit, page }: { id: number; limit: number; page: number }) => {
+    const params: { [key: string]: number } = {};
+
+    if (page) params.page = page;
+    if (limit) params.limit = limit;
+
+    const response = await axios.get(`${API_URL}/childCategory/${id}`, { params });
+    return response.data;
   }
 );
 

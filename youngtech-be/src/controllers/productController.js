@@ -3,24 +3,39 @@ const productService = require('../services/productService');
 
 const productController = {
   getAllProduct: async (req, res) => {
- 
-   try{
-    // lấy tham số phân trang 
-    const page = parseInt(req.query.page) || null;
-    const limit = parseInt(req.query.limit) || null;
-    // Tính toán offset dựa trên page và limit
-    if(page) {
-      var offset = (page - 1) * limit; 
-    } else{
-      var offset =0
-    }
-    // gọi service lấy tất cả sản phẩm với phân trang
-    const result = await productService.getAllProduct({ offset, limit });
-    if (!result || result.data.length === 0) {
-      return res.status(404).json({ message: 'No products found' });
- 
+    try {
+      // Lấy tham số phân trang từ query
+      const page = req.query.page ? parseInt(req.query.page) : null;
+      const limit = req.query.limit ? parseInt(req.query.limit) : null;
+  
+      let offset = 0; // Mặc định offset là 0 nếu không có page
+  
+      // Nếu cả `page` và `limit` đều tồn tại, tính offset
+      if (page && limit) {
+        offset = (page - 1) * limit;
+      }
+  
+      // Gọi service lấy sản phẩm
+      const result = await productService.getAllProduct({ offset, limit });
+  
+      // Kiểm tra dữ liệu trả về
+      if (!result || result.data.length === 0) {
+        return res.status(404).json({ message: 'No products found' });
+      }
+  
+      // Trả về kết quả
+      return res.status(200).json({
+        data: result.data,
+        totalItems: result.totalItems,
+        currentPage: page || 1,
+        totalPages: limit ? Math.ceil(result.totalItems / limit) : 1,
+      });
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
     }
   },
+  
 
   getProductById: async (req, res) => {
     try {
@@ -42,20 +57,44 @@ const productController = {
 
   getProductByChildCategory: async (req, res) => {
     try {
+      // Lấy `childCategoryId` từ params
       const childCategoryId = req.params.childCategoryId;
-      const result = await productService.getProductByChildCategory(
-        childCategoryId
-      );
 
-      if (!result || result.length === 0) {
+      // Lấy tham số phân trang từ query
+      const page = req.query.page ? parseInt(req.query.page) : null;
+      const limit = req.query.limit ? parseInt(req.query.limit) : null;
+
+      let offset = 0; // Mặc định offset là 0 nếu không có page
+
+      // Nếu cả `page` và `limit` tồn tại, tính toán `offset`
+      if (page && limit) {
+        offset = (page - 1) * limit;
+      }
+
+      // Gọi service để lấy danh sách sản phẩm theo `childCategoryId`
+      const result = await productService.getProductByChildCategory({
+        childCategoryId,
+        limit,
+        offset,
+      });
+
+      // Kiểm tra dữ liệu trả về
+      if (!result || result.data.length === 0) {
         return res.status(404).json({
           message: 'No products found for the given child category ID',
         });
       }
 
-      return res.status(200).json({ message: 'Success', data: result });
+      // Trả về kết quả
+      return res.status(200).json({
+        message: 'Success',
+        data: result.data,
+        totalItems: result.totalItems,
+        currentPage: page || 1,
+        totalPages: limit ? Math.ceil(result.totalItems / limit) : 1,
+      });
     } catch (err) {
-      console.error(err); // Log lỗi khi có sự cố
+      console.error('Error fetching products by child category:', err);
       return res
         .status(500)
         .json({ message: 'Internal Server Error', error: err.message });
@@ -64,25 +103,50 @@ const productController = {
 
   getProductByParentCategory: async (req, res) => {
     try {
+      // Lấy `parentCategoryId` từ params
       const parentCategoryId = req.params.parentCategoryId;
-      const result = await productService.getProductByParentCategory(
-        parentCategoryId
-      );
-
-      if (!result || result.length === 0) {
+  
+      // Lấy tham số phân trang từ query
+      const page = req.query.page ? parseInt(req.query.page) : null;
+      const limit = req.query.limit ? parseInt(req.query.limit) : null;
+  
+      let offset = 0; // Mặc định offset là 0 nếu không có page
+  
+      // Nếu cả `page` và `limit` tồn tại, tính toán `offset`
+      if (page && limit) {
+        offset = (page - 1) * limit;
+      }
+  
+      // Gọi service để lấy danh sách sản phẩm theo `parentCategoryId`
+      const result = await productService.getProductByParentCategory({
+        parentCategoryId,
+        limit,
+        offset
+      });
+  
+      // Kiểm tra dữ liệu trả về
+      if (!result || result.data.length === 0) {
         return res.status(404).json({
           message: 'No products found for the given parent category ID',
         });
       }
-
-      return res.status(200).json({ message: 'Success', data: result });
+  
+      // Trả về kết quả
+      return res.status(200).json({
+        message: 'Success',
+        data: result.data,
+        totalItems: result.totalItems,
+        currentPage: page || 1,
+        totalPages: limit ? Math.ceil(result.totalItems / limit) : 1,
+      });
     } catch (err) {
-      console.error(err); // Log lỗi khi có sự cố
+      console.error('Error fetching products by parent category:', err);
       return res
         .status(500)
         .json({ message: 'Internal Server Error', error: err.message });
     }
   },
+  
 
   updateProduct: async (req, res) => {
     try {

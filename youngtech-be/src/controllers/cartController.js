@@ -4,6 +4,7 @@ const cartController = {
   addProductToCart: async (req, res) => {
     try {
       const user_id = req.user.id;
+      console.log(user_id)
       const { quantity, product_id } = req.body;
 
       const customer_id = await cartService.getCustomerIdByAccountId(user_id);

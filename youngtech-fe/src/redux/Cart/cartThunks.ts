@@ -1,9 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../Store';
+import { getSession } from 'next-auth/react';
 import { addToCart, clearCart, removeFromCart, updateQuantity } from './cartSlice';
 const Api_url = process.env.NEXT_PUBLIC_API_URL
 const API_URL_Cart = `${Api_url}/cart`;
+
 
 // Thunk để lấy giỏ hàng từ API (Giả sử bạn có API để lấy giỏ hàng)
 export const fetchCartItems = createAsyncThunk(
@@ -17,9 +19,15 @@ export const fetchCartItems = createAsyncThunk(
 // Thunk để thêm sản phẩm vào giỏ hàng từ API
 export const addToCartThunk = createAsyncThunk(
   'cart/addToCart',
-  async (cartItem, { dispatch }) => {
-    const response = await axios.post(`${API_URL_Cart}/addProductToCart`,cartItem);  // Gọi API thêm sản phẩm vào giỏ hàng
-    dispatch(addToCart(response.data)); // Sau khi thêm, cập nhật trạng thái giỏ hàng trong Redux
+  async (cartItem) => {
+    const session = await getSession();
+    const userId = session.user.id;
+    const response = await axios.post(`${API_URL_Cart}/addProductToCart`,cartItem,{
+      headers: {
+        Authorization: `${session.accessToken}`, // Gửi token trong header
+      },
+    });  // Gọi API thêm sản phẩm vào giỏ hàng
+    return response.data
   }
 );
 

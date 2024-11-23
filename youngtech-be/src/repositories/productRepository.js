@@ -48,24 +48,89 @@ const productRepository = {
     },
     
     // Thêm hàm mới để lấy sản phẩm theo childCategory_id
-    getProductByChildCategory: async (childCategoryId) => {
-        const query = `SELECT * FROM product WHERE childCategory_id = :childCategoryId`;
-        const [result] = await sequelize.query(query, { replacements: { childCategoryId } });
-        return result; // Trả về danh sách các sản phẩm tìm thấy
-    },
-    getProductByParenCategory: async (parentCategoryId) => {
-        const query = `
+    getProductByChildCategory: async ({ childCategoryId, limit, offset }) => {
+        try {
+          // Câu truy vấn chính để lấy danh sách sản phẩm
+          const query = `
+            SELECT * 
+            FROM product 
+            WHERE childCategory_id = :childCategoryId
+            ${limit ? 'LIMIT :limit OFFSET :offset' : ''}
+          `;
+      
+          // Câu truy vấn phụ để tính tổng số sản phẩm
+          const countQuery = `
+            SELECT COUNT(*) as totalItems 
+            FROM product 
+            WHERE childCategory_id = :childCategoryId
+          `;
+      
+          // Thực thi câu truy vấn chính
+          const [result] = await sequelize.query(query, {
+            replacements: {
+              childCategoryId,
+              limit,
+              offset,
+            },
+          });
+      
+          // Thực thi câu truy vấn để lấy tổng số sản phẩm
+          const [countResult] = await sequelize.query(countQuery, {
+            replacements: { childCategoryId },
+          });
+      
+          // Trả về kết quả
+          return {
+            data: result, // Danh sách sản phẩm
+            totalItems: countResult[0].totalItems, // Tổng số sản phẩm
+          };
+        } catch (error) {
+          console.error('Error in getProductByChildCategory:', error);
+          throw error; // Ném lỗi ra ngoài để controller xử lý
+        }
+      },
+      
+    getProductByParentCategory: async ({ parentCategoryId, limit = null,offset = null }) => {
+        // Khởi tạo câu truy vấn cơ bản để lấy dữ liệu sản phẩm
+        let query = `
           SELECT p.*
           FROM product p
           JOIN childcategories c ON p.childCategory_id = c.id
           WHERE c.parentCategory_id = :parentCategoryId
         `;
+      
+        // Nếu có limit và offset, thêm các điều kiện phân trang
+        if (limit) {
+          query += offset !== null ? ` LIMIT :limit OFFSET :offset` : ` LIMIT :limit`;
+        }
+      
+        // Khởi tạo truy vấn để tính tổng số sản phẩm
+        const totalCountQuery = `
+          SELECT COUNT(*) as total
+          FROM product p
+          JOIN childcategories c ON p.childCategory_id = c.id
+          WHERE c.parentCategory_id = :parentCategoryId
+        `;
+      
+        // Thực thi truy vấn lấy danh sách sản phẩm
         const [result] = await sequelize.query(query, {
-          replacements: { parentCategoryId }
+          replacements: { parentCategoryId, limit, offset },
         });
-        return result;
-    },
-
+      
+        // Thực thi truy vấn để lấy tổng số sản phẩm
+        const [[totalCount]] = await sequelize.query(totalCountQuery, {
+          replacements: { parentCategoryId },
+        });
+      
+        // Trả về dữ liệu theo định dạng yêu cầu
+        return {
+          data: result, // Danh sách sản phẩm
+          totalItems: totalCount.total, // Tổng số sản phẩm
+        };
+      },
+      
+    
+    
     deleteProduct: async (id) => {
         const query = `UPDATE product SET flag = true WHERE id = :id`;
         const [result] = await sequelize.query(query, { replacements: { id } });
