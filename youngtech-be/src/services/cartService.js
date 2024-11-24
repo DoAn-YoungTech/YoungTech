@@ -1,4 +1,3 @@
- 
 const cartRepository = require('../repositories/cartRepository');
 
 const cartService = {
@@ -73,23 +72,61 @@ const cartService = {
 
   // checkCustomerExistInCart(getCustomerId)
   checkCustomerExistInCart: async (getCustomerId) => {
-    return await cartRepository.checkCustomerExistInCart(getCustomerId)
+    return await cartRepository.checkCustomerExistInCart(getCustomerId);
   },
 
   // checkUserExist(userId)
   checkUserExist: async (userId) => {
-   return await cartRepository.checkUserExist(userId);
+    return await cartRepository.checkUserExist(userId);
   },
 
   // getIdCart
-  getIdCart : async (customerId) => {
-   return await cartRepository.getIdCart(customerId)
+  getIdCart: async (customerId) => {
+    return await cartRepository.getIdCart(customerId);
   },
 
-  // updateProduct(getProductId) 
-  updateProduct : async (quantity, getProductId) => {
-    return await cartRepository.updateProduct(quantity, getProductId)
+  // updateProduct(getProductId)
+  updateProduct: async (quantity, getProductId) => {
+    return await cartRepository.updateProduct(quantity, getProductId);
+  },
+
+
+  // checkUserIdExist(userId)
+  checkUserIdExist : async (userId) => {
+    return await cartRepository.checkUserIdExist(userId)
+  },
+  //getCartId(checkUserIdExist)
+  getCartId : async (checkUserIdExist) => {
+    return await  cartRepository.getCartId(checkUserIdExist)
+  },
+
+  // getOrder(getCartId) 
+  getOrder : async (getCartId) => {
+    return await cartRepository.getOrder(getCartId)
+  },
+
+  // check product in stock 
+  checkStock : async (product_id) => {
+   return await cartRepository.checkStock(product_id)
+  },
+
+
+  // add product to order 
+  addProductToOrder : async (totalAmount, customerId) => {
+     return await cartRepository.addProductToOrder(totalAmount, customerId)
+  },
+
+  // clearUpdateCart(getCartId) 
+  clearUpdateCart : async (getCartId) => {
+    return await cartRepository.clearUpdateCart(getCartId)
+  },
+
+  // addProductOrderDetail(getCartId) 
+
+  addProductOrderDetail : async (getCartId) => {
+    return await cartRepository.addProductOrderDetail(getCartId)
   }
 };
 
- 
+
+module.exports = cartService

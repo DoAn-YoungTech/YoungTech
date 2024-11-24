@@ -21,8 +21,7 @@ const CartItem = sequelize.define(
         model: "Cart",
         key: "id"
       }
-    },
-
+    }, 
     product_id: {
       type: DataTypes.INTEGER,
       references: {

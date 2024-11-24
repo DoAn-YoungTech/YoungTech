@@ -34,8 +34,7 @@ const rootModel = {
   Product,
   Role,
   Supplier,
-  roleAccount,
-
+  roleAccount, 
   Image,
   RefreshToken
 };

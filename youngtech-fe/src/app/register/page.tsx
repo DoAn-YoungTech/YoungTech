@@ -8,9 +8,12 @@ import { Video } from "../../components/video/Video";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-
+import './register.css'
+import { useRouter } from 'next/navigation';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 const schema = yup.object().shape({
-  username: yup.string().required('Họ & tên là bắt buộc'),
+  userName: yup.string().required('Usename là bắt buộc'),
   email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
   password: yup.string().min(6, 'Mật khẩu phải ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
   confirmPassword: yup.string()
@@ -19,42 +22,50 @@ const schema = yup.object().shape({
 });
 
 const Page = () => {
+  const router = useRouter();
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
   const [checked, setChecked] = useState<boolean>(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<string>(''); // Đảm bảo message là string
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
   const onSubmit = async (data: any) => {
-    const { username, email, password, role = "admin" } = data;
-
+    const { userName, email, password } = data;
     try {
-      const res = await axios.post('http://localhost:8000/auth/register', {
-        username,
+      const res = await axios.post('http://localhost:8080/api/auth/register', {
+        userName, 
         email,
-        password,
-        role
+        password
       }, {
         headers: {
           'Content-Type': 'application/json',
         }
       });
-
+  
       if (res.status === 201) {
-        setMessage('Đăng ký thành công');
+        toast.success("Đăng ký thành công !");
+        setTimeout(()=>{
+          router.push('/login')
+        },2000);
+      } else {
+        toast.error("Đăng ký thất bại !")
       }
     } catch (error: any) {
-      setMessage(error.response?.data.message || 'Đăng ký thất bại');
+      const errorMessage = typeof error.response?.data.message === 'string'
+        ? error.response.data.message
+        : 'Đăng ký thất bại';
+      setMessage(errorMessage);
     }
   };
 
   return (
     <div className="w-full font-sans flex justify-center bg-gray-50 py-10">
+      <ToastContainer/>
       <div className="w-[90%] mt-5 bg-white shadow-lg rounded-lg overflow-hidden lg:flex">
-        <Video className="hidden p-8 lg:block lg:w-[50%]" />
-        <div className="w-full lg:w-[45%] p-8">
+        <Video className="hidden animotions-register  p-8 lg:block lg:w-[50%]" />
+        <div className="w-full  lg:w-[45%] p-8">
           <h3 className="text-center text-2xl font-bold mb-6">Đăng Ký Tài Khoản</h3>
 
           {/* Đăng ký với Google */}
@@ -68,31 +79,31 @@ const Page = () => {
           <h5 className="text-center text-gray-500 font-medium mb-4">Hoặc</h5>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Input Username */}
+            {/* Input UserName */}
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700">Họ & tên</label>
+              <label className="block text-sm font-medium text-gray-700">UserName</label>
               <div className="flex items-center gap-2 border overflow-hidden rounded-md">
-                <AiOutlineUser className="ml-3  text-gray-500" size={22} />
+                <AiOutlineUser className="ml-3 text-gray-500" size={22} />
                 <input
                   type="text"
-                  placeholder="Nhập tên Anh/Chị..."
-                  {...register('username')}
-                  className="w-full px-4 py-2  focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  placeholder="Nhập userName Anh/Chị..."
+                  {...register('userName')}
+                  className="w-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
-              {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
+              {errors.userName && <p className="text-red-500 text-sm">{errors.userName.message}</p>}
             </div>
 
             {/* Input Email */}
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700">Email</label>
-              <div className="flex items-center  gap-2 border overflow-hidden rounded-md">
-                <AiOutlineMail className="ml-3  text-gray-500" size={22} />
+              <div className="flex items-center gap-2 border overflow-hidden rounded-md">
+                <AiOutlineMail className="ml-3 text-gray-500" size={22} />
                 <input
                   type="email"
                   placeholder="Nhập email Anh/Chị..."
                   {...register('email')}
-                  className="w-full px-4 py-2  focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
               {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
@@ -101,13 +112,13 @@ const Page = () => {
             {/* Input Password */}
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700">Mật khẩu</label>
-              <div className="flex items-center  gap-2 border overflow-hidden rounded-md">
+              <div className="flex items-center gap-2 border overflow-hidden rounded-md">
                 <AiOutlineLock className="ml-3 text-gray-500" size={22} />
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Nhập mật khẩu..."
                   {...register('password')}
-                  className="w-full px-4 py-2  focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 <button
                   type="button"
@@ -123,13 +134,13 @@ const Page = () => {
             {/* Input Confirm Password */}
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700">Nhập lại mật khẩu</label>
-              <div className="flex items-center  gap-2 border overflow-hidden rounded-md">
+              <div className="flex items-center gap-2 border overflow-hidden rounded-md">
                 <AiOutlineLock className="ml-3 text-gray-500" size={22} />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Nhập lại mật khẩu..."
                   {...register('confirmPassword')}
-                  className="w-full px-4 py-2  focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
                 <button
                   type="button"
@@ -157,7 +168,7 @@ const Page = () => {
               Đăng Ký
             </button>
 
-            {message && <p className="text-center text-green-600 mt-4">{message}</p>}
+            {typeof message === 'string' && message && <p className="text-center text-green-600 mt-4">{message}</p>}
           </form>
 
           <div className="flex justify-between items-center mt-6">

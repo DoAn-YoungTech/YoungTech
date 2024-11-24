@@ -8,13 +8,16 @@ import { BsCart } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import MenuCategory from "../categories/MenuCategory";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/Store";
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State cho input tìm kiếm
   const pathname = usePathname();
   const isAdmin = pathname.includes('/dashboard');
-
+  const user = useSelector((state: RootState) => state.auth.user);
+  const idUser = user?.id;  // Optional chaining để tránh lỗi nếu user là null hoặc undefined
+  
   useEffect(() => {
     const handleScroll = () => {
       const topHeader = document.getElementById("topHeader")?.offsetHeight || 0;
@@ -32,8 +35,10 @@ const Header = () => {
         <section>
           <header
             id="header"
-            className={`transition-all duration-500 backdrop-blur-md bg-white border-b-[1px] ${
-              isSticky ? "fixed top-0 bg-white w-full z-10 shadow-sm" : ""
+            className={`transition-all  z-30
+              
+              duration-500 backdrop-blur-md bg-white border-b-[1px] ${
+              isSticky ? "fixed top-0 bg-white w-full z-15 shadow-sm" : ""
             }`}
           >
             <div className="lg:container px-1 m-auto">
@@ -70,10 +75,11 @@ const Header = () => {
                       </li>
                       <li className="ml-[20px]">
                         <Link
-                          href="/login"
-                          className="block px-3 py-[20px] transition-all duration-300 border-b-2 hover:border-b-red-700 border-transparent"
+                           href={idUser ? "/lich-su-mua-hang" : "/login"}
+                          className="block flex items-center gap-1 px-3 py-[20px] transition-all duration-300 border-b-2 hover:border-b-red-700 border-transparent"
                         >
                           <FiUser className="text-[25px]" />
+                          <h3 className="text-[20px]" >{idUser ? idUser : ""}</h3>
                         </Link>
                       </li>
                       <li className="ml-[20px]">

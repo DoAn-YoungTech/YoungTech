@@ -10,15 +10,14 @@ const productService = {
     },
 
     // Thêm hàm mới để lấy sản phẩm theo childCategory_id
-    getProductByChildCategory: async (childCategoryId) => {
-        return await productRepository.getProductByChildCategory(childCategoryId);
+    getProductByChildCategory: async (childCategoryId,limit, offset) => {
+        return await productRepository.getProductByChildCategory(childCategoryId,limit, offset);
     },
 
-    getProductByParentCategory: async (parentCategoryId) => {
-        return await productRepository.getProductByParentCategory(parentCategoryId);
-
-    },
-    
+    getProductByParentCategory: async (parentCategoryId,limit,offset) => {
+        return await productRepository.getProductByParentCategory(parentCategoryId,limit,offset)
+       
+      },
     createProduct: async (data) => {
         return await productRepository.createProduct(data);
     },

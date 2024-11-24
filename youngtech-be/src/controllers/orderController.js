@@ -1,4 +1,4 @@
-const orderService = require("../services/orderService");
+const orderService = require('../services/orderService');
 
 const OrderController = {
   // bán hàng
@@ -29,22 +29,22 @@ const OrderController = {
   getAllOrder: async (req, res) => {
     try {
       // Lấy tham số phân trang từ query (mặc định là page 1 và limit 10)
-      const page = parseInt(req.query.page) || 1; 
+      const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 2;
-  
+
       // Tính toán offset dựa trên page và limit
       const offset = (page - 1) * limit;
-  
+
       // Gọi service để lấy danh sách đơn hàng với phân trang
       const result = await orderService.getAllOrder({ offset, limit });
-  
+
       if (!result || result.data.length === 0) {
-        return res.status(404).json({ message: "No orders found" });
+        return res.status(404).json({ message: 'No orders found' });
       }
-  
+
       // Trả về kết quả phân trang
       res.json({
-        message: "All orders",
+        message: 'All orders',
         data: result.data,
         pagination: {
           page,
@@ -54,37 +54,41 @@ const OrderController = {
         },
       });
     } catch (err) {
-      res.status(500).json({ message: "Invalid order", error: err.message });
+      res.status(500).json({ message: 'Invalid order', error: err.message });
     }
   },
-  
 
   getOrderById: async (req, res) => {
     try {
       const id = req.params.id;
       const result = await orderService.getOrderById(id);
       if (!result) {
-        return res.status(404).json({ message: "Order not found" });
-      }else {
-        res.status(200).json({ message: "Success", data: result });
+        return res.status(404).json({ message: 'Order not found' });
+      } else {
+        res.status(200).json({ message: 'Success', data: result });
       }
     } catch (err) {
-      res.status(500).json({ message: "Error retrieving order", error: err.message });
+      res
+        .status(500)
+        .json({ message: 'Error retrieving order', error: err.message });
     }
-  },  
-
+  },
 
   createOrder: async (req, res) => {
     try {
       const data = req.body;
       const result = await orderService.createOrder(data);
       if (!result) {
-        res.status(400).json({ message: "Create order failed!" });
+        res.status(400).json({ message: 'Create order failed!' });
       } else {
-        res.status(201).json({ message: "Order created successfully!", data: result });
+        res
+          .status(201)
+          .json({ message: 'Order created successfully!', data: result });
       }
     } catch (err) {
-      res.status(500).json({ message: "Internal Server Error", error: err.message });
+      res
+        .status(500)
+        .json({ message: 'Internal Server Error', error: err.message });
     }
   },
 
@@ -94,12 +98,14 @@ const OrderController = {
       const data = req.body;
       const result = await orderService.updateOrder(id, data);
       if (!result) {
-        res.status(404).json({ message: " Order not found for update" });
+        res.status(404).json({ message: ' Order not found for update' });
       } else {
-        res.status(200).json({ message: "Update successful", data: result });
+        res.status(200).json({ message: 'Update successful', data: result });
       }
     } catch (err) {
-      res.status(500).json({ message: "Internal Server Error", error: err.message });
+      res
+        .status(500)
+        .json({ message: 'Internal Server Error', error: err.message });
     }
   },
 
@@ -108,31 +114,42 @@ const OrderController = {
       const id = req.params.id;
       const result = await orderService.deleteOrder(id, { flag: true });
       if (!result) {
-        res.status(404).json({ message: "Order not found" });
+        res.status(404).json({ message: 'Order not found' });
       } else {
-        res.status(200).json({ message: "Order soft deleted successfully" });
+        res.status(200).json({ message: 'Order soft deleted successfully' });
       }
     } catch (err) {
-      res.status(500).json({ message: "Server error", error: err.message });
+      res.status(500).json({ message: 'Server error', error: err.message });
     }
   },
   restoreOrder: async (req, res) => {
     try {
       const id = req.params.id;
-  
+
       // Gọi service để khôi phục lại đơn hàng
       const result = await orderService.restoreOrder(id);
-  
+
       if (!result) {
-        res.status(404).json({ message: "Order not found or already restored" });
+        res
+          .status(404)
+          .json({ message: 'Order not found or already restored' });
       } else {
-        res.status(200).json({ message: "Order restored successfully!" });
+        res.status(200).json({ message: 'Order restored successfully!' });
       }
     } catch (err) {
-      res.status(500).json({ message: "Internal Server Error", error: err.message });
+      res
+        .status(500)
+        .json({ message: 'Internal Server Error', error: err.message });
     }
   },
-    
+  
+  viewOrder : async (req, res) => {
+    try {
+       // 
+    } catch (error) {
+      res.status(500).json({message : error})
+    }
+  }
 };
 
 module.exports = OrderController;

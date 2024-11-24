@@ -5,7 +5,6 @@ const FilterModal = ({ isOpen, onClose }) => {
   
   const [selectedBrand, setSelectedBrand] = useState([]);
   const [selectedBrandOne, setSelectedBrandOne] = useState([]);
-  console.log(selectedBrandOne)
 
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedType, setSelectedType] = useState("");
