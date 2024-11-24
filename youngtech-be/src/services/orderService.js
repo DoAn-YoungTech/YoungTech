@@ -1,5 +1,23 @@
 const orderRepository = require('../repositories/orderRepository');
 const orderService = {
+  addCustomerForOrder: async (data) => {
+    // Tìm khách hàng dựa trên số điện thoại
+    const existingCustomer = await orderRepository.findCustomerByPhoneNumber(data.phoneNumber);
+
+    if (existingCustomer) {
+      // Nếu khách hàng đã tồn tại, trả về thông tin của họ
+      return existingCustomer;
+    }
+
+    // Nếu không tồn tại, thêm mới
+    return await orderRepository.addCustomerForOrder(data);
+  },
+
+  // Hàm tìm khách hàng (có thể không cần nếu repository đã hỗ trợ)
+  findCustomer: async (phoneNumber) => {
+    return await orderRepository.findCustomerByPhoneNumber(phoneNumber);
+  },
+ 
   getAllOrder: async ({ offset, limit }) => {
     return await orderRepository.getAllOrder({ offset, limit });
   },

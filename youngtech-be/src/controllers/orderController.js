@@ -1,6 +1,31 @@
 const orderService = require("../services/orderService");
 
 const OrderController = {
+  // bán hàng
+  addCustomerForOrder: async (req, res) => {
+    try {
+      const { fullName, phoneNumber, address } = req.body;
+
+      // Kiểm tra dữ liệu đầu vào
+      if (!phoneNumber) {
+        return res.status(400).json({ message: 'Số điện thoại là bắt buộc.' });
+      }
+
+      // Gọi Service để xử lý logic
+      const customer = await orderService.addCustomerForOrder({ fullName, phoneNumber, address });
+
+      // Phản hồi kết quả
+      return res.status(200).json({
+        message: customer.created ? 'Thêm khách hàng thành công.' : 'Khách hàng đã tồn tại.',
+        data: customer,
+      });
+    } catch (error) {
+      console.error('Lỗi khi xử lý khách hàng:', error);
+      return res.status(500).json({ message: 'Đã xảy ra lỗi.', error: error.message });
+    }
+  },
+
+
   getAllOrder: async (req, res) => {
     try {
       // Lấy tham số phân trang từ query (mặc định là page 1 và limit 10)

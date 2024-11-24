@@ -18,5 +18,6 @@ orderRoutes.put('/:id', orderController.updateOrder);
 orderRoutes.delete('/:id', orderController.deleteOrder);
 
 orderRoutes.put('/:id/restore',orderController.restoreOrder);
+orderRoutes.post('/add-customer', orderController.addCustomerForOrder);
 
 module.exports = orderRoutes;
