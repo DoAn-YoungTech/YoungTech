@@ -33,6 +33,10 @@ const Order = sequelize.define(
       allowNull: false,
       defaultValue: 'Pending',
     },
+    paymentMethod: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    }
   },
   {
     tableName: 'Order',

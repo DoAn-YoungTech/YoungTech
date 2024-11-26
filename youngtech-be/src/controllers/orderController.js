@@ -1,6 +1,10 @@
 const orderService = require('../services/orderService');
 
 const OrderController = {
+
+    // add { id_customer, totalamount, paymentmethod => tạo order- gọi về service add order }
+    // mảng order detail , gọi về service add order detail - oddtservice.addmang(orderdetails, idOrrder)- ( duyệt qua các phần tử order detail trong mảng này, và mỗi lần duyệt qua thì sẽ gọi về hàm add orderdtail trong repository )
+
   // bán hàng
   addCustomerForOrder: async (req, res) => {
     try {
@@ -25,7 +29,7 @@ const OrderController = {
     }
   },
 
-
+  // join 2 bảng order, và customer 
   getAllOrder: async (req, res) => {
     try {
       // Lấy tham số phân trang từ query (mặc định là page 1 và limit 10)
@@ -58,6 +62,7 @@ const OrderController = {
     }
   },
 
+  // viết riêng controller cho orderdetail để trả về mảng orderdetail theo id của order
   getOrderById: async (req, res) => {
     try {
       const id = req.params.id;

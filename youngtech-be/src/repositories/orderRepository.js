@@ -5,27 +5,53 @@ const orderRepository = {
   // tạo thông tin khách hàng hoặc kiểm tra khách hàng cũ
   // Tìm khách hàng theo số điện thoại
   findCustomerByPhoneNumber: async (phoneNumber) => {
-    const query = `SELECT * FROM customer WHERE phoneNumber = :phoneNumber AND flag = false`;
-    const [result] = await sequelize.query(query, { replacements: { phoneNumber } });
-    return result[0]; // Trả về khách hàng đầu tiên nếu tìm thấy, hoặc `undefined` nếu không có
+    try {
+      const query = `
+        SELECT * 
+        FROM customer 
+        WHERE phoneNumber = :phoneNumber AND flag = false
+      `;
+      const [result] = await sequelize.query(query, { replacements: { phoneNumber } });
+      return result[0]; // Trả về khách hàng đầu tiên nếu tìm thấy
+    } catch (err) {
+      throw new Error("Lỗi khi tìm khách hàng theo số điện thoại: " + err.message);
+    }
   },
+
+  // add order 
+  // add order detail 
+   
+  
 
   // Thêm mới khách hàng nếu không tồn tại
   addCustomerForOrder: async (data) => {
-    const query = `
-      INSERT INTO customer (flag, fullName, phoneNumber, address, account_id)
-      VALUES (false, :fullName, :phoneNumber, :address, NULL)
-    `;
-    const [result] = await sequelize.query(query, {
-      replacements: { fullName: data.fullName, phoneNumber: data.phoneNumber, address: data.address },
-    });
-
-    // Trả về thông tin khách hàng vừa thêm
-    const customerId = result.insertId;
-    const newCustomerQuery = `SELECT * FROM customers WHERE id = :customerId`;
-    const [newCustomer] = await sequelize.query(newCustomerQuery, { replacements: { customerId } });
-    return newCustomer[0];
+    try {
+      const query = `
+        INSERT INTO customer (flag, fullName, phoneNumber, address, account_id)
+        VALUES (false, :fullName, :phoneNumber, :address, NULL)
+      `;
+      const [result] = await sequelize.query(query, {
+        replacements: {
+          fullName: data.fullName,
+          phoneNumber: data.phoneNumber,
+          address: data.address,
+        },
+      });
+  
+      // Truy vấn để lấy lại thông tin khách hàng vừa được thêm
+      const customerId = result.insertId;
+      const newCustomerQuery = `
+        SELECT * 
+        FROM customer 
+        WHERE id = :customerId
+      `;
+      const [newCustomer] = await sequelize.query(newCustomerQuery, { replacements: { customerId } });
+      return newCustomer[0];
+    } catch (err) {
+      throw new Error("Lỗi khi thêm khách hàng mới: " + err.message);
+    }
   },
+  
 
   getAllOrder: async ({ offset, limit }) => {
     const query = `SELECT * FROM \`order\` LIMIT :limit OFFSET :offset`;
