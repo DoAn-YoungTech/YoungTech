@@ -6,6 +6,7 @@ const invoiceRouters = require('./invoiceRouters');
 const employeeRouter = require('./employeeRouter');
 const customerRoutes = require('./customerRoutes');
 const productRoutes = require('./productRoutes');
+const imageRotes = require('./imageRotes');
  
 const orderRouter = require('./orderRoutes')
  
@@ -29,6 +30,11 @@ router.use('/admin', admin);
 router.use('/roles', roles);
 router.use('/cart', cart)
 router.use('/product', productRoutes);
+
+router.use('/image', imageRotes);
+
+
+ 
 router.use('/order', orderRouter)
 router.use('/childcategories',childCategoriesRouters);
 router.use('/parencategories',parentCategoriesRouters);

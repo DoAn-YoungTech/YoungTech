@@ -1,7 +1,9 @@
-import CategoryParentActions from "@/components/dashboard/category-parent/CategoryParentMain"
+
+import ListParentCategory from "@/components/dashboard/parentCategory/ListParentCategory"
+
 const page = () => {
   return (
-    <CategoryParentActions/>
+    <ListParentCategory/>
   )
 }
 
