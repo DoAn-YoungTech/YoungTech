@@ -1,113 +1,106 @@
 const imageService = require('../services/imageService');
 
 const imageController = {
-  getAllImage: async (req, res) => {
-    try {
-      const result = await imageService.getAllImage();
-      if (!result || result.data.length === 0) {
-        return res.status(404).json({ message: 'No images found' });
-      }
-      // trả về kết quả
-      res.json({
-        message: 'All images',
-        data: result.data
+  create: async (req, res) => {
+    const { images, productId } = req.body;
+
+    if (!images || !productId) {
+      return res.status(400).json({
+        message: 'Images and productId are required',
       });
-    } catch (err) {
-      res.status(500).json({ message: 'Internal Server Error', error: err.message });
+    }
+
+    try {
+      const result = await imageService.saveImages(images, productId);
+      return res.status(200).json({
+        message: 'Images created successfully',
+        data: result,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
     }
   },
 
-  // getImagebyProductId trả về danh sách ảnh
-  getImageByProductId: async (req, res) => {
-    try {
-        const productId = req.params.productId; // Lấy productId từ URL params
-        const result = await imageService.getImageByProductId(productId); // Gọi phương thức từ service
+  updateImages: async (req, res) => {
+    const { images, productId } = req.body;
 
-        if (!result || result.length === 0) {
-            return res.status(404).json({ message: 'No images found for the given product ID' });
-        }
-
-        return res.status(200).json({ message: 'Success', data: result });
-    } catch (err) {
-        console.error(err); // Log lỗi khi có sự cố
-        return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+    if (!images || !productId) {
+      return res.status(400).json({
+        message: 'Images and productId are required',
+      });
     }
-},
-    getImageById: async (req, res) => {
-      try {
-        const id = req.params.id;
-        const result = await imageService.getImageById(id);
-    
-        if (!result) {
-          return res.status(404).json({ message: 'Image by id not found' }); // Thông báo lỗi đã sửa
-        }
-    
-        return res.status(200).json({ message: 'Success', data: result });
-      } catch (err) {
-        console.error(err); // Log lỗi khi có sự cố
-        return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+
+    try {
+      const result = await imageService.updateImages(images, productId);
+      return res.status(200).json({
+        message: 'Images updated successfully',
+        data: result,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
+    }
+  },
+
+  getAllByProductId: async (req, res) => {
+    const { productId } = req.params;
+
+    if (!productId) {
+      return res.status(400).json({
+        message: 'Product ID is required',
+      });
+    }
+
+    try {
+      const images = await imageService.getAllImagesByProductId(productId);
+      return res.status(200).json({
+        message: 'Images retrieved successfully',
+        data: images,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
+    }
+  },
+
+  getDetailImage: async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        message: 'Image ID is required',
+      });
+    }
+
+    try {
+      const image = await imageService.getDetailImage(id);
+      if (!image) {
+        return res.status(404).json({
+          message: `Image with ID ${id} not found`,
+        });
       }
-    },
- 
-    updateImage: async (req, res) => {
-        try {
-          const id = req.params.id;
-          const data = req.body;
-          const result = await imageService.updateImage(id, data);
-          
-          if (!result) {
-            return res.status(404).json({ message: 'Image not found for update' });
-          }
-      
-          return res.status(200).json({ message: 'Update successful', data: result });
-        } catch (err) {
-          console.error(err); // Log lỗi để dễ dàng debug
-          return res.status(500).json({ message: 'Internal Server Error', error: err.message });
-        }
-      },
- 
-      createImage: async (req, res) => {
-        try {
-          const data = req.body;
-          const result = await imageService.createImage(data);
-          res.status(201).json({ message: "Image created successfully", data: result });
-        } catch (err) {
-          res.status(500).json({ message: 'Internal Server Error', error: err.message });
-        }
-      },
-    
-      deleteImage: async (req, res) => {
-        try {
-          const id = req.params.id;
-          const result = await imageService.deleteImage(id); // Gọi service để thực hiện xóa mềm
-      
-          if (!result) {
-            res.status(404).json({ message: "Image not found" });
-          } else {
-            res.status(200).json({ message: "Image marked as deleted successfully!" });
-          }
-        } catch (err) {
-          res.status(500).json({ message: "Internal Server Error", error: err.message });
-        }
-      },
-    
-      restoreImage: async (req, res) => {
-        try {
-          const id = req.params.id;
-      
-          // Gọi service để khôi phục lại
-          const result = await imageService.restoreImage(id);
-      
-          if (!result) {
-            res.status(404).json({ message: "Image not found or already restored" });
-          } else {
-            res.status(200).json({ message: "Image restored successfully!" });
-          }
-        } catch (err) {
-          res.status(500).json({ message: "Internal Server Error", error: err.message });
-        }
-      }
-  };
-  
-  module.exports = imageController;
-  
+      return res.status(200).json({
+        message: 'Image details retrieved successfully',
+        data: image,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
+    }
+  },
+};
+
+module.exports = imageController; // Ensure the export is correct
