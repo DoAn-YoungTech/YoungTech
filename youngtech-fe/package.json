@@ -47,6 +47,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-motion": "^0.4.3-beta",
     "vietnam-provinces": "^0.0.4",
+    "youngtech-fe": "file:",
     "yup": "^1.4.0"
   },
   "devDependencies": {

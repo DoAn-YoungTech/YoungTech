@@ -1,9 +1,8 @@
+import ListParentCategory from "@/components/dashboard/parentCategory/ListParentCategory"
 
 const page = () => {
   return (
-    <div>
-      <h1>Hello</h1>
-    </div>
+    <ListParentCategory/>
   )
 }
 
