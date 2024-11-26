@@ -16,5 +16,7 @@ export interface Product {
 export interface ProductState {
   data: Product[];
   loading: boolean;
+  parenProduct:Product[];
+  childProduct:Product[];
   error: string | null;
 }

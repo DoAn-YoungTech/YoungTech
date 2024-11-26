@@ -1,9 +1,9 @@
 import React from 'react'
 
-export const Video = () => {
+export const Video = ({className}) => {
   return (
-    <div className="w-[30%] hidden lg:block">
-          <div className="h-[700px]">
+    <div className={`${className}`}>
+          <div className="h-[600px]">
             <video className="w-full h-full" autoPlay loop muted>
               <source src="/video/video.mp4" type="video/mp4" />
             </video>

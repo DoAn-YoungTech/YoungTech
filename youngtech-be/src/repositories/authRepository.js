@@ -2,13 +2,19 @@ const sequelize = require('../configs/db');
 
 const authRepository = {
   register: async (userName, email, hashPassword) => {
-    const query = `INSERT INTO account (userName , email , password) VALUES (:userName , :email , :password)`;
-    await sequelize.query(query, {
-      replacements: { userName, email, password: hashPassword },
-    });
-    const [result] = await sequelize.query(`SELECT LAST_INSERT_ID() as id`);
-    const accountId = result[0].id;
-    return accountId;
+    try {
+      const query = `INSERT INTO account (userName , email , password) VALUES (:userName , :email , :password)`;
+      await sequelize.query(query, {
+        replacements: { userName, email, password: hashPassword },
+      });
+      const [result] = await sequelize.query(`SELECT LAST_INSERT_ID() as id`);
+      const accountId = result[0].id;
+      return accountId;
+
+    }catch(err) {
+      console.log(err)
+      throw new Error(err.message) 
+    }
   },
 
   findUserByEmail: async (email) => {

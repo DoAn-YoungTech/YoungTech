@@ -1,10 +1,13 @@
 const employeeRepository = require('../repositories/employeeRepository');
 
 const employeeService = {
-
+  // checkPhoneNumberExist
+  checkPhoneNumberExist : async (phoneNumber) =>  {
+    return await employeeRepository.checkPhoneNumberExist(phoneNumber)
+  },
  
-  createEmployee: async (data, userId) => {
-    return await employeeRepository.createEmployee(data, userId);
+  createEmployee: async (dataAccount , newAccount) => {
+    return await employeeRepository.createEmployee(dataAccount , newAccount);
   },
   
   //checkUserExist
@@ -28,6 +31,13 @@ const employeeService = {
   deleteEmployeeById: async (id) => {
     return await employeeRepository.deleteEmployeeById(id);
   },
+
+  // getRoleId(roleName)
+  getRoleId : async (roleName) => {
+    return await employeeRepository.getRoleId(roleName)
+  }
+   
+  // 
 };
 
 module.exports = employeeService;

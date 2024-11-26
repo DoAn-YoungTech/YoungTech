@@ -1,4 +1,3 @@
-
 const express = require('express');
 const middlewareController = require('../controllers/middlewareController');
 const employeeRouter = express.Router();

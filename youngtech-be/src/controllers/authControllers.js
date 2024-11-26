@@ -6,6 +6,9 @@ const authController = {
   register: async (req, res) => {
     try {
       const { userName, email, password } = req.body;
+      
+      console.log(userName, email, password);
+
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
       // check email
@@ -23,7 +26,8 @@ const authController = {
       }
 
       //add user id to role account
-      const defaultRoleId = 1;
+      const defaultRoleId =  1;
+
       const roleIds = req.body.roleIds || [defaultRoleId];
       await authService.assignRolesToAccount(roleIds, account);
 
