@@ -15,7 +15,7 @@ cart.get(
   '/viewCart',
   middlewareController.verifyToken,
   middlewareController.verifyTokenAndRole(['customer']),
-  middlewareController.checkPermission('Cart_Management' , 'read'),
+  middlewareController.checkPermission('Cart_Management', 'read'),
   cartController.viewCart
 );
 
@@ -23,7 +23,7 @@ cart.put(
   '/editCart',
   middlewareController.verifyToken,
   middlewareController.verifyTokenAndRole(['customer']),
-  middlewareController.checkPermission('Cart_Management' , 'update'),
+  middlewareController.checkPermission('Cart_Management', 'update'),
   cartController.editCart
 );
 
@@ -37,9 +37,16 @@ cart.delete(
   '/removeProductId/:productId',
   middlewareController.verifyToken,
   middlewareController.verifyTokenAndRole(['customer']),
-  middlewareController.checkPermission('Cart_Management' , 'delete'),
+  middlewareController.checkPermission('Cart_Management', 'delete'),
   cartController.removeProductId
 );
 
+cart.delete(
+  '/removeManyProduct',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['customer']),
+  middlewareController.checkPermission('Cart_Management', 'delete'),
+  cartController.removeManyProduct
+);
 
 module.exports = cart;

@@ -4,7 +4,7 @@ const cartController = {
   addProductToCart: async (req, res) => {
     try {
       const user_id = req.user.id;
-      console.log(user_id)
+      console.log(user_id);
       const { quantity, product_id } = req.body;
 
       const customer_id = await cartService.getCustomerIdByAccountId(user_id);
@@ -118,7 +118,7 @@ const cartController = {
           .status(404)
           .json({ message: 'Cart Empty ! Please add product to cart!' });
       }
-      res.status(200).json({ message: "Success",data:result });
+      res.status(200).json({ message: 'Success', data: result });
     } catch (err) {
       return res.status(500).json({ message: err });
     }
@@ -141,6 +141,7 @@ const cartController = {
       const getCartIdByCustomerId = await cartService.getCartIdByCustomerId(
         customerId
       );
+
       console.log(`cart id ${getCartIdByCustomerId}`);
       if (!getCartIdByCustomerId) {
         return res.status(404).json({ message: 'Cart id  not exist!' });
@@ -167,7 +168,7 @@ const cartController = {
   editCart: async (req, res) => {
     try {
       const { quantity, product_id } = req.body;
-      console.log(quantity, product_id)
+      console.log(quantity, product_id);
       // get quantity product by cart_id and product_id
       const userId = req.user.id;
       const checkUserExist = await cartService.checkUserExist(userId);
@@ -224,8 +225,7 @@ const cartController = {
         total,
         checkUserIdExist
       );
-      //then  add product to order detail
-
+      //then  add product to order detail 
       const addProductOrderDetail = await cartService.addProductOrderDetail(
         getCartId
       );
@@ -246,13 +246,32 @@ const cartController = {
     }
   },
 
-  // remove many product from cart 
-  removeManyProduct : async (req, res) => {
+  // remove many product from cart
+  removeManyProduct: async (req, res) => {
     try {
-      // const 
-    }catch(err) {
+      // suppose customer want remove [1,2,3] 3 product from cart
+      const { productIds } = req.body;
+      console.log(productIds);
+
+      const userId = req.user.id;
+      const customerId = await cartService.checkCustomerId(userId);
+
+      const getCart = await cartService.getCart(customerId, productIds);
+
+      if (!getCart) {
+        return res
+          .status(404)
+          .json({
+            message:
+              'Cart Empty ! Please add product to cart . Thanks u so much ',
+          });
+      }
+
+      // check if all product  exist in cart
+      res.status(200).json({ message: getCart });
+    } catch (err) {
       res.status(500).json({ message: err });
     }
-  }
+  },
 };
 module.exports = cartController;

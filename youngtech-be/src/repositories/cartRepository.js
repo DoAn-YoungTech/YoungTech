@@ -253,13 +253,53 @@ const cartRepository = {
 
   // addProductOrderDetail(getCartId)
 
-  addProductOrderDetail : async (getCartId)=> {
+  addProductOrderDetail: async (getCartId) => {
     const query = `
     SELECT 
     cartitem.id AS cartId 
     FROM cartitem WHERE id = :id;
-    `
-  }
+    `;
+  },
+
+  getCart: async (customerId, productIds) => {
+    try {
+      const query = `SELECT * FROM cart WHERE customer_id = :customer_id`;
+      const [result] = await sequelize.query(query, {
+        replacements: { customer_id: customerId },
+      });
+      const cartId = result[0].id;
+      const query2 = `SELECT 
+                       product_id ,
+                       quantity  
+                       FROM cartitem 
+                       WHERE cart_id = :cart_id `;
+      const [result2] = await sequelize.query(query2, {
+        replacements: { cart_id: cartId },
+      });
+
+      const updateCart = result2.filter((item) =>
+        productIds.includes(item.product_id)
+      );
+      let showResult = 0;
+      for (const removeCart of updateCart) {
+        const query3 = `DELETE FROM cartitem WHERE cart_id = :cart_id AND product_id =:product_id`;
+        const [result3] = await sequelize.query(query3, {
+          replacements: { cart_id: cartId, product_id: removeCart.product_id },
+        });
+        showResult += result3.affectedRows;
+      }
+
+      return showResult;
+    } catch (err) {
+      console.error(err);
+      throw Error(err.message);
+    }
+  },
+
+  // checkAllProductIdExist(productId)
+  checkAllProductIdExist: async (productId) => {
+    const query = `SELECT * FROM cartitem WHERE product_id = :product_id`;
+  },
 };
 
 module.exports = cartRepository;
