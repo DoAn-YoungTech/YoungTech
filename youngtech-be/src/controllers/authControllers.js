@@ -1,12 +1,14 @@
 const bcrypt = require('bcrypt');
 const authService = require('../services/authService');
 const jwt = require('jsonwebtoken');
-const RoleService = require('../services/roleService')
+const RoleService = require('../services/roleService');
+const crypto = require('crypto');
+
 const authController = {
   register: async (req, res) => {
     try {
       const { userName, email, password } = req.body;
-      
+
       console.log(userName, email, password);
 
       const salt = await bcrypt.genSalt(10);
@@ -26,9 +28,9 @@ const authController = {
       }
 
       //add user id to role account
-      const roleName = 'customer'
-      const createCustomer = await RoleService.checkRole(roleName)
-        
+      const roleName = 'customer';
+      const createCustomer = await RoleService.checkRole(roleName);
+
       const roleIds = req.body.roleIds || [createCustomer];
       await authService.assignRolesToAccount(roleIds, account);
 
@@ -46,7 +48,6 @@ const authController = {
       return res.status(500).json({ message: err });
     }
   },
-
   //generateAccessToken
   generateAccessToken: (user, getRoleName) => {
     return jwt.sign(
@@ -216,6 +217,92 @@ const authController = {
       return res.status(200).json({ message: 'Logged out success!' });
     } else {
       return res.status(500).json({ message: `Login Failed` });
+    }
+  },
+  // generateResetToken: async (account) => {
+  //   const resetToken = crypto.randomBytes(32).toString('hex');
+  //   const hashToken = crypto
+  //     .createHash('sha256')
+  //     .update(resetToken)
+  //     .digest('hex');
+  //   const expires = Date.now() + 15 * 60 * 1000; // Expires in 15 minutes
+  //   const result = await authService.resetPasswordToken(hashToken, expires);
+  //   if (!result) {
+  //     return res.status(403).json({ message: 'generate fail !' });
+  //   }
+  //   return resetToken;
+  // },
+  generateResetTokens: async (req, res) => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return res.status(404).json({
+          message: 'Email not found ! Please enter your email address.',
+        });
+      }
+      // check email exist . if exist send reset token to email
+      const account = await authService.checkEmailExist(email);
+
+      if (!account) {
+        return res.status(404).json({ message: 'Email not found.' });
+      }
+
+      const resetToken = crypto.randomBytes(32).toString('hex');
+      const hashToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
+      const resetPasswordToken = new Date(Date.now() + 15 * 60 * 1000);
+
+      const generateResetToken = await authService.generateResetToken(
+        account,
+        hashToken,
+        resetPasswordToken
+      );
+      if (!generateResetToken) {
+        return res
+          .status(403)
+          .json({ message: 'Can not generate reset token !' });
+      }
+      return res.status(200).json({ hashToken: resetToken });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { token, newPassword } = req.body;
+
+      const validateResetToken = await authService.validateResetToken(token);
+
+      if (!validateResetToken) {
+        return res.status(403).json({ message: 'Invalid reset token !' });
+      }
+
+      // check reset password expires
+      console.log(validateResetToken.resetPasswordExpires);
+      if (Date.now() > validateResetToken.resetPasswordExpires) {
+        return res
+          .status(403)
+          .json({ message: 'Reset password token expired !' });
+      }
+      const hashPassword = await bcrypt.hash(newPassword, 10);
+
+      const resetPassword = await authService.resetPassword(
+        validateResetToken.id,
+        hashPassword
+      );
+      if (!resetPassword) {
+        return res.status(403).json({ message: 'Can not reset password !' });
+      }
+      // clear reset token from database
+      await authService.clearResetToken(userId);
+
+      return res.status(200).json({ message: 'Password reset successfully !' });
+    } catch (error) {
+      res.status(500).json({ message: 'internal serve error !' });
     }
   },
 };

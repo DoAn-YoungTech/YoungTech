@@ -14,4 +14,16 @@ auth.post(
   authControllers.userLogout
   // authentication
 );
+
+auth.post(
+  '/generateResetTokens',
+  middlewareController.verifyToken,
+  authControllers.generateResetTokens
+);
+
+auth.patch(
+  '/resetPassword',
+  middlewareController.verifyToken,
+  authControllers.resetPassword
+);
 module.exports = auth;
