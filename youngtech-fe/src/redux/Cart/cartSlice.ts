@@ -1,59 +1,54 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+// src/store/cartSlice.ts
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchCartItems, addToCartThunk, updateCartItemQuantity, removeCartItem } from './cartThunks';
 
-// Định nghĩa kiểu dữ liệu cho CartItem
-interface CartItem {
+export interface CartItem {
   id: number;
   name: string;
-  price: number;
   quantity: number;
+  price: number;
 }
 
-// Định nghĩa kiểu dữ liệu cho CartState
 interface CartState {
-  cartItems: CartItem[];
+ cartItems: CartItem[];
+  status: 'idle' | 'loading' | 'failed';
 }
 
 const initialState: CartState = {
-  cartItems: [],
+ cartItems: [],
+  status: 'idle',
 };
 
-// Slice để quản lý giỏ hàng
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
-  reducers: {
-    // Thêm sản phẩm vào giỏ hàng
-    addToCart: (state, action: PayloadAction<CartItem>) => {
-      const itemIndex = state.cartItems.findIndex(item => item.id === action.payload.id);
-      if (itemIndex >= 0) {
-        // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
-        state.cartItems[itemIndex].quantity += action.payload.quantity;
-      } else {
-        // Nếu sản phẩm chưa có trong giỏ hàng, thêm vào giỏ hàng
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCartItems.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchCartItems.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.cartItems = action.payload;
+      })
+      .addCase(fetchCartItems.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(addToCartThunk.fulfilled, (state, action) => {
         state.cartItems.push(action.payload);
-      }
-    },
-
-    // Xóa sản phẩm khỏi giỏ hàng theo ID
-    removeFromCart: (state, action: PayloadAction<number>) => {
-      state.cartItems = state.cartItems.filter(item => item.id !== action.payload);
-    },
-
-    // Cập nhật số lượng sản phẩm trong giỏ hàng
-    updateQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
-      const item = state.cartItems.find(item => item.id === action.payload.id);
-      if (item) {
-        item.quantity = action.payload.quantity;
-      }
-    },
-
-    // Xóa tất cả sản phẩm trong giỏ hàng
-    clearCart: (state) => {
-      state.cartItems = [];
-    },
+      })
+      .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
+        console.log('Action Payload:', action.payload);
+        const index = state.cartItems.findIndex((item) => item.product_id  === action.payload.product_id);
+        if (index !== -1) {
+          state.cartItems[index].quantity = action.payload.quantity
+        }
+      })
+      .addCase(removeCartItem.fulfilled, (state, action) => {
+        state.cartItems = state.cartItems.filter((item) => item.product_id !== action.payload);
+      });
   },
 });
 
-// Các action và reducer
-export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

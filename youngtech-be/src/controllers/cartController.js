@@ -118,7 +118,7 @@ const cartController = {
           .status(404)
           .json({ message: 'Cart Empty ! Please add product to cart!' });
       }
-      res.status(200).json({ message: result });
+      res.status(200).json({ message: "Success",data:result });
     } catch (err) {
       return res.status(500).json({ message: err });
     }
@@ -167,7 +167,7 @@ const cartController = {
   editCart: async (req, res) => {
     try {
       const { quantity, product_id } = req.body;
-
+      console.log(quantity, product_id)
       // get quantity product by cart_id and product_id
       const userId = req.user.id;
       const checkUserExist = await cartService.checkUserExist(userId);

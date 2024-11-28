@@ -73,7 +73,7 @@ const cartRepository = {
     product.productName AS product_name,
     product.description,
     product.productPrice AS price,  
-    image.imageUrl AS image_url
+    product.productImage AS image_url
     FROM cartitem
     JOIN product ON cartitem.product_id = product.id
     LEFT JOIN image ON product.id = image.product_id
