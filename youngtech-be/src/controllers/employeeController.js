@@ -80,7 +80,7 @@ const employeeController = {
           message: 'Phone number exist ! Please try  another phone number !',
         });
       }
-    
+
       // hash password
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
@@ -100,7 +100,7 @@ const employeeController = {
 
       console.log(`newAccount ${newAccount}`);
 
-      const roleName = 'employee';
+      const roleName = dataEmployee.position;
       // from name role => get role id
       console.log(roleName);
 

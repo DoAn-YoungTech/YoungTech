@@ -245,5 +245,14 @@ const cartController = {
       res.status(500).json({ message: error });
     }
   },
+
+  // remove many product from cart 
+  removeManyProduct : async (req, res) => {
+    try {
+      // const 
+    }catch(err) {
+      res.status(500).json({ message: err });
+    }
+  }
 };
 module.exports = cartController;
