@@ -1,25 +1,30 @@
-
 const sequelize = require('../configs/db');
 const dayjs = require('dayjs');
 const employeeRepository = {
   // create employee
-  createEmployee: async (data, userId) => {
-    const originalDateOfBirth = data.dateOfBirth;
-    // Đảm bảo định dạng ngày thành 'YYYY-MM-DD' và không thêm múi giờ . DD-MM-YYYY
-    const formatDay = dayjs(originalDateOfBirth, 'DD-MM-YYYY').format(
-      'YYYY-MM-DD'
-    );
-    const query = `INSERT INTO employee (fullName , profilePicture , dateOfBirth , phoneNumber , position ,  account_id )
-        VALUES (:fullName , :profilePicture , :dateOfBirth , :phoneNumber , :position , :account_id)`;
 
-    const [result] = await sequelize.query(query, {
-      replacements: {
-        ...data,
-        dateOfBirth: formatDay,
-        account_id: userId,
-      },
-    });
-    return result;
+  createEmployee: async (dataAccount, newAccount) => {
+    try {
+      const originalDateOfBirth = dataAccount.dateOfBirth;
+      // Đảm bảo định dạng ngày thành 'YYYY-MM-DD' và không thêm múi giờ . DD-MM-YYYY
+      const formatDay = dayjs(originalDateOfBirth, 'DD-MM-YYYY').format(
+        'YYYY-MM-DD'
+      );
+      const query = `INSERT INTO employee (fullName , profilePicture , dateOfBirth , phoneNumber , position ,  account_id )
+          VALUES (:fullName , :profilePicture , :dateOfBirth , :phoneNumber , :position , :account_id)`;
+
+      const [result] = await sequelize.query(query, {
+        replacements: {
+          ...dataAccount,
+          dateOfBirth: formatDay,
+          account_id: newAccount,
+        },
+      });
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw Error(err.message);
+    }
   },
 
   //checkUserExist
@@ -68,7 +73,20 @@ const employeeRepository = {
     const [result] = await sequelize.query(query, { replacements: { id: id } });
     return result.affectedRows > 0;
   },
+  // getRoleId(roleName)
+  getRoleId: async (roleName) => {
+    const query = `SELECT * FROM role WHERE roleName = :roleName`;
+    const [result] = await sequelize.query(query, {
+      replacements: { roleName: roleName },
+    });
+    return result[0].id;
+  },
+
+  checkPhoneNumberExist : async (phoneNumber) => {
+    const query = `SELECT * FROM employee WHERE phoneNumber = :phoneNumber`
+    const [result] = await sequelize.query(query ,  {replacements : {phoneNumber : phoneNumber}})
+    return result[0]
+  }
 };
 
 module.exports = employeeRepository;
-
