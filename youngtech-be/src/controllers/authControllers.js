@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const authService = require('../services/authService');
 const jwt = require('jsonwebtoken');
-
+const RoleService = require('../services/roleService')
 const authController = {
   register: async (req, res) => {
     try {
@@ -26,9 +26,10 @@ const authController = {
       }
 
       //add user id to role account
-      const defaultRoleId =  1;
-
-      const roleIds = req.body.roleIds || [defaultRoleId];
+      const roleName = 'customer'
+      const createCustomer = await RoleService.checkRole(roleName)
+        
+      const roleIds = req.body.roleIds || [createCustomer];
       await authService.assignRolesToAccount(roleIds, account);
 
       // add user to customer
