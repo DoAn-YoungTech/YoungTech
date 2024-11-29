@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { FaAngleRight,FaAngleLeft } from "react-icons/fa6";
+import DestionscriptProduct from "../destionscript-product/DestionscriptProduct";
 const ImageProductDetails: React.FC = ({dataProduct}) => {
     const images: string[] = [
         "/designImage/imageProducts/dienthoai/ImgProductDetails1.jpg",
@@ -25,6 +26,7 @@ const ImageProductDetails: React.FC = ({dataProduct}) => {
     };
 
     return (
+       <>
         <div className="w-full bg-white p-5 mb-5 rounded-lg">
             <div className="flex flex-col justify-center items-center">
                 <div className="relative w-[90%]  h-[400px] mb-4 overflow-hidden"> 
@@ -78,6 +80,10 @@ const ImageProductDetails: React.FC = ({dataProduct}) => {
                 </div>
             </div>
         </div>
+        <div className="w-full">
+<DestionscriptProduct dataProduct={dataProduct}/>
+        </div>
+       </>
     );
 };
 

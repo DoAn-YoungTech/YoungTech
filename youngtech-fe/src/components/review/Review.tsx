@@ -1,5 +1,5 @@
 "use client"
-import NameProduct from '../InfoDetailProduct/name-product/NameProduct'
+import NameProduct from '../InfoDetailProduct/NameProduct'
 import { FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
 import Star from './Star';

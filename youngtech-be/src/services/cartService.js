@@ -125,6 +125,15 @@ const cartService = {
 
   addProductOrderDetail : async (getCartId) => {
     return await cartRepository.addProductOrderDetail(getCartId)
+  },
+
+  // getCart(customerId) 
+  getCart : async (customerId, productIds) => {
+    return await cartRepository.getCart(customerId, productIds)
+  },
+  // checkAllProductIdExist(productId) 
+  checkAllProductIdExist : async (productId) => {
+    return await cartRepository.checkAllProductIdExist(productId)
   }
 };
 

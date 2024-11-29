@@ -18,7 +18,6 @@ const Account = sequelize.define(
     userName: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -29,6 +28,14 @@ const Account = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    resetPasswordToken : { 
+      type : DataTypes.STRING,
+      allowNull : true,
+    },
+    resetPasswordExpires : {
+      type : DataTypes.DATE,
+      allowNull: true,
+    }
   },
   {
     tableName: 'Account',

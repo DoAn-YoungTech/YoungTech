@@ -7,14 +7,14 @@ import { useDispatch,useSelector } from 'react-redux'
 import { AppDispatch,RootState } from '@/redux/Store'
 import { fetchProductsId } from '@/redux/Product/productThunks'
 import { useSearchParams } from 'next/navigation';
-
-import DestionscriptProduct from './destionscript-product/DestionscriptProduct'
 import { useEffect } from 'react'
+import Loadingcss from './loadingcss/Loadingcss'
 const MainProductDetails = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   const dispatch = useDispatch<AppDispatch>();
   const {data,loading} = useSelector((state: RootState) => state.products);
+  console.log(loading)
   useEffect(()=>{
     if(id){
       dispatch(fetchProductsId(id))
@@ -23,7 +23,9 @@ const MainProductDetails = () => {
   },[dispatch])
   return (
     <>
+     {loading && <Loadingcss/>} 
     <div className='w-full flex flex-col  justify-center items-center'>
+   
         <main className='w-[90%]' >
           <Breadcrumb name="Chi tiết sản phẩm"/>
      
@@ -38,12 +40,8 @@ const MainProductDetails = () => {
         </div>
         
      </div>
-     <div className='w-full  lg:w-[59%]'>
-    <DestionscriptProduct dataProduct={data}/>
-     </div>
-     <div className='w-full  lg:w-[59%]'>
-     {/* <Review/> */}
-     </div>
+   
+    
         </main>
     </div>
     </>

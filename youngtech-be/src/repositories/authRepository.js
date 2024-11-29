@@ -1,14 +1,19 @@
 const sequelize = require('../configs/db');
-
+const crypto = require('crypto');
 const authRepository = {
   register: async (userName, email, hashPassword) => {
-    const query = `INSERT INTO account (userName , email , password) VALUES (:userName , :email , :password)`;
-    await sequelize.query(query, {
-      replacements: { userName, email, password: hashPassword },
-    });
-    const [result] = await sequelize.query(`SELECT LAST_INSERT_ID() as id`);
-    const accountId = result[0].id;
-    return accountId;
+    try {
+      const query = `INSERT INTO account (userName , email , password) VALUES (:userName , :email , :password)`;
+      await sequelize.query(query, {
+        replacements: { userName, email, password: hashPassword },
+      });
+      const [result] = await sequelize.query(`SELECT LAST_INSERT_ID() as id`);
+      const accountId = result[0].id;
+      return accountId;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err.message);
+    }
   },
 
   findUserByEmail: async (email) => {
@@ -107,6 +112,68 @@ const authRepository = {
       replacements: { id: getRoleId },
     });
     return result[0].roleName;
+  },
+  checkEmailExist: async (email) => {
+    const query = `SELECT * FROM account WHERE email = :email`;
+    const [result] = await sequelize.query(query, { replacements: { email } });
+    return result[0];
+  },
+
+  // generateResetToken(account)
+  generateResetToken: async (account, hashToken, resetPasswordToken) => {
+    const query = `UPDATE account SET resetPasswordExpires = :resetPasswordExpires , resetPasswordToken = :resetPasswordToken WHERE id = :id`;
+    const [result] = await sequelize.query(query, {
+      replacements: {
+        resetPasswordToken: hashToken,
+        resetPasswordExpires: resetPasswordToken,
+        id: account.id,
+      },
+    });
+    return result;
+  },
+
+  // validateResetToken(token)
+  validateResetToken: async (token) => {
+    try {
+      console.log(token);
+      const hashToken = crypto.createHash('sha256').update(token).digest('hex');
+
+      const query = `SELECT * FROM account WHERE resetPasswordToken = :resetPasswordToken `;
+      const [result] = await sequelize.query(query, {
+        replacements: {
+          resetPasswordToken: hashToken,
+        },
+      });
+
+      return result[0];
+    } catch (err) {
+      console.error(err);
+      throw Error(err.message);
+    }
+  },
+
+  resetPassword: async (id, hashPassword) => {
+    const query = `UPDATE account SET password = :password WHERE id = :id `;
+    const [result] = await sequelize.query(query, {
+      replacements: { password: hashPassword, id: id },
+    });
+    return result;
+  },
+  clearResetToken: async (userId) => {
+    try {
+      const query = `UPDATE account SET resetPasswordToken = :resetPasswordToken , resetPasswordExpires = :resetPasswordExpires WHERE id = :id`;
+      const [result] = await sequelize.query(query, {
+        replacements: {
+          resetPasswordToken: null,
+          resetPasswordExpires: null,
+          id: userId,
+        },
+      });
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw Error(error.message);
+    }
   },
 };
 
