@@ -1,11 +1,10 @@
 
-import React from "react";
-
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import OrderInfoUser from "./OrderInfoUser";
 import PayCart from "./PayCart";
 
 const Page = () => {
+ 
   return (
    <div className="w-full flex flex-col justify-center items-center">
     <Breadcrumb name={"Thanh toán"}/>

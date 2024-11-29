@@ -31,34 +31,37 @@ const Page = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-  const onSubmit = async (data: any) => {
-    const { userName, email, password } = data;
-    try {
-      const res = await axios.post('http://localhost:3400/api/auth/register', {
-        userName, 
-        email,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+    const onSubmit = async (data: any) => {
+      const { userName, email, password } = data;
+      try {
+        const res = await axios.post('http://localhost:8080/api/auth/register', {
+          userName, 
+          email,
+          password
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+    
+        if (res.status === 201) {
+          toast.success("Đăng ký thành công !");
+          setTimeout(()=>{
+            router.push('/login')
+          },2000);
+        } else {
+          toast.error("Đăng ký thất bại !")
         }
-      });
-  
-      if (res.status === 201) {
-        toast.success("Đăng ký thành công !");
-        setTimeout(()=>{
-          router.push('/login')
-        },2000);
-      } else {
-        toast.error("Đăng ký thất bại !")
+      } catch (error: any) {
+        const errorMessage = typeof error.response?.data.message === 'string'
+          ? error.response.data.message
+          : 'Đăng ký thất bại';
+        setMessage(errorMessage);
       }
-    } catch (error: any) {
-      const errorMessage = typeof error.response?.data.message === 'string'
-        ? error.response.data.message
-        : 'Đăng ký thất bại';
-      setMessage(errorMessage);
-    }
-  };
+    };
+
+
+    
 
   return (
     <div className="w-full font-sans flex justify-center bg-gray-50 py-10">

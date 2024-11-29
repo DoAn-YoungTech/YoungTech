@@ -8,25 +8,37 @@ import { useDispatch, useSelector} from 'react-redux';
 import { fetchCartItems } from '@/redux/Cart/cartThunks';
 import EmptyCart from './cart/EmptyCart/EmptyCart';
 import Loadingcss from './loadingcss/Loadingcss';
-type CartItemType = {
-  id: number;
-  name: string;
-  price: number;
-  originalPrice: number;
-  quantity: number;
-  shopName: string;
-  imageUrl: string;
-};
-
-
 const CartPage: React.FC = () => {
   const dispatch = useDispatch();
   const {cartItems,loading} = useSelector(state=>state.cart);
+  const [cartItemS,setCartItemS] = useState(cartItems);
+
+  const handleSelectAllChange = (selected: boolean) => {
+    const updatedItems = cartItemS.map(item => ({
+      ...item,
+      selected
+    }));
+    setCartItemS(updatedItems);
+  };
   
+  
+
+  const handleItemSelectChange = (id: number, selected: boolean) => {
+    const updatedItems = cartItemS.map(item =>
+      item.product_id === id ? { ...item, selected } : item
+    );
+    setCartItemS(updatedItems);
+  };
   useEffect(()=>{
+
     dispatch(fetchCartItems())
   },[dispatch])
   
+  useEffect(() => {
+    if (cartItems) {
+      setCartItemS(cartItems);  // Cập nhật cartItemS khi cartItems thay đổi
+    }
+  }, [cartItems]);
   
   if(loading){
     return (
@@ -40,18 +52,20 @@ const CartPage: React.FC = () => {
 
    
     <div className="w-full  mb-[100px]">
+
          <Breadcrumb name="Cart"/>
         <div className="lg:w-[90%] w-full m-auto">
         <CartHeader />
-        {cartItems?.length > 0 ? cartItems.map((item) => (
+        {cartItemS?.length > 0 ? cartItemS.map((item) => (
           <CartItem
             key={item.id}
             item={item}
+            onSelectChange={handleItemSelectChange}
           />
         )) 
         : <EmptyCart/> }
   
-        {cartItems?.length > 0  ?  <CartSummary dataCart={cartItems} /> : ""}
+        {cartItemS?.length > 0  ?  <CartSummary onSelectedAllChange={handleSelectAllChange} dataCart={cartItemS} /> : ""}
        
 
         </div>
