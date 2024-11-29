@@ -50,7 +50,30 @@ const authService = {
     return await authRepository.getRoleName(getRoleId);
   },
 
-  // viewingListEmployee
+  // checkEmailExist(email)
+  checkEmailExist : async (email)=> {
+    return await authRepository.checkEmailExist(email)
+  },
+
+  generateResetToken : async (account , hashToken , resetPasswordToken)=> {
+    return await authRepository.generateResetToken(account , hashToken , resetPasswordToken)
+  },
+
+  validateResetToken : async (token) => {
+    return await authRepository.validateResetToken(token)
+  },
+
+  // resetPassword(validateResetToken.id , hashPassword);
+  resetPassword : async (id , hashPassword) => {
+    return await authRepository.resetPassword(id , hashPassword);
+  },
+
+  clearResetToken : async (userId)=> {
+    return await authRepository.clearResetToken(userId)
+  }
+
+ 
+ 
 };
 
 module.exports = authService;
