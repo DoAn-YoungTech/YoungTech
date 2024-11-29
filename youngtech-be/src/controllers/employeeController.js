@@ -51,7 +51,7 @@ const employeeController = {
       res.status(500).json({ message: err.message });
     }
   },
-  //only admin can create Employee
+
   createEmployee: async (req, res) => {
     try {
       //get user id
