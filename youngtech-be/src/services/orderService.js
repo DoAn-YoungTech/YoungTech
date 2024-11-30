@@ -3,6 +3,14 @@ const orderRepository = require('../repositories/orderRepository');
 const orderDetailRepository = require('../repositories/orderDetailRepository');
 
 const orderService = {
+  getPendingOrders: async () => {
+    try {
+      const orders = await orderRepository.getPendingOrders();
+      return orders;
+    } catch (error) {
+      throw new Error('Error fetching pending orders: ' + error.message);
+    }
+  },
   addOrderWithDetails: async (orderData, orderDetails) => {
     const transaction = await sequelize.transaction();
 

@@ -2,6 +2,29 @@ const sequelize = require('../configs/db');
 
 const orderRepository = {
  
+  getPendingOrders: async () => {
+    const query = `
+      SELECT 
+        c.fullName AS customerName,
+        o.orderDate,
+        o.totalAmount,
+        o.paymentMethod
+      FROM 
+        Customer c
+      INNER JOIN 
+        \`Order\` o ON c.id = o.customer_id
+      WHERE 
+        o.status = 'Pending' AND o.flag = true
+    `;
+
+    try {
+      const [results] = await sequelize.query(query);
+      return results;
+    } catch (error) {
+      console.error('Error fetching pending orders:', error);
+      throw error;
+    }
+  },
 
   getOrderById: async (id) => {
     const query = `SELECT * FROM \`order\` WHERE id = :id`;
