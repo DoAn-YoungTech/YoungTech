@@ -7,13 +7,14 @@ const imageRepository = {
         INSERT INTO Image (imageUrl, product_id, flag)
         VALUES (:imageUrl, :productId, true)
       `;
-      
+  
       await sequelize.query(query, {
         replacements: {
-          imageUrl: image.imageUrl,  
-          productId,                 
+          imageUrl: image.imageUrl,
+          productId, // Truyền đúng giá trị `productId`
         },
       });
+  
       return { message: 'Image added successfully' };
     } catch (error) {
       console.error('Error creating image:', error);

@@ -19,12 +19,23 @@ const orderDetailRepository ={
         const [result] = await sequelize.query(query,{replacements: {id}});
         return result[0];
     },
-    createOrderDetail: async (data) =>{
-        console.log(data);
-        const query = `INSERT INTO orderdetail (unitPrice, description, quantity, order_id, product_id)
-                       VALUES (:unitPrice, :description, :quantity, :order_id, :product_id)`
-        const [result] = await sequelize.query(query, {replacements: data});
-        return result;
+    createOrderDetail: async (orderDetailData) => {
+      const query = `
+        INSERT INTO \`OrderDetail\` (unitPrice, quantity, order_id, product_id)
+        VALUES (:unitPrice, :quantity, :order_id, :product_id)
+      `;
+      
+      // Kiểm tra log dữ liệu đầu vào
+      console.log('Creating OrderDetail with data:', orderDetailData);
+  
+      await sequelize.query(query, {
+        replacements: {
+          unitPrice: orderDetailData.unitPrice,
+          quantity: orderDetailData.quantity,
+          order_id: orderDetailData.order_id, // Đảm bảo truyền đúng order_id
+          product_id: orderDetailData.product_id,
+        },
+      });
     },
     deleteOrderDetail: async (id, data) => {
         const query = `UPDATE orderdetail SET flag = true WHERE id = :id`;
