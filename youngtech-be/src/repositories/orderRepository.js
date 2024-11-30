@@ -1,19 +1,7 @@
 const sequelize = require('../configs/db');
 
 const orderRepository = {
-  getAllOrder: async ({ offset, limit }) => {
-    const query = `SELECT * FROM \`order\` LIMIT :limit OFFSET :offset`;
-    const [result] = await sequelize.query(query, {
-      replacements: { limit, offset },
-    });
-
-    // Để hỗ trợ tính toán tổng số đơn hàng, bạn có thể làm như sau:
-    const countQuery = `SELECT COUNT(*) AS totalItems FROM \`order\``;
-    const [countResult] = await sequelize.query(countQuery);
-    const totalItems = countResult[0].totalItems;
-
-    return { data: result, totalItems };
-  },
+ 
 
   getOrderById: async (id) => {
     const query = `SELECT * FROM \`order\` WHERE id = :id`;
@@ -21,27 +9,30 @@ const orderRepository = {
     return result[0];
   },
 
-  createOrder: async (data) => {
-    console.log(`Repository ${JSON.stringify(data)}`);
+  createOrder: async (orderData) => {
+    const query = `
+      INSERT INTO \`Order\` (flag, orderDate, succesDate, totalAmount, status, paymentMethod, customer_id)
+      VALUES (:flag, :orderDate, :succesDate, :totalAmount, :status, :paymentMethod, :customer_id)
+    `;
 
-    // Kiểm tra nếu flag không có trong data thì mặc định flag là false
-    const { orderDate, succesDate, totalAmount, status, customer_id } = data;
-    const flag = data.flag !== undefined ? data.flag : false; // Mặc định flag là false
-
-    const query = `INSERT INTO \`order\` (flag, orderDate, succesDate, totalAmount, status, customer_id)
-                   VALUES (:flag, :orderDate, :succesDate, :totalAmount, :status, :customer_id)`;
     const [result] = await sequelize.query(query, {
       replacements: {
-        flag,
-        orderDate,
-        succesDate,
-        totalAmount,
-        status,
-        customer_id,
+        flag: orderData.flag,
+        orderDate: orderData.orderDate,
+        succesDate: orderData.succesDate,
+        totalAmount: orderData.totalAmount,
+        status: orderData.status,
+        paymentMethod: orderData.paymentMethod,
+        customer_id: orderData.customer_id,
       },
     });
-    return result;
+
+    // Dùng query để lấy ID vừa thêm
+    const [orderIdResult] = await sequelize.query('SELECT LAST_INSERT_ID() AS id');
+    return orderIdResult[0]?.id; // Trả về ID vừa tạo
   },
+
+
   updateOrder: async (id, data) => {
     const query = `UPDATE \`order\`
                  SET orderDate = :orderDate, succesDate = :succesDate, totalAmount = :totalAmount, status = :status, customer_id = :customer_id

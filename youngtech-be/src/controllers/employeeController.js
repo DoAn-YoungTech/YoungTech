@@ -50,13 +50,6 @@ const employeeController = {
       res.status(500).json({ message: err.message });
     }
   },
-<<<<<<< HEAD
-=======
-  //only admin can create Employee
-  // step one get data from body
-  // {useName , email , password , fullName , profilePicture , dataOfBirth, phoneNumber , position , account_id } = newAccount
-  // {}
->>>>>>> 16f5e01ec5a2bddab459b0ae5d2cd1cc21a0023e
 
   createEmployee: async (req, res) => {
     try {

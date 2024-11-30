@@ -159,13 +159,34 @@ const productRepository = {
     
       
       createProduct: async (productData) => {
-        const query = `INSERT INTO product (productName, quantity, description, productPrice, productImage, brand, childCategory_id, supplier_id, flag, createAt) 
-          VALUES (:productName, :quantity, :description, :productPrice,: productImage, :brand, :childCategory_id, :supplier_id, true, :createAt)`;
-        
+        const query = `
+          INSERT INTO product (productName, quantity, description, productPrice, brand, childCategory_id, supplier_id, flag, createAt) 
+          VALUES (:productName, :quantity, :description, :productPrice, :brand, :childCategory_id, :supplier_id, true, :createAt)
+        `;
         productData.createAt = new Date();
-    
-        await sequelize.query(query, { replacements: productData });
-    }
+      
+        try {
+          const [result] = await sequelize.query(query, {
+            replacements: productData,
+          });
+      
+          // Truy vấn lại để lấy `productId` nếu cần
+          const [createdProduct] = await sequelize.query(`
+            SELECT id AS productId FROM product WHERE productName = :productName AND flag = true
+          `, {
+            replacements: { productName: productData.productName },
+          });
+      
+          if (!createdProduct || createdProduct.length === 0) {
+            throw new Error('Failed to retrieve productId for the created product');
+          }
+      
+          return createdProduct[0]; // Trả về `productId`
+        } catch (error) {
+          console.error('Error creating product:', error);
+          throw error;
+        }
+      }
 
 
     };
