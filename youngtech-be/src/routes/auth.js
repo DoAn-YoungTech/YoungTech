@@ -16,14 +16,17 @@ auth.post(
 );
 
 auth.post(
-  '/generateResetTokens',
-  middlewareController.verifyToken,
-  authControllers.generateResetTokens
+  '/generateOtp', 
+  authControllers.generateOtp
 );
 
 auth.patch(
-  '/resetPassword',
-  middlewareController.verifyToken,
+  '/resetPassword', 
   authControllers.resetPassword
 );
+
+// sendingOTP
+auth.post('/sendingOTP' , 
+  authControllers.sendingOTP
+)
 module.exports = auth;

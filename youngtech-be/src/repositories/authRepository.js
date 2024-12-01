@@ -120,12 +120,12 @@ const authRepository = {
   },
 
   // generateResetToken(account)
-  generateResetToken: async (account, hashToken, resetPasswordToken) => {
-    const query = `UPDATE account SET resetPasswordExpires = :resetPasswordExpires , resetPasswordToken = :resetPasswordToken WHERE id = :id`;
+  generateResetToken: async (account, otp, otpExpires) => {
+    const query = `UPDATE account SET otp = :otp , otpExpires = :otpExpires WHERE id = :id`;
     const [result] = await sequelize.query(query, {
       replacements: {
-        resetPasswordToken: hashToken,
-        resetPasswordExpires: resetPasswordToken,
+        otp: otp,
+        otpExpires: otpExpires,
         id: account.id,
       },
     });
@@ -133,15 +133,12 @@ const authRepository = {
   },
 
   // validateResetToken(token)
-  validateResetToken: async (token) => {
+  validateResetOtp: async (otp) => {
     try {
-      console.log(token);
-      const hashToken = crypto.createHash('sha256').update(token).digest('hex');
-
-      const query = `SELECT * FROM account WHERE resetPasswordToken = :resetPasswordToken `;
+      const query = `SELECT * FROM account WHERE otp = :otp `;
       const [result] = await sequelize.query(query, {
         replacements: {
-          resetPasswordToken: hashToken,
+          otp: otp,
         },
       });
 
@@ -152,27 +149,49 @@ const authRepository = {
     }
   },
 
-  resetPassword: async (id, hashPassword) => {
-    const query = `UPDATE account SET password = :password WHERE id = :id `;
-    const [result] = await sequelize.query(query, {
-      replacements: { password: hashPassword, id: id },
-    });
-    return result;
-  },
-  clearResetToken: async (userId) => {
+  resetPassword: async (email, hashPassword) => {
     try {
-      const query = `UPDATE account SET resetPasswordToken = :resetPasswordToken , resetPasswordExpires = :resetPasswordExpires WHERE id = :id`;
+      const query = `UPDATE account SET password = :password WHERE email =:email `;
+      const [result] = await sequelize.query(query, {
+        replacements: { password: hashPassword, email: email },
+      });
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw Error(error.message);
+    }
+  },
+  clearResetToken: async (email) => {
+    try {
+      const query = `UPDATE account SET otp = :otp , otpExpires = :otpExpires WHERE email = :email`;
       const [result] = await sequelize.query(query, {
         replacements: {
-          resetPasswordToken: null,
-          resetPasswordExpires: null,
-          id: userId,
+          otp: null,
+          otpExpires: null,
+          email: email,
         },
       });
       return result;
     } catch (error) {
       console.error(error);
       throw Error(error.message);
+    }
+  },
+
+  checkOTPExist: async (email, otp) => {
+    try {
+      const query = `SELECT * FROM account WHERE otp = :otp AND email = :email`;
+      const [result] = await sequelize.query(query, {
+        replacements: {
+          otp: otp,
+          email: email,
+        },
+      });
+
+      return result[0];
+    } catch (err) {
+      console.error(err);
+      throw Error(err.message);
     }
   },
 };
