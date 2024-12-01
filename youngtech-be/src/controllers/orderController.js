@@ -1,4 +1,5 @@
 const orderService = require('../services/orderService');
+const cartService = require('../services/cartService')
 
 const orderController = {
   getPendingOrders: async (req, res) => {
@@ -17,16 +18,53 @@ const orderController = {
       });
     }
   },
-  addOrderWithDetails: async (req, res) => {
-    const { order, orderDetails } = req.body;
+  // addOrderWithDetails: async (req, res) => {
+  //   const { order, orderDetails } = req.body;
 
+  //   if (!order || !orderDetails || orderDetails.length === 0) {
+  //     return res.status(400).json({ message: 'Order and order details are required' });
+  //   }
+
+  //   try {
+  //     const result = await orderService.addOrderWithDetails(order, orderDetails);
+
+  //     return res.status(201).json({
+  //       message: 'Order and order details created successfully',
+  //       data: result,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error adding order and details:', error);
+  //     return res.status(500).json({
+  //       message: 'Internal Server Error',
+  //       error: error.message,
+  //     });
+  //   }
+  // },
+  addOrderWithDetails: async (req, res) => {
+    const { order, orderDetails, cartId } = req.body;
+  
     if (!order || !orderDetails || orderDetails.length === 0) {
       return res.status(400).json({ message: 'Order and order details are required' });
     }
-
+  
     try {
+      // Nếu có cartId, xóa cart tương ứng
+      if (cartId) {
+        try {
+          await cartService.removeCart(cartId);
+          console.log(`Cart with ID ${cartId} has been removed successfully.`);
+        } catch (cartError) {
+          console.error('Error removing cart:', cartError);
+          return res.status(500).json({
+            message: 'Failed to remove cart',
+            error: cartError.message,
+          });
+        }
+      }
+  
+      // Thêm order và order details
       const result = await orderService.addOrderWithDetails(order, orderDetails);
-
+  
       return res.status(201).json({
         message: 'Order and order details created successfully',
         data: result,
@@ -39,6 +77,7 @@ const orderController = {
       });
     }
   },
+
   getOrderById: async (req, res) => {
     const { orderId } = req.params;
 
