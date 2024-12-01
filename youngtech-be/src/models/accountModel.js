@@ -28,11 +28,11 @@ const Account = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    resetPasswordToken : { 
-      type : DataTypes.STRING,
+    otp : { 
+      type : DataTypes.STRING(6),
       allowNull : true,
     },
-    resetPasswordExpires : {
+    otpExpires : {
       type : DataTypes.DATE,
       allowNull: true,
     }

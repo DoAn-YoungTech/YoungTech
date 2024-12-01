@@ -90,7 +90,7 @@ const cartController = {
       // get cart id
       // const user
       const userId = req.user.id;
-      console.log(userId);
+      console.log(`userId ${userId}`);
       const getCustomerId = await cartService.getCustomerId(userId);
       console.log(`getCustomerId`, getCustomerId);
       if (!getCustomerId) {
@@ -225,7 +225,7 @@ const cartController = {
         total,
         checkUserIdExist
       );
-      //then  add product to order detail 
+      //then  add product to order detail
       const addProductOrderDetail = await cartService.addProductOrderDetail(
         getCartId
       );
@@ -246,31 +246,47 @@ const cartController = {
     }
   },
 
-  // remove many product from cart
-  removeManyProduct: async (req, res) => {
+  getCartId: async (userId) => {
+    const checkUser = await cartService.checkUserExist(userId);
+    if (!checkUser) {
+      return res.status(404).json({ message: 'User not exist' });
+    }
+    console.log(`user id ${checkUser}`);
+
+    const getCustomerId = await cartService.checkCustomer(checkUser);
+    if (!getCustomerId) {
+      return res.status(404).json({ message: 'Customer not exist' });
+    }
+    return getCustomerId.id;
+  },
+  removeIn: async (req, res) => {
     try {
-      // suppose customer want remove [1,2,3] 3 product from cart
-      const { productIds } = req.body;
-      console.log(productIds);
-
+      const { productId } = req.body;
       const userId = req.user.id;
-      const customerId = await cartService.checkCustomerId(userId);
+      const getCartId = await cartController.getCartId(userId);
+      const deleteIn = await cartService.deleteIn(productId, getCartId);
 
-      const getCart = await cartService.getCart(customerId, productIds);
-
-      if (!getCart) {
-        return res
-          .status(404)
-          .json({
-            message:
-              'Cart Empty ! Please add product to cart . Thanks u so much ',
-          });
+      if (!deleteIn) {
+        return res.status(403).json({ message: 'fail' });
       }
-
-      // check if all product  exist in cart
-      res.status(200).json({ message: getCart });
+      res.status(200).json({ message: 'success' });
     } catch (err) {
-      res.status(500).json({ message: err });
+      res.status(500).json({ message: err.message });
+    }
+  },
+  removeAll: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const getCartId = await cartController.getCartId(userId);
+      const deleteAll = await cartService.removeAll(getCartId);
+      if (!deleteAll) {
+        return res
+          .status(403)
+          .json({ message: 'can not delete all product in cart' });
+      }
+      res.status(200).json({ message: 'delete all product in cart' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
   },
 };

@@ -3,7 +3,11 @@ const authService = require('../services/authService');
 const jwt = require('jsonwebtoken');
 const RoleService = require('../services/roleService');
 const crypto = require('crypto');
-
+const otpGenerator = require('otp-generator');
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
+const { MailtrapClient } = require('mailtrap');
+const { meet } = require('googleapis/build/src/apis/meet');
 const authController = {
   register: async (req, res) => {
     try {
@@ -219,20 +223,7 @@ const authController = {
       return res.status(500).json({ message: `Login Failed` });
     }
   },
-  // generateResetToken: async (account) => {
-  //   const resetToken = crypto.randomBytes(32).toString('hex');
-  //   const hashToken = crypto
-  //     .createHash('sha256')
-  //     .update(resetToken)
-  //     .digest('hex');
-  //   const expires = Date.now() + 15 * 60 * 1000; // Expires in 15 minutes
-  //   const result = await authService.resetPasswordToken(hashToken, expires);
-  //   if (!result) {
-  //     return res.status(403).json({ message: 'generate fail !' });
-  //   }
-  //   return resetToken;
-  // },
-  generateResetTokens: async (req, res) => {
+  generateOtp: async (req, res, next) => {
     try {
       const { email } = req.body;
       if (!email) {
@@ -247,58 +238,105 @@ const authController = {
         return res.status(404).json({ message: 'Email not found.' });
       }
 
-      const resetToken = crypto.randomBytes(32).toString('hex');
-      const hashToken = crypto
-        .createHash('sha256')
-        .update(resetToken)
-        .digest('hex');
-      const resetPasswordToken = new Date(Date.now() + 15 * 60 * 1000);
+      // const OTP = Math.floor(1000 + Math.random() * 9000) this a way manual generate OTP
+
+      // using otpGenerator
+      const otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+        lowerCaseAlphabets: false,
+        digits: true,
+      });
+
+      const otpExpires = new Date();
+      otpExpires.setMinutes(otpExpires.getMinutes() + 1); // expires in 1 minute
 
       const generateResetToken = await authService.generateResetToken(
         account,
-        hashToken,
-        resetPasswordToken
+        otp,
+        otpExpires
       );
       if (!generateResetToken) {
         return res
           .status(403)
-          .json({ message: 'Can not generate reset token !' });
+          .json({ message: 'Can not generate reset otp !' });
       }
-      return res.status(200).json({ hashToken: resetToken });
+      const TOKEN = '12ca1b117ae28fb61627c0973da2586f';
+
+      const client = new MailtrapClient({
+        token: TOKEN,
+      });
+
+      const sender = {
+        email: 'hello@demomailtrap.com',
+        name: 'Mailtrap Test',
+      };
+      const recipients = [
+        {
+          email: email,
+        },
+      ];
+
+      client
+        .send({
+          from: sender,
+          to: recipients,
+          template_uuid: 'b0700ea9-3ceb-44f9-bd69-f155b829ec06',
+          template_variables: {
+            email: email,
+            company_info_name: 'Test_Company_info_name',
+            company_info_address: 'Test_Company_info_address',
+            company_info_city: 'Test_Company_info_city',
+            company_info_zip_code: otp,
+            company_info_country: 'Test_Company_info_country',
+          },
+        })
+        .then(
+          res.status(200).json({
+            message: `Send email to ${email} Please check then enter OTP`,
+          }),
+          console.error
+        );
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   },
+  // send OTP
+  sendingOTP: async (req, res) => {
+    try {
+      const { email, otp } = req.body;
 
+      const checkOTPExist = await authService.checkOTPExist(email, otp);
+
+      if (!checkOTPExist) {
+        return res.status(404).json({ message: `OTP incorrect !` });
+      }
+
+      if (Date.now() > new Date(checkOTPExist.otpExpires)) {
+        return res
+          .status(404)
+          .json({ message: `OTP expired ! Please enter email again . ` });
+      }
+
+      res.status(200).json({ message: 'OPT is correct .' });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  },
   resetPassword: async (req, res) => {
     try {
-      const userId = req.user.id;
-      const { token, newPassword } = req.body;
-
-      const validateResetToken = await authService.validateResetToken(token);
-
-      if (!validateResetToken) {
-        return res.status(403).json({ message: 'Invalid reset token !' });
-      }
-
-      // check reset password expires
-      console.log(validateResetToken.resetPasswordExpires);
-      if (Date.now() > validateResetToken.resetPasswordExpires) {
-        return res
-          .status(403)
-          .json({ message: 'Reset password token expired !' });
-      }
+      const { email, newPassword } = req.body;
       const hashPassword = await bcrypt.hash(newPassword, 10);
 
       const resetPassword = await authService.resetPassword(
-        validateResetToken.id,
+        email,
         hashPassword
       );
       if (!resetPassword) {
         return res.status(403).json({ message: 'Can not reset password !' });
       }
       // clear reset token from database
-      await authService.clearResetToken(userId);
+      await authService.clearResetToken(email);
 
       return res.status(200).json({ message: 'Password reset successfully !' });
     } catch (error) {
