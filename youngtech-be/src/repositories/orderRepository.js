@@ -26,10 +26,35 @@ const orderRepository = {
     }
   },
 
-  getOrderById: async (id) => {
-    const query = `SELECT * FROM \`order\` WHERE id = :id`;
-    const [result] = await sequelize.query(query, { replacements: { id } });
-    return result[0];
+  getOrderById: async (orderId) => {
+    const query = `
+      SELECT 
+        o.id AS orderId,
+        o.totalAmount,
+        o.orderDate,
+        o.paymentMethod,
+        c.id AS customerId,
+        c.fullName,
+        c.phoneNumber,
+        c.address
+      FROM 
+        \`Order\` o
+      INNER JOIN 
+        Customer c ON o.customer_id = c.id
+      WHERE 
+        o.id = :orderId AND o.flag = true
+    `;
+    
+    try {
+      const [order] = await sequelize.query(query, {
+        replacements: { orderId },
+        type: sequelize.QueryTypes.SELECT
+      });
+      return order;
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      throw error;
+    }
   },
 
   createOrder: async (orderData) => {
@@ -56,33 +81,29 @@ const orderRepository = {
   },
 
 
-  updateOrder: async (id, data) => {
-    const query = `UPDATE \`order\`
-                 SET orderDate = :orderDate, succesDate = :succesDate, totalAmount = :totalAmount, status = :status, customer_id = :customer_id
-                 WHERE id = :id`;
-    const [result] = await sequelize.query(query, {
-      replacements: { ...data, id },
-    });
-    return result;
-  },
-
-  deleteOrder: async (id) => {
-    const query = `UPDATE \`order\` SET flag = true WHERE id = :id`;
-    const [result] = await sequelize.query(query, { replacements: { id } });
-    return result;
-  },
-  restoreOrder: async (id) => {
-    const query = `UPDATE \`order\` SET flag = false WHERE id = :id`; // Khôi phục xóa mềm
-    const [result] = await sequelize.query(query, { replacements: { id } });
-    return result;
-  },
-
-  // view order 
-
-  viewOrder : async (req, res) => {
+  updateOrderStatus: async (orderId, newStatus) => {
+    const query = `
+      UPDATE \`Order\`
+      SET status = :newStatus
+      WHERE id = :orderId AND flag = true
+    `;
     
-  }
+    try {
+      const [updatedRows] = await sequelize.query(query, {
+        replacements: { orderId, newStatus }, 
+        type: sequelize.QueryTypes.UPDATE
+      });
   
+      if (updatedRows === 0) {
+        throw new Error("Không tìm thấy đơn hàng hoặc cập nhật trạng thái thất bại.");
+      }
+  
+      return { message: 'Cập nhật trạng thái đơn hàng thành công' };
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+      throw error;
+    }
+  },
  
 };
 

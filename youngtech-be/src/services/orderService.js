@@ -42,6 +42,25 @@ const orderService = {
       throw error;
     }
   },
+  getOrderById: async (orderId) => {
+    const order = await orderRepository.getOrderById(orderId);
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    return order;
+  },
+  updateStatusOrder: async (orderId, status) => {
+    try {
+      const result = await orderRepository.updateOrderStatus(orderId, status);
+      return result;
+    } catch (error) {
+      console.error("Error in updateStatusOrder service:", error);
+      throw error;
+    }
+  },
 };
+
 
 module.exports = orderService;
