@@ -40,13 +40,20 @@ cart.delete(
   middlewareController.checkPermission('Cart_Management', 'delete'),
   cartController.removeProductId
 );
-
 cart.delete(
-  '/removeManyProduct',
+  '/removeIn',
   middlewareController.verifyToken,
   middlewareController.verifyTokenAndRole(['customer']),
   middlewareController.checkPermission('Cart_Management', 'delete'),
-  cartController.removeManyProduct
+  cartController.removeIn
+);
+
+cart.delete(
+  '/removeAll',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['customer']),
+  middlewareController.checkPermission('Cart_Management', 'delete'),
+  cartController.removeAll
 );
 
 module.exports = cart;
