@@ -17,7 +17,6 @@ const cartItemService = {
     return await cartItemRepository.deleteCartItem(id); // Xóa cứng
   },
 
-
   updateCartItem: async (id, data) => {
     return await cartItemRepository.updateCartItem(id, data);
   },

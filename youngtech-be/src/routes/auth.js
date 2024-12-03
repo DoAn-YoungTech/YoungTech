@@ -14,4 +14,19 @@ auth.post(
   authControllers.userLogout
   // authentication
 );
+
+auth.post(
+  '/generateOtp', 
+  authControllers.generateOtp
+);
+
+auth.patch(
+  '/resetPassword', 
+  authControllers.resetPassword
+);
+
+// sendingOTP
+auth.post('/sendingOTP' , 
+  authControllers.sendingOTP
+)
 module.exports = auth;
