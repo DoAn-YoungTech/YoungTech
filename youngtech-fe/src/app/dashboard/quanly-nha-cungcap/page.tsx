@@ -1,9 +1,9 @@
 
-import SupplierList from "@/components/dashboard/supplier/SupplierList"
+import SupplierTable from "@/components/dashboard/supplier/SupplierTable"
 
 const page = () => {
   return (
-    <SupplierList/>
+    <SupplierTable/>
   )
 }
 
