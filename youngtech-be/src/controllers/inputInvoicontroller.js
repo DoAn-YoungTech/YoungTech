@@ -3,18 +3,20 @@ const inputInvoiceService = require('../services/inputInvoiceService');
 
 const inputInvoiceController = {
   addProductToInventory: async (req, res) => {
-    const products = req.body;
+    const products = req.body; 
+
     try {
       const result = await inputInvoiceService.addProductToInventory(products);
+
       return res.status(200).json({
-        message: 'Products processed successfully',
-        data: result
+        message: 'Products and images processed successfully',
+        data: result, 
       });
     } catch (error) {
       console.error(error);
       return res.status(500).json({
         message: 'Internal Server Error',
-        error: error.message
+        error: error.message,
       });
     }
   },

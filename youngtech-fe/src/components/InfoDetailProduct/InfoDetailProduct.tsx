@@ -1,44 +1,53 @@
 "use client";
 import { useState } from "react";
-import MemoryGb from "../memoryGb/MemoryGb";
-import ColorProduct from "./ColorProduct/ColorProduct";
-import NameProduct from "./name-product/NameProduct";
+import NameProduct from "./NameProduct";
 import { useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { addToCartThunk } from "@/redux/Cart/cartThunks";
-
+import Promotions from "./descriptionSmall";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 export default function InfoDetailProduct({ dataProduct }) {
   const searchParams = useSearchParams(); // Lấy tất cả các query params
   const id = searchParams.get("id");
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
 
-  const handleAddToCart = (quantity, id) => {
+  const handleAddToCart = async (quantity, id) => {
     const cartItem = {
       quantity: quantity,
       product_id: id,
     };
-    console.log(cartItem);
-
-    dispatch(addToCartThunk(cartItem)); // Thêm sản phẩm vào giỏ hàng thông qua Thunk
+  
+    try {
+      // Dispatch và chờ kết quả từ thunk
+      const result = await dispatch(addToCartThunk(cartItem)) // Sử dụng unwrap() để lấy kết quả
+  
+      if (result) {
+        toast.success("Thêm vào giỏ hàng thành công");
+      }
+    } catch (error) {
+      // Hiển thị lỗi nếu thất bại
+      toast.error("Thêm vào giỏ hàng thất bại");
+    }
   };
+  
 
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev)); // Không cho phép giá trị nhỏ hơn 1
 
-  const formattedPrice = new Intl.NumberFormat("de-DE").format(dataProduct.productPrice);
+  const formattedPrice = new Intl.NumberFormat("de-DE").format(dataProduct.productPrice || 0);
 
   return (
-    <div className="w-full rounded-xl bg-white shadow-md">
+   <>
+  
+    <div className="w-full mb-5 rounded-sm bg-white shadow-md">
+    <ToastContainer />
       <div className="w-full p-5">
         {/* Tên sản phẩm */}
         <NameProduct data={dataProduct} fontsize={fontsize} />
 
-        {/* Mô tả sản phẩm */}
-        <div className="w-full mt-2 text-gray-600 text-sm border-b pb-4">
-          <h3 className="font-semibold text-lg text-gray-800 mb-2">Description:</h3>
-          <p>{dataProduct.productDescription || "No description available."}</p>
-        </div>
+     
 
         {/* Giá bán */}
         <div className="w-full mt-4 flex items-center gap-4">
@@ -83,9 +92,15 @@ export default function InfoDetailProduct({ dataProduct }) {
           >
             Mua ngay
           </button>
+        
         </div>
+       
       </div>
     </div>
+     <div className="w-full  bg-white shadow-md  ">
+     <Promotions/>
+     </div>
+   </>
   );
 }
 

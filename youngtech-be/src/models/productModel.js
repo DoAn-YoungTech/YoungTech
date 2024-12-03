@@ -18,9 +18,13 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    productImage: {
+    productRetailPrice: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    productSalePrice: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     description: {
       type: DataTypes.STRING,
@@ -42,7 +46,7 @@ const Product = sequelize.define(
     createAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW, // Thêm giá trị mặc định cho createAt
+      defaultValue: DataTypes.NOW, 
     },
     childCategory_id: {
       type: DataTypes.INTEGER,

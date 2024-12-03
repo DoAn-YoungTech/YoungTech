@@ -4,7 +4,7 @@ const cartController = {
   addProductToCart: async (req, res) => {
     try {
       const user_id = req.user.id;
-      console.log(user_id)
+      console.log(user_id);
       const { quantity, product_id } = req.body;
 
       const customer_id = await cartService.getCustomerIdByAccountId(user_id);
@@ -90,7 +90,7 @@ const cartController = {
       // get cart id
       // const user
       const userId = req.user.id;
-      console.log(userId);
+      console.log(`userId ${userId}`);
       const getCustomerId = await cartService.getCustomerId(userId);
       console.log(`getCustomerId`, getCustomerId);
       if (!getCustomerId) {
@@ -118,7 +118,7 @@ const cartController = {
           .status(404)
           .json({ message: 'Cart Empty ! Please add product to cart!' });
       }
-      res.status(200).json({ message: result });
+      res.status(200).json({ message: 'Success', data: result });
     } catch (err) {
       return res.status(500).json({ message: err });
     }
@@ -141,6 +141,7 @@ const cartController = {
       const getCartIdByCustomerId = await cartService.getCartIdByCustomerId(
         customerId
       );
+
       console.log(`cart id ${getCartIdByCustomerId}`);
       if (!getCartIdByCustomerId) {
         return res.status(404).json({ message: 'Cart id  not exist!' });
@@ -167,7 +168,7 @@ const cartController = {
   editCart: async (req, res) => {
     try {
       const { quantity, product_id } = req.body;
-
+      console.log(quantity, product_id);
       // get quantity product by cart_id and product_id
       const userId = req.user.id;
       const checkUserExist = await cartService.checkUserExist(userId);
@@ -225,7 +226,6 @@ const cartController = {
         checkUserIdExist
       );
       //then  add product to order detail
-
       const addProductOrderDetail = await cartService.addProductOrderDetail(
         getCartId
       );
@@ -243,6 +243,50 @@ const cartController = {
       res.status(200).json({ message: addProductToOrder });
     } catch (error) {
       res.status(500).json({ message: error });
+    }
+  },
+
+  getCartId: async (userId) => {
+    const checkUser = await cartService.checkUserExist(userId);
+    if (!checkUser) {
+      return res.status(404).json({ message: 'User not exist' });
+    }
+    console.log(`user id ${checkUser}`);
+
+    const getCustomerId = await cartService.checkCustomer(checkUser);
+    if (!getCustomerId) {
+      return res.status(404).json({ message: 'Customer not exist' });
+    }
+    return getCustomerId.id;
+  },
+  removeIn: async (req, res) => {
+    try {
+      const { productId } = req.body;
+      const userId = req.user.id;
+      const getCartId = await cartController.getCartId(userId);
+      const deleteIn = await cartService.deleteIn(productId, getCartId);
+
+      if (!deleteIn) {
+        return res.status(403).json({ message: 'fail' });
+      }
+      res.status(200).json({ message: 'success' });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  },
+  removeAll: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const getCartId = await cartController.getCartId(userId);
+      const deleteAll = await cartService.removeAll(getCartId);
+      if (!deleteAll) {
+        return res
+          .status(403)
+          .json({ message: 'can not delete all product in cart' });
+      }
+      res.status(200).json({ message: 'delete all product in cart' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
   },
 };
