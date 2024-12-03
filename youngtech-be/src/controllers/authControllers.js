@@ -69,6 +69,7 @@ const authController = {
     login: async (req, res) => {
       try {
         const { email, password } = req.body;
+        console.log(email, password )
         // find userName follow email
         const user = await authService.findUserByEmail(email);
         console.log(user);
@@ -97,6 +98,7 @@ const authController = {
         // if true save role in payload token account
         // then => compare pass login === pass on database ,use bcrypt
         const comparePass = await bcrypt.compare(password, user.password);
+        console.log(comparePass)
 
         if (!comparePass) {
           return res.status(404).json({ message: 'Password wrong!' });
@@ -107,7 +109,9 @@ const authController = {
             user,
             getRoleName
           );
+          console.log(accessToken)
           const refreshToken = authController.refreshToken(user);
+          console.log(refreshToken)
 
           // save refresh token in data
           const saveRefreshToken = await authService.saveRefreshToken(
