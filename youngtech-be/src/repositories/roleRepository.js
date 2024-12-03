@@ -20,7 +20,7 @@ const roleRepository = {
     const [result] = await sequelize.query(query, {
       replacements: { roleName },
     });
-    return result;
+    return result[0].id;
   },
 };
 

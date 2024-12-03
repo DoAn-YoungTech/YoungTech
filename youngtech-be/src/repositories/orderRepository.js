@@ -1,130 +1,111 @@
 const sequelize = require('../configs/db');
 
 const orderRepository = {
-  // Bán hàng
-  // tạo thông tin khách hàng hoặc kiểm tra khách hàng cũ
-  // Tìm khách hàng theo số điện thoại
-  findCustomerByPhoneNumber: async (phoneNumber) => {
+
+  getPendingOrders: async () => {
+    const query = `
+      SELECT 
+        c.fullName AS customerName,
+        o.orderDate,
+        o.totalAmount,
+        o.paymentMethod
+      FROM 
+        Customer c
+      INNER JOIN 
+        \`Order\` o ON c.id = o.customer_id
+      WHERE 
+        o.status = 'Pending' AND o.flag = true
+    `;
+
     try {
-      const query = `
-        SELECT * 
-        FROM customer 
-        WHERE phoneNumber = :phoneNumber AND flag = false
-      `;
-      const [result] = await sequelize.query(query, { replacements: { phoneNumber } });
-      return result[0]; // Trả về khách hàng đầu tiên nếu tìm thấy
-    } catch (err) {
-      throw new Error("Lỗi khi tìm khách hàng theo số điện thoại: " + err.message);
+      const [results] = await sequelize.query(query);
+      return results;
+    } catch (error) {
+      console.error('Error fetching pending orders:', error);
+      throw error;
     }
   },
 
-  // add order 
-  // add order detail 
-   
-  
-
-  // Thêm mới khách hàng nếu không tồn tại
-  addCustomerForOrder: async (data) => {
+  getOrderById: async (orderId) => {
+    const query = `
+      SELECT 
+        o.id AS orderId,
+        o.totalAmount,
+        o.orderDate,
+        o.paymentMethod,
+        c.id AS customerId,
+        c.fullName,
+        c.phoneNumber,
+        c.address
+      FROM 
+        \`Order\` o
+      INNER JOIN 
+        Customer c ON o.customer_id = c.id
+      WHERE 
+        o.id = :orderId AND o.flag = true
+    `;
+    
     try {
-      const query = `
-        INSERT INTO customer (flag, fullName, phoneNumber, address, account_id)
-        VALUES (false, :fullName, :phoneNumber, :address, NULL)
-      `;
-      const [result] = await sequelize.query(query, {
-        replacements: {
-          fullName: data.fullName,
-          phoneNumber: data.phoneNumber,
-          address: data.address,
-        },
+      const [order] = await sequelize.query(query, {
+        replacements: { orderId },
+        type: sequelize.QueryTypes.SELECT
       });
-  
-      // Truy vấn để lấy lại thông tin khách hàng vừa được thêm
-      const customerId = result.insertId;
-      const newCustomerQuery = `
-        SELECT * 
-        FROM customer 
-        WHERE id = :customerId
-      `;
-      const [newCustomer] = await sequelize.query(newCustomerQuery, { replacements: { customerId } });
-      return newCustomer[0];
-    } catch (err) {
-      throw new Error("Lỗi khi thêm khách hàng mới: " + err.message);
+      return order;
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      throw error;
     }
   },
-  
 
-  getAllOrder: async ({ offset, limit }) => {
-    const query = `SELECT * FROM \`order\` LIMIT :limit OFFSET :offset`;
-    const [result] = await sequelize.query(query, {
-      replacements: { limit, offset },
-    });
-
-    // Để hỗ trợ tính toán tổng số đơn hàng, bạn có thể làm như sau:
-    const countQuery = `SELECT COUNT(*) AS totalItems FROM \`order\``;
-    const [countResult] = await sequelize.query(countQuery);
-    const totalItems = countResult[0].totalItems;
-
-    return { data: result, totalItems };
-  },
-
-  getOrderById: async (id) => {
-    const query = `SELECT * FROM \`order\` WHERE id = :id`;
-    const [result] = await sequelize.query(query, { replacements: { id } });
-    return result[0];
-  },
-
-  createOrder: async (data) => {
-    console.log(`Repository ${JSON.stringify(data)}`);
+  createOrder: async (orderData) => {
+    const query = `
+      INSERT INTO \`Order\` (flag, orderDate, succesDate, totalAmount, status, paymentMethod, customer_id)
+      VALUES (:flag, :orderDate, :succesDate, :totalAmount, :status, :paymentMethod, :customer_id)
+    `;
 
 
-    // Kiểm tra nếu flag không có trong data thì mặc định flag là false
-    const { orderDate, succesDate, totalAmount, status, customer_id } = data;
-    const flag = data.flag !== undefined ? data.flag : false; // Mặc định flag là false
-
-    const query = `INSERT INTO \`order\` (flag, orderDate, succesDate, totalAmount, status, customer_id)
-                   VALUES (:flag, :orderDate, :succesDate, :totalAmount, :status, :customer_id)`;
     const [result] = await sequelize.query(query, {
       replacements: {
-        flag,
-        orderDate,
-        succesDate,
-        totalAmount,
-        status,
-        customer_id,
+        flag: orderData.flag,
+        orderDate: orderData.orderDate,
+        succesDate: orderData.succesDate,
+        totalAmount: orderData.totalAmount,
+        status: orderData.status,
+        paymentMethod: orderData.paymentMethod,
+        customer_id: orderData.customer_id,
       },
     });
 
-    return result;
-  },
-  updateOrder: async (id, data) => {
-    const query = `UPDATE \`order\`
-                 SET orderDate = :orderDate, succesDate = :succesDate, totalAmount = :totalAmount, status = :status, customer_id = :customer_id
-                 WHERE id = :id`;
-    const [result] = await sequelize.query(query, {
-      replacements: { ...data, id },
-    });
-    return result;
-  },
 
-  deleteOrder: async (id) => {
-    const query = `UPDATE \`order\` SET flag = true WHERE id = :id`;
-
-    const [result] = await sequelize.query(query, { replacements: { id } });
-    return result;
-  },
-  restoreOrder: async (id) => {
-    const query = `UPDATE \`order\` SET flag = false WHERE id = :id`; // Khôi phục xóa mềm
-    const [result] = await sequelize.query(query, { replacements: { id } });
-    return result;
+    // Dùng query để lấy ID vừa thêm
+    const [orderIdResult] = await sequelize.query('SELECT LAST_INSERT_ID() AS id');
+    return orderIdResult[0]?.id; // Trả về ID vừa tạo
   },
 
 
-  // view order 
-
-  viewOrder : async (req, res) => {
+  updateOrderStatus: async (orderId, newStatus) => {
+    const query = `
+      UPDATE \`Order\`
+      SET status = :newStatus
+      WHERE id = :orderId AND flag = true
+    `;
     
-  }
+    try {
+      const [updatedRows] = await sequelize.query(query, {
+        replacements: { orderId, newStatus }, 
+        type: sequelize.QueryTypes.UPDATE
+      });
   
+      if (updatedRows === 0) {
+        throw new Error("Không tìm thấy đơn hàng hoặc cập nhật trạng thái thất bại.");
+      }
+  
+      return { message: 'Cập nhật trạng thái đơn hàng thành công' };
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+      throw error;
+    }
+  },
  
 };
 

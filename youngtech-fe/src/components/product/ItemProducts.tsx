@@ -11,8 +11,6 @@ interface ItemProductProps {
 
 export const ItemProducts: React.FC<ItemProductProps> = ({ DataProducts, loading }) => {
  
-
-  // Kiểm tra DataProducts có phải là mảng không và đảm bảo không phải null hoặc undefined
   const isDataValid = Array.isArray(DataProducts) && DataProducts.length > 0;
 
   if (loading) {

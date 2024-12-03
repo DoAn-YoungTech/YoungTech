@@ -1,51 +1,66 @@
+const sequelize = require('../configs/db');
 const orderRepository = require('../repositories/orderRepository');
-const orderService = {
-  addCustomerForOrder: async (data) => {
-    // Tìm khách hàng dựa trên số điện thoại
-    const existingCustomer = await orderRepository.findCustomerByPhoneNumber(data.phoneNumber);
+const orderDetailRepository = require('../repositories/orderDetailRepository');
 
-    if (existingCustomer) {
-      // Nếu khách hàng đã tồn tại, trả về thông tin của họ
-      return existingCustomer;
+const orderService = {
+  getPendingOrders: async () => {
+    try {
+      const orders = await orderRepository.getPendingOrders();
+      return orders;
+    } catch (error) {
+      throw new Error('Error fetching pending orders: ' + error.message);
+    }
+  },
+  addOrderWithDetails: async (orderData, orderDetails) => {
+    const transaction = await sequelize.transaction();
+
+    try {
+      const newOrderId = await orderRepository.createOrder(orderData);
+
+      if (!newOrderId) {
+        throw new Error('Failed to create Order');
+      }
+
+      console.log('New Order ID:', newOrderId);
+
+      for (const detail of orderDetails) {
+        const orderDetailData = {
+          ...detail,
+          order_id: newOrderId, 
+        };
+
+        console.log('OrderDetail Data:', orderDetailData);
+
+        await orderDetailRepository.createOrderDetail(orderDetailData);
+      }
+
+      await transaction.commit();
+      return { message: 'Order and details added successfully', orderId: newOrderId };
+    } catch (error) {
+      await transaction.rollback();
+      console.error('Error adding order and details:', error);
+      throw error;
+    }
+  },
+  getOrderById: async (orderId) => {
+    const order = await orderRepository.getOrderById(orderId);
+
+    if (!order) {
+      throw new Error('Order not found');
     }
 
-    // Nếu không tồn tại, thêm mới
-    return await orderRepository.addCustomerForOrder(data);
+    return order;
   },
-
-  // Hàm tìm khách hàng (có thể không cần nếu repository đã hỗ trợ)
-  findCustomer: async (phoneNumber) => {
-    return await orderRepository.findCustomerByPhoneNumber(phoneNumber);
+  updateStatusOrder: async (orderId, status) => {
+    try {
+      const result = await orderRepository.updateOrderStatus(orderId, status);
+      return result;
+    } catch (error) {
+      console.error("Error in updateStatusOrder service:", error);
+      throw error;
+    }
   },
- 
-  getAllOrder: async ({ offset, limit }) => {
-    return await orderRepository.getAllOrder({ offset, limit });
-  },
-
-
-  getOrderById: async (id) => {
-    return await orderRepository.getOrderById(id);
-  },
-
-  createOrder: async (data) => {
-    // Tạo đơn hàng cùng với chi tiết đơn hàng
-    return await orderRepository.createOrder(data);
-  },
-
-  updateOrder: async (id, data) => {
-    // Cập nhật đơn hàng cùng với chi tiết đơn hàng mới
-    return await orderRepository.updateOrder(id, data);
-  },
-
-  deleteOrder: async (id) => {
-    const data = { flag: true };
-    return await orderRepository.deleteOrder(id, data);
-  },
-  restoreOrder: async (id) => {
-    return await orderRepository.restoreOrder(id);
-  },
-
-  
 };
+
 
 module.exports = orderService;

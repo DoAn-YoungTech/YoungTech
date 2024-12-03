@@ -32,9 +32,11 @@ const productController = {
         currentPage: page || 1,
         totalPages: limit ? Math.ceil(result.totalItems / limit) : 1,
       });
+
     } catch (error) {
       console.error('Error fetching products:', error);
       return res.status(500).json({ message: 'Internal Server Error' });
+
     }
   },
   

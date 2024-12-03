@@ -1,160 +1,119 @@
 const orderService = require('../services/orderService');
+const cartService = require('../services/cartService')
 
-const OrderController = {
 
-    // add { id_customer, totalamount, paymentmethod => tạo order- gọi về service add order }
-    // mảng order detail , gọi về service add order detail - oddtservice.addmang(orderdetails, idOrrder)- ( duyệt qua các phần tử order detail trong mảng này, và mỗi lần duyệt qua thì sẽ gọi về hàm add orderdtail trong repository )
-
-  // bán hàng
-  addCustomerForOrder: async (req, res) => {
+const orderController = {
+  getPendingOrders: async (req, res) => {
     try {
-      const { fullName, phoneNumber, address } = req.body;
+      const pendingOrders = await orderService.getPendingOrders();
 
-      // Kiểm tra dữ liệu đầu vào
-      if (!phoneNumber) {
-        return res.status(400).json({ message: 'Số điện thoại là bắt buộc.' });
-      }
-
-      // Gọi Service để xử lý logic
-      const customer = await orderService.addCustomerForOrder({ fullName, phoneNumber, address });
-
-      // Phản hồi kết quả
       return res.status(200).json({
-        message: customer.created ? 'Thêm khách hàng thành công.' : 'Khách hàng đã tồn tại.',
-        data: customer,
+        message: 'Pending orders fetched successfully',
+        data: pendingOrders,
       });
     } catch (error) {
-      console.error('Lỗi khi xử lý khách hàng:', error);
-      return res.status(500).json({ message: 'Đã xảy ra lỗi.', error: error.message });
+      console.error('Error fetching pending orders:', error);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
     }
   },
+  // addOrderWithDetails: async (req, res) => {
+  //   const { order, orderDetails } = req.body;
 
-  // join 2 bảng order, và customer 
-  getAllOrder: async (req, res) => {
+  //   if (!order || !orderDetails || orderDetails.length === 0) {
+  //     return res.status(400).json({ message: 'Order and order details are required' });
+  //   }
+
+  //   try {
+  //     const result = await orderService.addOrderWithDetails(order, orderDetails);
+
+  //     return res.status(201).json({
+  //       message: 'Order and order details created successfully',
+  //       data: result,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error adding order and details:', error);
+  //     return res.status(500).json({
+  //       message: 'Internal Server Error',
+  //       error: error.message,
+  //     });
+  //   }
+  // },
+  addOrderWithDetails: async (req, res) => {
+    const { order, orderDetails, cartId } = req.body;
+  
+    if (!order || !orderDetails || orderDetails.length === 0) {
+      return res.status(400).json({ message: 'Order and order details are required' });
+    }
+  
     try {
-      // Lấy tham số phân trang từ query (mặc định là page 1 và limit 10)
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 2;
-
-      // Tính toán offset dựa trên page và limit
-      const offset = (page - 1) * limit;
-
-      // Gọi service để lấy danh sách đơn hàng với phân trang
-      const result = await orderService.getAllOrder({ offset, limit });
-
-      if (!result || result.data.length === 0) {
-        return res.status(404).json({ message: 'No orders found' });
+      // Nếu có cartId, xóa cart tương ứng
+      if (cartId) {
+        try {
+          await cartService.removeCart(cartId);
+          console.log(`Cart with ID ${cartId} has been removed successfully.`);
+        } catch (cartError) {
+          console.error('Error removing cart:', cartError);
+          return res.status(500).json({
+            message: 'Failed to remove cart',
+            error: cartError.message,
+          });
+        }
       }
-
-      // Trả về kết quả phân trang
-      res.json({
-        message: 'All orders',
-        data: result.data,
-        pagination: {
-          page,
-          limit,
-          totalItems: result.totalItems,
-          totalPages: Math.ceil(result.totalItems / limit),
-        },
+  
+      // Thêm order và order details
+      const result = await orderService.addOrderWithDetails(order, orderDetails);
+  
+      return res.status(201).json({
+        message: 'Order and order details created successfully',
+        data: result,
       });
-    } catch (err) {
-      res.status(500).json({ message: 'Invalid order', error: err.message });
+    } catch (error) {
+      console.error('Error adding order and details:', error);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
     }
   },
 
   // viết riêng controller cho orderdetail để trả về mảng orderdetail theo id của order
   getOrderById: async (req, res) => {
-    try {
-      const id = req.params.id;
-      const result = await orderService.getOrderById(id);
-      if (!result) {
-        return res.status(404).json({ message: 'Order not found' });
-      } else {
-        res.status(200).json({ message: 'Success', data: result });
-      }
-    } catch (err) {
-      res
-        .status(500)
-        .json({ message: 'Error retrieving order', error: err.message });
-    }
-  },
+    const { orderId } = req.params;
 
-  createOrder: async (req, res) => {
     try {
-      const data = req.body;
-      const result = await orderService.createOrder(data);
-      if (!result) {
-        res.status(400).json({ message: 'Create order failed!' });
-      } else {
-        res
-          .status(201)
-          .json({ message: 'Order created successfully!', data: result });
-      }
-    } catch (err) {
-      res
-        .status(500)
-        .json({ message: 'Internal Server Error', error: err.message });
-    }
-  },
-
-  updateOrder: async (req, res) => {
-    try {
-      const id = req.params.id;
-      const data = req.body;
-      const result = await orderService.updateOrder(id, data);
-      if (!result) {
-        res.status(404).json({ message: ' Order not found for update' });
-      } else {
-        res.status(200).json({ message: 'Update successful', data: result });
-      }
-    } catch (err) {
-      res
-        .status(500)
-        .json({ message: 'Internal Server Error', error: err.message });
-    }
-  },
-
-  deleteOrder: async (req, res) => {
-    try {
-      const id = req.params.id;
-      const result = await orderService.deleteOrder(id, { flag: true });
-      if (!result) {
-        res.status(404).json({ message: 'Order not found' });
-      } else {
-        res.status(200).json({ message: 'Order soft deleted successfully' });
-      }
-    } catch (err) {
-      res.status(500).json({ message: 'Server error', error: err.message });
-    }
-  },
-  restoreOrder: async (req, res) => {
-    try {
-      const id = req.params.id;
-
-      // Gọi service để khôi phục lại đơn hàng
-      const result = await orderService.restoreOrder(id);
-
-      if (!result) {
-        res
-          .status(404)
-          .json({ message: 'Order not found or already restored' });
-      } else {
-        res.status(200).json({ message: 'Order restored successfully!' });
-      }
-    } catch (err) {
-      res
-        .status(500)
-        .json({ message: 'Internal Server Error', error: err.message });
-    }
-  },
-  
-  viewOrder : async (req, res) => {
-    try {
-       // 
+      const order = await orderService.getOrderById(orderId);
+      return res.status(200).json({
+        message: 'Order retrieved successfully',
+        data: order,
+      });
     } catch (error) {
-      res.status(500).json({message : error})
+      console.error('Error fetching order:', error);
+      return res.status(404).json({
+        message: 'Error fetching order',
+        error: error.message,
+      });
+    }
+  },
+  updateOrderStatus: async (req, res) => {
+    const { orderId, status } = req.body;
+    console.log(orderId);
+    console.log(status);
+  
+    if (!orderId || !status) {
+      return res.status(400).json({ message: "orderId và status là bắt buộc." });
+    }
+  
+    try {
+      const result = await orderService.updateStatusOrder(orderId, status);
+      res.status(200).json(result); 
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+      res.status(500).json({ message: "Lỗi khi cập nhật trạng thái đơn hàng" });
     }
   }
 };
 
-module.exports = OrderController;
+module.exports = orderController;
