@@ -38,9 +38,6 @@ const productRepository = {
         };
     },
     
-    
-    
-     
     getProductById: async (id) => {
         const query = `SELECT * FROM product WHERE id = :id`;
         const [result] = await sequelize.query(query, { replacements: { id } });
