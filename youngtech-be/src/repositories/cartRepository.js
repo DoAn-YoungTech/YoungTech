@@ -300,6 +300,38 @@ const cartRepository = {
   checkAllProductIdExist: async (productId) => {
     const query = `SELECT * FROM cartitem WHERE product_id = :product_id`;
   },
+
+  cartId: async (getCustomerId) => {
+    const query = `SELECT id FROM cart WHERE customer_id = :customer_id`;
+    const [result] = await sequelize.query(query, {
+      replacements: { customer_id: getCustomerId },
+    });
+    return result[0].id;
+  },
+  deleteIn: async (productId, cartId) => {
+    try { 
+      const uniqueProduct = [...new Set(productId)];
+      console.log(uniqueProduct);
+      const query = `DELETE FROM cartitem  WHERE product_id IN (?) AND cart_id = ?`;
+      const [result] = await sequelize.query(query, {
+        replacements: [uniqueProduct, cartId],
+      });
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error(error);
+      throw Error(error.message);
+    }
+  },
+  removeAll : async (getCartId) => {
+    const query = `DELETE FROM cartitem WHERE cart_id = :cart_id`
+    const [result] = await sequelize.query(query, {replacements : {cart_id : getCartId}})
+    return result.affectedRows> 0
+  },
+  removeCart : async (cartId) => {
+    const query = `DELETE FROM cart WHERE id = :cart_id`
+    const [result] = await sequelize.query(query, {replacements : {cart_id : cartId}})
+    return result.affectedRows> 0
+  }
 };
 
 module.exports = cartRepository;

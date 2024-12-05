@@ -134,6 +134,19 @@ const cartService = {
   // checkAllProductIdExist(productId) 
   checkAllProductIdExist : async (productId) => {
     return await cartRepository.checkAllProductIdExist(productId)
+  },
+  cartId : async (getCustomerId) => {
+    return await cartRepository.cartId(getCustomerId)
+  },
+  deleteIn : async (productId,cartId) =>{
+    return await cartRepository.deleteIn(productId,cartId)
+  },
+
+  removeAll : async (getCartId) => {
+    return await cartRepository.removeAll(getCartId)
+  },
+  removeCart : async (cartId) => {
+    return await cartRepository.removeCart(cartId)
   }
 };
 

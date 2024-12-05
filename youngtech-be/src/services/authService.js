@@ -55,23 +55,28 @@ const authService = {
     return await authRepository.checkEmailExist(email)
   },
 
-  generateResetToken : async (account , hashToken , resetPasswordToken)=> {
-    return await authRepository.generateResetToken(account , hashToken , resetPasswordToken)
+  generateResetToken : async (account , otp , expires)=> {
+    return await authRepository.generateResetToken(account , otp , expires)
   },
 
-  validateResetToken : async (token) => {
-    return await authRepository.validateResetToken(token)
+  validateResetOtp : async (otp) => {
+    return await authRepository.validateResetOtp(otp)
   },
 
   // resetPassword(validateResetToken.id , hashPassword);
-  resetPassword : async (id , hashPassword) => {
-    return await authRepository.resetPassword(id , hashPassword);
+  resetPassword : async (email , hashPassword) => {
+    return await authRepository.resetPassword(email , hashPassword);
   },
 
-  clearResetToken : async (userId)=> {
-    return await authRepository.clearResetToken(userId)
-  }
+  clearResetToken : async (email)=> {
+    return await authRepository.clearResetToken(email)
+  },
 
+
+  // checkOTPExist(otp)
+  checkOTPExist : async (email, otp) => {
+    return await authRepository.checkOTPExist(email, otp)
+  }
  
  
 };
