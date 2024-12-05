@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BadgeCheck,
@@ -10,20 +10,16 @@ import {
   CreditCard,
   LogOut,
   Settings2,
-  Sparkles,
-} from "lucide-react"
+  Sparkles
+} from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+  CollapsibleTrigger
+} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,8 +27,8 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -46,27 +42,45 @@ import {
   SidebarMenuSub,
   SidebarTrigger,
   SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
-import {IoIosPeople } from "react-icons/io";
+  SidebarMenuSubItem
+} from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { IoIosPeople } from "react-icons/io";
 import { GiJerusalemCross } from "react-icons/gi";
-import { FaBusinessTime,FaClipboardList,FaWarehouse,FaFileInvoice } from "react-icons/fa";
+import {
+  FaBusinessTime,
+  FaClipboardList,
+  FaWarehouse,
+  FaFileInvoice
+} from "react-icons/fa";
 import { GrCatalog } from "react-icons/gr";
-
+import { FcTwoSmartphones } from "react-icons/fc";
+import { BiCategoryAlt } from "react-icons/bi";
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/shadcn.jpg"
   },
   navMain: [
-   
     {
       title: "Quản lý nhân viên",
       url: "quanly-nhanvien",
-      icon: IoIosPeople ,
-     
+      icon: IoIosPeople,
+      items: [ 
+        {
+          title: "Tạo nhân viên",
+          url: "quanly-nhanvien/tao-nhanvien"
+        },
+        {
+          title: "Chỉnh sửa thông tin",
+          url: "quanly-nhanvien/chinhsua-nhanvien"
+        },
+        {
+          title: "Chi tiết nhân viên",
+          url: "quanly-nhanvien/chitiet-nhanvien"
+        }
+      ]
     },
     {
       title: "Quản lý bán hàng",
@@ -75,17 +89,17 @@ const data = {
       items: [
         {
           title: "Bán hàng",
-          url: "quanly-banhang/ban-hang",
+          url: "quanly-banhang/ban-hang"
         },
         {
           title: "Đơn hàng chưa xử lý",
-          url: "quanly-banhang/donhang-chua-xuly",
+          url: "quanly-banhang/donhang-chua-xuly"
         },
         {
           title: "danh sách hóa đơn",
-          url: "quanly-banhang/danhsach-hoadon",
+          url: "quanly-banhang/danhsach-hoadon"
         }
-      ],
+      ]
     },
     {
       title: "Quản lý kinh doanh",
@@ -94,71 +108,99 @@ const data = {
       items: [
         {
           title: "Giá bán lẻ",
-          url: "quanly-kinhdoanh/giaban-le",
-        },
+          url: "quanly-kinhdoanh/giaban-le"
+        }, 
         {
           title: "Danh thu và lợi nhuận",
-          url: "quanly-kinhdoanh/danhthu-loinhuan",
+          url: "quanly-kinhdoanh/danhthu-loinhuan"
         },
         {
           title: "Thông tin khách hàng",
           url: "quanly-kinhdoanh/thongtin-khachhang",
         }
-      ],
+      ]
     },
     {
       title: "Danh mục sản phẩm",
       url: "quanly-danhmuc-sanpham",
       icon: GrCatalog,
-    
+      items: [
+        {
+          title: "Danh sách danh mục",
+          url: "quanly-danhmuc-sanpham/danhsach-danhmuc"
+        },
+        {
+          title: "Chỉnh sửa danh mục",
+          url: "quanly-danhmuc-sanpham/chinhsua-danhmuc"
+        },
+        {
+          title: "Tạo danh mục",
+          url: "quanly-danhmuc-sanpham/taodanhmuc"
+        }
+      ]
+    },
+    {
+      title: "Sản phẩm",
+      url: "quanly-sanpham",
+      icon: FcTwoSmartphones,
+      items: [
+        {
+          title: "Danh sách sản phẩm",
+          url: "quanly-sanpham/danhsach-sanpham"
+        },
+        {
+          title: "Chỉnh sửa sản phẩm",
+          url: "quanly-sanpham/chinhsua-sanpham"
+        },
+        {
+          title: "Tạo sản phẩm",
+          url: "quanly-sanpham/tao-sanpham"
+        }
+      ]
     },
     {
       title: "Quản lý nhà cung cấp",
       url: "quanly-nha-cungcap",
-      icon: FaClipboardList,
-    
+      icon: FaClipboardList
     },
     {
       title: "Quản lý nhập kho hàng",
       url: "quanly-nhap-khohang",
-      icon: FaWarehouse,
-    
+      icon: FaWarehouse
     },
     {
       title: "Danh sách hóa đơn",
       url: "quanly-hoadon",
-      icon: FaFileInvoice,
-    
-    },
-    
-  ],
- 
- 
-}
+      icon: FaFileInvoice
+    }
+  ]
+};
 
 export default function SiderbarAdmin() {
   const pathname = usePathname();
-  const router = useRouter()
+  const router = useRouter();
   return (
-      <Sidebar className="bg-gray-900   text-slate-300" variant="inset">
-        <SidebarHeader className="bg-gray-900 text-slate-300">
+    <Sidebar className="bg-[#22282E] p-2 text-slate-300" variant="inset">
+      <div className="bg-[#282F36] h-[100vh] rounded-2xl">
+        <SidebarHeader className="  text-slate-300">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
                 <a href="#">
-                  <div className="flex aspect-square  bg-white size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <div className="flex aspect-square  size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                     <Command className="size-4 text-black" />
                   </div>
                   <div className=" flex justify-between items-center text-left text-sm leading-tight">
-                    <span className="truncate text-xl text-white font-semibold">Dashboard</span>
-                  
+                    <span className="truncate text-xl text-white font-semibold">
+                      Dashboard
+                    </span>
                   </div>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
-        <SidebarContent className="bg-gray-900 text-slate-300">
+        <SidebarContent className="  text-slate-300">
           <SidebarGroup>
             <SidebarMenu>
               {data.navMain.map((item) => (
@@ -168,14 +210,24 @@ export default function SiderbarAdmin() {
                   defaultOpen={item.isActive}
                 >
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="py-5 hover:bg-transparent!important hover:text-white" asChild tooltip={item.title}>
-                      <button type="button" className={`${
-                                      pathname.includes(item.url)
-                                        ? "bg-blue-600 hover:bg-blue-600 text-white"
-                                        :""
-                                    }`} onClick={() => router.push(`/dashboard/${item.url}`)}>
+                    <SidebarMenuButton
+                      className="py-5 hover:bg-transparent!important hover:text-white"
+                      asChild
+                      tooltip={item.title}
+                    >
+                      <button
+                        type="button"
+                        className={`${
+                          pathname.includes(item.url)
+                            ? "bg-black/50 hover:bg-slate-600 text-white "
+                            : ""
+                        }`}
+                        onClick={() => router.push(`/dashboard/${item.url}`)}
+                      >
                         <item.icon />
-                        <span className="text-[16px] font-semibold">{item.title}</span>
+                        <span className="text-[15px] font-[500]">
+                          {item.title}
+                        </span>
                       </button>
                     </SidebarMenuButton>
                     {item.items?.length ? (
@@ -190,15 +242,24 @@ export default function SiderbarAdmin() {
                           <SidebarMenuSub>
                             {item.items?.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton className="py-5 hover:bg-gray-900 hover:text-white" asChild>
-                                  <button type="button"
-                                  className={`${
-                                    pathname.includes(subItem.url)
-                                      ? "bg-blue-600 hover:bg-blue-600 text-white"
-                                      :""
-                                  }`}
-                                  onClick={() => router.push(`/dashboard/${subItem.url}`)}>
-                                    <span className="text-[16px] font-semibold">{subItem.title}</span>
+                                <SidebarMenuSubButton
+                                  className="py-5 hover:bg-gray-900 hover:text-white"
+                                  asChild
+                                >
+                                  <button
+                                    type="button"
+                                    className={`${
+                                      pathname.includes(subItem.url)
+                                        ? "bg-blue-600 hover:bg-blue-600 text-black"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      router.push(`/dashboard/${subItem.url}`)
+                                    }
+                                  >
+                                    <span className="text-[16px] text-white/60 font-semibold">
+                                      {subItem.title}
+                                    </span>
                                   </button>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
@@ -208,14 +269,14 @@ export default function SiderbarAdmin() {
                       </>
                     ) : null}
                   </SidebarMenuItem>
+                  
                 </Collapsible>
+                
               ))}
             </SidebarMenu>
           </SidebarGroup>
-         
         </SidebarContent>
-      </Sidebar>
-     
-    
-  )
+      </div>
+    </Sidebar>
+  );
 }

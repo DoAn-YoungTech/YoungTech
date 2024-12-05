@@ -1,6 +1,7 @@
 
 import HeaderAdmin from "@/components/dashboard/HeaderAdmin";
 import SiderbarAdmin from "@/components/dashboard/Sidebar";
+import { SearchBar } from "@/components/dashboard/SearchBar";
 import {
   SidebarInset,
   SidebarProvider,
@@ -9,13 +10,12 @@ import {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
 <>
- <SidebarProvider>
+ <SidebarProvider className="bg-[#22282E]">
  <SiderbarAdmin/>
  <SidebarInset > 
   <HeaderAdmin/>
- <main className="w-full flex justify-center">
-       <section className="w-[90%]">
-      
+      <main className="w-full flex justify-center  ">
+       <section className="w-[90%]" > 
        {children}
        </section>
       </main>
