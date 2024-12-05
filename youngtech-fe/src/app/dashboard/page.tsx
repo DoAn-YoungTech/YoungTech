@@ -13,7 +13,7 @@ const page = () => {
               </div>
               <div className="w-[50%] flex items-center justify-center">
                 <div className="w-[50px] h-[50px] rounded-full bg-slate-900">
-                           hhh
+                           
                 </div>
               </div>
            </div>
@@ -31,7 +31,7 @@ const page = () => {
               </div>
               <div className="w-[50%] flex items-center justify-center">
                 <div className="w-[50px] h-[50px] rounded-full bg-slate-900">
-                           hhh
+                           
                 </div>
               </div>
            </div>
@@ -49,7 +49,7 @@ const page = () => {
               </div>
               <div className="w-[50%] flex items-center justify-center">
                 <div className="w-[50px] h-[50px] rounded-full bg-slate-900">
-                           hhh
+                           
                 </div>
               </div>
            </div>
@@ -67,7 +67,7 @@ const page = () => {
               </div>
               <div className="w-[50%] flex items-center justify-center">
                 <div className="w-[50px] h-[50px] rounded-full bg-slate-900">
-                           hhh
+                           
                 </div>
               </div>
            </div>
