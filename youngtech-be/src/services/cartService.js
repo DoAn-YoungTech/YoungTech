@@ -146,7 +146,7 @@ const cartService = {
     return await cartRepository.removeAll(getCartId)
   },
   removeCart : async (cartId) => {
-    return await cartRepository.removeCart(cartId)
+    return await cartRepository.removeCart(cartId) 
   }
 };
 

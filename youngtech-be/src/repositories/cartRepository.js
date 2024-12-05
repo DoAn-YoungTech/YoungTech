@@ -321,12 +321,8 @@ const cartRepository = {
       console.error(error);
       throw Error(error.message);
     }
-  },
-  removeAll : async (getCartId) => {
-    const query = `DELETE FROM cartitem WHERE cart_id = :cart_id`
-    const [result] = await sequelize.query(query, {replacements : {cart_id : getCartId}})
-    return result.affectedRows> 0
-  },
+
+  }, 
   removeCart : async (cartId) => {
     const query = `DELETE FROM cart WHERE id = :cart_id`
     const [result] = await sequelize.query(query, {replacements : {cart_id : cartId}})

@@ -10,7 +10,6 @@ const productRoutes = require('./productRoutes');
 const inputInvoiceRoutes = require('./inputInvoiceRoutes');
 const parentCategoriesRouters = require('./parentCategoriesRoutes')
 const childCategoriesRouters = require('./childCategoriesRoutes')
-
 const orderRouter = require('./orderRoutes')
 // const inputInvoiceRoutes = require('./inputInvoiceRoutes');
 
@@ -33,8 +32,6 @@ router.use('/roles', roles);
 router.use('/cart', cart)
 router.use('/permission', permission)
 router.use('/product', productRoutes);
-
-
 router.use('/childcategories',childCategoriesRouters);
 router.use('/parencategories',parentCategoriesRouters);
 router.use('/inputinvoice', inputInvoiceRoutes);
