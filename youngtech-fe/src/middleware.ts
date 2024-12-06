@@ -12,9 +12,9 @@ export async function middleware(req: NextRequest) {
   }
 
   // Nếu cố gắng truy cập /dashboard nhưng không phải admin
-  if (pathname.startsWith('/dashboard') && (!token || token.role !== 'admin')) {
-    return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
-  }
+  // if (pathname.startsWith('/dashboard') && (!token || token.role !== 'admin')) {
+  //   return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
+  // }
 
   return NextResponse.next(); // Tiếp tục yêu cầu
 }
