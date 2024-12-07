@@ -35,6 +35,7 @@ const Order = sequelize.define(
     },
     paymentMethod: {
       type: DataTypes.STRING,
+
       allowNull: false,
       defaultValue: 'Cash', 
     },

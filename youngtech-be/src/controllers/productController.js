@@ -2,8 +2,10 @@ const productService = require('../services/productService');
 // const validateProductAttributes = require('../validate/productValidator');
 
 const productController = {
+  // gọi  imageService để lấy ra danh sách ảnh, rồi cho danh sách ảnh vào product  
   getAllProduct: async (req, res) => {
     try {
+
       // Lấy tham số phân trang từ query
       const page = req.query.page ? parseInt(req.query.page) : null;
       const limit = req.query.limit ? parseInt(req.query.limit) : null;
