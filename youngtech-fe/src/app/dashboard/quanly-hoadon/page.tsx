@@ -1,7 +1,10 @@
-import InvoicePage from "@/components/dashboard/list-inputInvoice/InvoicePage"
+import InputInvoiceList from "@/components/dashboard/list_of_input_invoices/InputInvoiceList"
+
 const page = () => {
   return (
-    <InvoicePage/>
+    <div>
+      <InputInvoiceList />
+    </div>
   )
 }
 

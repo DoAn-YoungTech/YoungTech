@@ -1,5 +1,3 @@
- 
- 
 const express = require('express');
 const supplierRoutes = require('./supplierRoutes');
 const invoiceRouters = require('./invoiceRouters');
@@ -32,6 +30,7 @@ router.use('/roles', roles);
 router.use('/cart', cart)
 router.use('/permission', permission)
 router.use('/product', productRoutes);
+
 router.use('/childcategories',childCategoriesRouters);
 router.use('/parencategories',parentCategoriesRouters);
 router.use('/inputinvoice', inputInvoiceRoutes);

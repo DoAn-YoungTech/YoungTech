@@ -75,6 +75,7 @@ const authController = {
     );
   },
 
+
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -129,6 +130,7 @@ const authController = {
             .status(403)
             .json({ message: 'Error saving refresh token' });
         }
+
 
         const { password, ...others } = user;
         res.status(200).json({ ...others, accessToken, refreshToken });
