@@ -31,6 +31,7 @@ export const ItemProduct = ({item}) => {
         <p className='mb-5 overflow-hidden text-[11px] w-[70px] flex justify-center bg-slate-200'>Trả góp 0%</p>
         <div className="image h-[200px]">
           <Image
+
             src={`/designImage/imageProducts/${item.productImage}`}
             alt={item.product_name}
             className='transform transition-transform duration-500 ease-in-out group-hover:-translate-y-4'
@@ -46,6 +47,7 @@ export const ItemProduct = ({item}) => {
           <span className='text-[12px] bg-slate-200 px-2 rounded-lg'>Super Retina XDR</span>
         </div>
         <MemoryGb />
+
         <strong className='price w-full text-[16px] text-red-600'>{formattedPrice}₫</strong>
         <div className='star flex items-center py-1 text-slate-500'>
           <IoIosStar className="text-yellow-400 text-[12px]" />
