@@ -1,7 +1,7 @@
 const sequelize = require('../configs/db');
 
 const orderRepository = {
- 
+
   getPendingOrders: async () => {
     const query = `
       SELECT 
@@ -63,6 +63,7 @@ const orderRepository = {
       VALUES (:flag, :orderDate, :succesDate, :totalAmount, :status, :paymentMethod, :customer_id)
     `;
 
+
     const [result] = await sequelize.query(query, {
       replacements: {
         flag: orderData.flag,
@@ -74,6 +75,7 @@ const orderRepository = {
         customer_id: orderData.customer_id,
       },
     });
+
 
     // Dùng query để lấy ID vừa thêm
     const [orderIdResult] = await sequelize.query('SELECT LAST_INSERT_ID() AS id');

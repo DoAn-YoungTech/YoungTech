@@ -23,6 +23,7 @@ const productRepository = {
             replacements: replacements
         });
     
+
         let totalItems = 0;
     
         // Nếu có limit, tính tổng số sản phẩm để tính tổng số trang
@@ -31,19 +32,44 @@ const productRepository = {
             const [totalResult] = await sequelize.query(totalQuery);
             totalItems = totalResult[0].totalItems;
         }
+
+    
+        // Nhóm các hình ảnh lại theo product_id
+        const productsWithImages = result.reduce((acc, product) => {
+            // Kiểm tra nếu sản phẩm chưa có trong accumulator
+            if (!acc[product.id]) {
+                acc[product.id] = { ...product, images: [] };
+            }
+            // Thêm hình ảnh vào mảng images của sản phẩm
+            if (product.image_url) {
+                acc[product.id].images.push(product.image_url);
+            }
+            return acc;
+        }, {});
+    
+        // Chuyển kết quả thành mảng và trả về
+        const products = Object.values(productsWithImages);
     
         return {
-            data: result,
+            data: products,
             totalItems
         };
     },
     
     getProductById: async (id) => {
-        const query = `SELECT * FROM product WHERE id = :id`;
+        const query = `
+            SELECT p.*, GROUP_CONCAT(pi.imageUrl) AS imageUrls
+            FROM product p
+            LEFT JOIN image pi ON p.id = pi.product_id
+            WHERE p.id = :id
+            GROUP BY p.id
+        `;
         const [result] = await sequelize.query(query, { replacements: { id } });
-        return result[0];  // Trả về sản phẩm đầu tiên trong kết quả
+        return result[0];  // Trả về sản phẩm với tất cả các hình ảnh gộp lại trong cột 'imageUrls'
     },
     
+    
+
     // Thêm hàm mới để lấy sản phẩm theo childCategory_id
     getProductByChildCategory: async ({ childCategoryId, limit, offset }) => {
         try {

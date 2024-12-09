@@ -13,7 +13,7 @@ import { ThemeSwitcherButton } from "./darkmode";
 
 import SearchAdmin from "./SearchAdmin";
 import { SearchBar } from "./SearchBar";
-import Avatar from "./Avatar";
+import Avatar from "./user/Avatar";
 const HeaderAdmin = () => {
   return (
     <header className="flex h-16 w-full  justify-between  items-center mb-10 gap-2 rounded-xl text-[#c8d2db]  ">

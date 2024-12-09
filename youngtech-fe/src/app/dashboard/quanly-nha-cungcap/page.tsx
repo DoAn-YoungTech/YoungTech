@@ -64,7 +64,6 @@ const Page = () => {
       email: "tranvany@gmail.com"
     }
   ];
-
   return (
     <div>
       <header className="mb-5">
@@ -87,5 +86,4 @@ const Page = () => {
     </div>
   );
 };
-
 export default Page;
