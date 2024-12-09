@@ -29,4 +29,10 @@ customerRoutes.patch(
   middlewareController.verifyToken,
   customerController.softDelete
 );
-module.exports = customerRoutes;
+
+customerRoutes.get(
+  '/getOrderHistoryByCustomerId/:id',
+  // middlewareController.verifyTokenAndAdminAuth,
+  customerController.getOrderHistoryHandler
+);
+module.exports = customerRoutes;  

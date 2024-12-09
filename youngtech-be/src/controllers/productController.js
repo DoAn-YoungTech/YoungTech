@@ -1,5 +1,5 @@
 const productService = require('../services/productService');
-// const validateProductAttributes = require('../validate/productValidator');
+const validateProductAttributes = require('../validate/productValidator');
 
 const productController = {
   // gọi  imageService để lấy ra danh sách ảnh, rồi cho danh sách ảnh vào product  
@@ -99,6 +99,29 @@ const productController = {
       });
     } catch (err) {
       console.error('Error fetching products by child category:', err);
+      return res
+        .status(500)
+        .json({ message: 'Internal Server Error', error: err.message });
+    }
+  },
+
+  updatePricesProduct: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const data = req.body;
+      const result = await productService.updatePricesProduct(id, data);
+
+      if (!result) {
+        return res
+          .status(404)
+          .json({ message: 'Product not found for update' });
+      }
+
+      return res
+        .status(200)
+        .json({ message: 'Update successful', data: result });
+    } catch (err) {
+      console.error(err); // Log lỗi để dễ dàng debug
       return res
         .status(500)
         .json({ message: 'Internal Server Error', error: err.message });
@@ -250,7 +273,7 @@ const productController = {
     });
 
     if (Object.keys(errors).length > 0) {
-      return res.status(400).json({ errors });
+      return res.status(200).json({ errors });
     }
 
     res.status(200).json({ message: 'Product data is valid.' });

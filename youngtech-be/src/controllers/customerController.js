@@ -91,6 +91,16 @@ const customerController = {
       res.status(500).json({ message: error });
     }
   },
+
+  getOrderHistoryHandler: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const orders = await customerService.getOrderHistoryByCustomerId(id);
+      res.status(200).json(orders);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
 
 module.exports = customerController;
