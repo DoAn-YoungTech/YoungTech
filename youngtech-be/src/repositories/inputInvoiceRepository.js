@@ -1,6 +1,24 @@
 const sequelize = require('../configs/db');  
 
 const inputInvoiceRepository = {
+  getAllInputInvoice: async ({ offset, limit }) => {
+    console.log('<< offset, limit >>', offset, limit);
+    const query = `SELECT * FROM inputinvoice LIMIT :limit OFFSET :offset`;
+    const [results] = await sequelize.query(query, {
+      replacements: { limit, offset }
+    });
+
+    // Lấy tổng số nhà cung cấp để tính tổng số trang
+    const totalQuery = `SELECT COUNT(*) AS totalItems FROM inputinvoice`;
+    const [totalResult] = await sequelize.query(totalQuery);
+    const totalItems = totalResult[0].totalItems;
+    console.log('<< totalItems >>', totalItems);
+
+    return {
+      data: results,
+      totalItems
+    };
+  },
   saveInputInvoice: async (invoiceData) => {
     try {
       const query = `
