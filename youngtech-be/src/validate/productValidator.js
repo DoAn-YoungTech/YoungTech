@@ -17,19 +17,22 @@ const validateProductAttributes = ({
       errors.productPrice = "Product price must be a positive number.";
     }
   
-    if (description && description.length > 500) {
-      errors.description = "Description must not exceed 500 characters.";
-    }
+
   
     if (quantity === undefined || !Number.isInteger(Number(quantity)) || quantity < 0) {
       errors.quantity = "Quantity must be a non-negative integer.";
     }
+
     if (!brand || brand.length < 2) {
       errors.brand = "Brand must be at least 2 characters long.";
     }
   
     if (!Number.isInteger(Number(childCategory_id)) || childCategory_id <= 0) {
       errors.childCategory_id = "Child category ID must be a positive integer.";
+    }
+
+    if (description && description.length > 500) {
+      errors.description = "Description must not exceed 500 characters.";
     }
   
     if (!Number.isInteger(Number(supplier_id)) || supplier_id <= 0) {

@@ -1,7 +1,8 @@
-import InvoiceMain from "@/components/dashboard/inputInvoice/InvoiceMain"
+import WarehouseManagement from "@/components/dashboard/quanly-nhap-kho-hang"
+
 const page = () => {
   return (
-    <InvoiceMain/>
+     <WarehouseManagement />
   )
 }
 
