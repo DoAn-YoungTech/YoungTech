@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 * {
   margin: 0;
   padding: 0;
@@ -22,7 +22,8 @@ li {
 }
 
 body {
-  @apply bg-gray-100; /* Thêm màu nền xám nhạt cho body */
+  @apply bg-gray-100;
+ /* Thêm màu nền xám nhạt cho body */
 }
 
 @keyframes gradientMove {
@@ -77,7 +78,7 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
+    
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;

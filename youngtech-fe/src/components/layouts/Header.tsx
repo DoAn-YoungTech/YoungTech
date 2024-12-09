@@ -32,7 +32,9 @@ const Header = () => {
   }, []);
 
   useEffect(()=>{
-     dispatch(fetchCartItems())
+    if(idUser){
+      dispatch(fetchCartItems())
+    }
   },[dispatch])
 
   return (
@@ -103,7 +105,7 @@ const Header = () => {
                         >
                           <BsCart className="text-[25px]" />
                           <div className="w-5 h-5 absolute  flex items-center justify-center rounded-full top-0 right-0 bg-red-500 ">
-                          <span className=" text-white">{cartItems.length}</span>
+                          <span className=" text-white">{idUser ? cartItems.length : 0}</span>
                           </div>
                         </Link>
                       </li>
