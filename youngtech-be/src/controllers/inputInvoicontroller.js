@@ -54,7 +54,16 @@ const inputInvoiceController = {
         error: error.message
       });
     }
-  }
+  },
+  getAllInputInvoice: async (req, res) => {
+    try {
+      const { offset = 0, limit = 10 } = req.query; 
+      const suppliers = await inputInvoiceService.getAllInputInvoice(parseInt(offset), parseInt(limit));
+      res.status(200).json(suppliers);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
 };
 
 module.exports = inputInvoiceController;
