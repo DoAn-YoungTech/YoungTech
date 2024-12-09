@@ -1,6 +1,7 @@
 const orderService = require('../services/orderService');
 const cartService = require('../services/cartService')
 
+
 const orderController = {
   getPendingOrders: async (req, res) => {
     try {
@@ -78,6 +79,7 @@ const orderController = {
     }
   },
 
+  // viết riêng controller cho orderdetail để trả về mảng orderdetail theo id của order
   getOrderById: async (req, res) => {
     const { orderId } = req.params;
 

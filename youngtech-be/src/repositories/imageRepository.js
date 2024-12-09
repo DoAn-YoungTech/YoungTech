@@ -1,5 +1,4 @@
 const sequelize = require('../configs/db');
-
 const imageRepository = {
   createImage: async (image, productId) => {
     try {
