@@ -1,6 +1,7 @@
+
 import { MdDeleteOutline } from "react-icons/md";
 import Image from "next/image";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AlertClearCart } from "./AlertClearCart";
 import { updateCartItemQuantity } from "@/redux/Cart/cartThunks";
@@ -18,12 +19,11 @@ type CartItemProps = {
   };
 };
 
-const CartItem: React.FC<CartItemProps> = ({ item }) => {
+const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
   const dispatch = useDispatch();
-  console.log(item)
   const [isEditing, setIsEditing] = useState(false);
   const [isAlertClear, setIsAlertClear] = useState(false);
-  const quantity =item.quantity;
+  const [quantity,setQuantity] = useState(item.quantity);
   const totalItem = quantity * Number(item.price);
   const handleEditClick = () => {
     setIsEditing(!isEditing);
@@ -34,7 +34,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
   };
 
   const handleIncreaseQuantity = (newQuantity,product_id) => {
-
+    setQuantity(newQuantity)
     const newItemCart = {
       quantity:newQuantity,
       product_id
@@ -43,7 +43,9 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
   };
 
   const handleDecreaseQuantity = (newQuantity,product_id) => {
+   
     if (quantity > 1) {
+      setQuantity(newQuantity)
     const newItemCart = {
       quantity:newQuantity,
       product_id
@@ -53,13 +55,41 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       setIsAlertClear(true)
     }
   };
+  useEffect(()=>{
+   setQuantity(item.quantity)
+  },[item.quantity])
 
+  const handleQuantityChange = (value,id) => {
+    // Kiểm tra nếu giá trị nhập vào là số hợp lệ và >= 1
+    const parsedValue = parseInt(value, 10);
+    if (!isNaN(parsedValue) && parsedValue >= 1) {
+      const newItemCart = {
+        quantity:parsedValue,
+        product_id:id
+      }
+      dispatch(updateCartItemQuantity(newItemCart));
+    } else if (value === "") {
+      setQuantity("");
+      
+    }
+  };
+
+  useEffect(()=>{
+    setQuantity(item.quantity)
+  },[item.quantity])
+ 
   return (
+    
     <div className="bg-white py-4 px-4 border-b border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      {/* Product Info */}
+     
       <div className="flex lg:hidden items-center justify-between w-full">
-        <input type="checkbox" className="mr-2" />
-        <button type="button" onClick={handleEditClick}>
+      <input
+          type="checkbox"
+          checked={item.selected} 
+          onChange={(e)=>onSelectChange(item.product_id,e.target.checked)}
+       
+        />
+        <button type="button"  onClick={handleEditClick}>
           Sửa
         </button>
       </div>
@@ -69,7 +99,14 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
             !isEditing ? "sm:translate-x-[0]" : "transform duration-300 ease-in-out translate-x-[-20%]"
           }`}
         >
-          <input type="checkbox" className="mr-2 hidden sm:block" />
+
+<input
+          type="checkbox"
+          checked={item.selected} 
+          onChange={(e)=>onSelectChange(item.product_id,e.target.checked)}
+       className="mr-2 hidden sm:block"
+        />
+          
           <Image
             src={`/designImage/imageProducts/${item.image_url}`}
             alt={item.product_name}
@@ -112,7 +149,13 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
         >
           -
         </button>
-        <span className="px-2">{quantity}</span>
+        <input
+      type="text"
+      value={quantity}
+      onChange={(e) => handleQuantityChange(e.target.value,item.product_id)}
+      className="w-[50px]  focus:outline-none focus:border-none px-2 py-1  text-center"
+      min={1}
+    />
         <button
           onClick={()=>handleIncreaseQuantity(quantity + 1,item.product_id)}
           className="px-2 py-1 border border-gray-300 text-sm sm:text-base"
