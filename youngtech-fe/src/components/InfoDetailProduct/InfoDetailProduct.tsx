@@ -1,19 +1,33 @@
 "use client";
-import { useState } from "react";
+import Link from 'next/link'
+import { useState,useCallback } from "react";
 import NameProduct from "./NameProduct";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { addToCartThunk } from "@/redux/Cart/cartThunks";
 import Promotions from "./descriptionSmall";
+import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { debounce } from 'lodash';
+import { Router } from 'lucide-react';
 export default function InfoDetailProduct({ dataProduct }) {
+  const { data: session } = useSession();
   const searchParams = useSearchParams(); // Lấy tất cả các query params
   const id = searchParams.get("id");
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleAddToCart = async (quantity, id) => {
+    if (!session) {
+      toast.warning("Vui lòng đăng nhập ");
+       setTimeout(()=>{
+        router.push("/login");
+       },2000)
+      return
+    }
+
     const cartItem = {
       quantity: quantity,
       product_id: id,
@@ -21,10 +35,14 @@ export default function InfoDetailProduct({ dataProduct }) {
   
     try {
       // Dispatch và chờ kết quả từ thunk
-      const result = await dispatch(addToCartThunk(cartItem)) // Sử dụng unwrap() để lấy kết quả
+      const result = await dispatch(addToCartThunk(cartItem)) 
   
-      if (result) {
+      if (result && result.success) {
+        // Nếu API trả về trạng thái thành công
         toast.success("Thêm vào giỏ hàng thành công");
+      } else {
+        // Nếu API trả về thất bại hoặc không đúng định dạng
+        toast.error("Không thể thêm vào giỏ hàng");
       }
     } catch (error) {
       // Hiển thị lỗi nếu thất bại
@@ -33,6 +51,22 @@ export default function InfoDetailProduct({ dataProduct }) {
   };
   
 
+  const handleQuantityChange = (value) => {
+    // Kiểm tra nếu giá trị nhập vào là số hợp lệ và >= 1
+    const parsedValue = parseInt(value, 10);
+    if (!isNaN(parsedValue) && parsedValue >= 1) {
+      setQuantity(parsedValue);  // Chỉ cập nhật quantity nếu giá trị hợp lệ
+    } else if (value === "") {
+      setQuantity("");  // Nếu người dùng xóa hết nội dung, cho phép giá trị là chuỗi rỗng
+    }
+  };
+
+  const debouncedAddToCart = useCallback(
+    debounce((quantity, id) => {
+      handleAddToCart(quantity, id);
+    }, 500),
+    []
+  );
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev)); // Không cho phép giá trị nhỏ hơn 1
 
@@ -65,9 +99,13 @@ export default function InfoDetailProduct({ dataProduct }) {
             >
               −
             </button>
-            <span className="px-4 py-1 border border-gray-300 rounded-md bg-white text-center">
-              {quantity}
-            </span>
+            <input
+      type="text"
+      value={quantity}
+      onChange={(e) => handleQuantityChange(e.target.value)}
+      className="w-[50px]  focus:outline-none focus:border-none px-2 py-1  border border-gray-300 rounded-md text-center"
+      min={1}
+    />
             <button
               onClick={increment}
               className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md text-lg font-semibold"
@@ -81,17 +119,19 @@ export default function InfoDetailProduct({ dataProduct }) {
         <div className="w-full gap-5 py-5 flex">
           <button
             type="button"
-            onClick={() => handleAddToCart(quantity, id)}
-            className="bg-red-500 hover:bg-red-600 transition w-[200px] py-3 text-white rounded-lg text-[16px]"
+            onMouseDown={() => debouncedAddToCart(quantity, id)}
+            className="bg-red-500 active:scale-95  transform duration-200 hover:bg-red-600 transition w-[200px] py-3 text-white rounded-lg text-[16px]"
           >
             Thêm vào giỏ hàng
           </button>
-          <button
+         <Link href="/cart" >
+         <button
             type="button"
-            className="bg-slate-800 hover:bg-slate-900 transition w-[200px] py-3 text-white rounded-lg text-[16px]"
+            className="bg-slate-800 active:scale-95  transform duration-200 hover:bg-slate-900 transition w-[200px] py-3 text-white rounded-lg text-[16px]"
           >
             Mua ngay
           </button>
+         </Link>
         
         </div>
        

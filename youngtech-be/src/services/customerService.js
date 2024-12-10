@@ -27,6 +27,10 @@ const customerService = {
   deleteCustomer: async (checkUserIdExist) => {
     return await customerRepository.deleteCustomer(checkUserIdExist);
   },
+
+  getOrderHistoryByCustomerId: async (customerId) => {
+    return await customerRepository.getOrderHistoryByCustomerId(customerId);
+  },
 };
 
 module.exports = customerService;

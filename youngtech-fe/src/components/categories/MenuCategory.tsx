@@ -20,8 +20,6 @@ const MenuCategory = () => {
     dispatch(setIdCateParen(id))
     const slug = slugify(name);
     router.push(`/${slug}`);
-  
-  
   };
 
 

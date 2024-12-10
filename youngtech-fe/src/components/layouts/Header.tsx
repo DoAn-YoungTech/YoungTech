@@ -8,8 +8,9 @@ import { BsCart } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import MenuCategory from "../categories/MenuCategory";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/Store";
+import { fetchCartItems } from "@/redux/Cart/cartThunks";
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State cho input tìm kiếm
@@ -17,7 +18,8 @@ const Header = () => {
   const isAdmin = pathname.includes('/dashboard');
   const user = useSelector((state: RootState) => state.auth.user);
   const idUser = user?.id;  // Optional chaining để tránh lỗi nếu user là null hoặc undefined
-  
+  const dispatch = useDispatch();
+  const {cartItems,loading} = useSelector(state=>state.cart);
   useEffect(() => {
     const handleScroll = () => {
       const topHeader = document.getElementById("topHeader")?.offsetHeight || 0;
@@ -28,6 +30,12 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(()=>{
+    if(idUser){
+      dispatch(fetchCartItems())
+    }
+  },[dispatch])
 
   return (
     <>
@@ -93,9 +101,12 @@ const Header = () => {
                       <li className="ml-[20px]">
                         <Link
                           href="/cart"
-                          className="block px-3 py-[20px] transition-all duration-300 border-b-2 hover:border-b-red-700 border-transparent"
+                          className="block relative px-3 py-[20px] transition-all duration-300 border-b-2 hover:border-b-red-700 border-transparent"
                         >
                           <BsCart className="text-[25px]" />
+                          <div className="w-5 h-5 absolute  flex items-center justify-center rounded-full top-0 right-0 bg-red-500 ">
+                          <span className=" text-white">{idUser ? cartItems.length : 0}</span>
+                          </div>
                         </Link>
                       </li>
                     </ul>
