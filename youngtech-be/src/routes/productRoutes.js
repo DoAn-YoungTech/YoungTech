@@ -10,10 +10,13 @@ productRoutes.get('/:id', productController.getProductById);
 productRoutes.post('/', productController.createProduct);
 
 productRoutes.put('/:id', productController.updateProduct);
-
+  
 productRoutes.delete('/:id', productController.deleteProduct);
 
 productRoutes.put('/:id/restore', productController.restoreProduct);
+
+productRoutes.put('/updatePrices/:id', productController.updatePricesProduct);
+
 
 productRoutes.get(
   '/childCategory/:childCategoryId',

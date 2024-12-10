@@ -44,8 +44,12 @@ export default function RootLayout({
        <Header/>
           <main>{children}</main>
         <Footer/>
+<<<<<<< Updated upstream
        </ReduxProvider> 
          
+=======
+       </ReduxProvider>
+>>>>>>> Stashed changes
         </div>
       </body>
     </html>

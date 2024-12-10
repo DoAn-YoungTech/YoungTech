@@ -25,7 +25,7 @@ const OrderDetail = sequelize.define(
     order_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Order", // 'OrderDetail' refers to table name
+        model: "Order", 
         key: "id"
       }
     },
@@ -33,7 +33,7 @@ const OrderDetail = sequelize.define(
     product_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Product", // 'OrderDetail' refers to table name
+        model: "Product", 
         key: "id"
       }
     }
