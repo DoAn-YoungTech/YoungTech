@@ -14,17 +14,15 @@ const parentCategoriesRepository = {
     },
 
     createParentCategories: async (data) => {
-        console.log(`Repository ${JSON.stringify(data)}`);
-        
-        // Kiểm tra nếu flag không có trong data thì mặc định flag là false
-        const { name } = data; 
-        const flag = data.flag !== undefined ? data.flag : false;  // Mặc định flag là false
-    
+        const { name, flag = true } = data; // Mặc định flag là true nếu không được truyền
         const query = `INSERT INTO parentcategories (name, flag)
                        VALUES (:name, :flag)`;
-        const [result] = await sequelize.query(query, { replacements: { name, flag } });
+        const [result] = await sequelize.query(query, {
+          replacements: { name, flag },
+        });
         return result;
-    },
+      },      
+
     
 
     deleteParentCategories: async (id) => {
