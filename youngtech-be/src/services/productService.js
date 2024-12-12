@@ -9,6 +9,10 @@ const productService = {
         return await productRepository.getProductById(id);
     },
 
+    updatePricesProduct: async (id, data) => {
+        return await productRepository.updatePricesProduct(id, data);
+      },
+
     // Thêm hàm mới để lấy sản phẩm theo childCategory_id
     getProductByChildCategory: async (childCategoryId,limit, offset) => {
         return await productRepository.getProductByChildCategory(childCategoryId,limit, offset);

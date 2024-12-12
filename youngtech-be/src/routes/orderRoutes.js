@@ -8,6 +8,4 @@ orderRoutes.post('/createOrder', orderController.addOrderWithDetails);
 orderRoutes.put('/updateOrderStatus', orderController.updateOrderStatus); 
 orderRoutes.get('/getPendingOrders', orderController.getPendingOrders);
 orderRoutes.get('/:orderId', orderController.getOrderById);
-
-
 module.exports = orderRoutes;

@@ -22,7 +22,11 @@ const initialState: CartState = {
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
-  reducers: {},
+  reducers: {
+    updateSelectedItems(state, action) {
+      state.cartItems = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCartItems.pending, (state) => {
@@ -51,4 +55,5 @@ const cartSlice = createSlice({
   },
 });
 
+export const { updateSelectedItems } = cartSlice.actions
 export default cartSlice.reducer;

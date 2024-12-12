@@ -21,21 +21,21 @@ import {
 export const description = "A multiple bar chart"
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "Jan", Doanh_thu: 186, Loi_nhuan: 80 },
+  { month: "Feb", Doanh_thu: 305, Loi_nhuan: 200 },
+  { month: "Mar", Doanh_thu: 237, Loi_nhuan: 120 },
+  { month: "Apr", Doanh_thu: 73, Loi_nhuan: 190 },
+  { month: "May", Doanh_thu: 209, Loi_nhuan: 130 },
+  { month: "Jun", Doanh_thu: 214, Loi_nhuan: 140 },
 ]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  Doanh_thu: {
+    label: "Doanh thu",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  Loi_nhuan: {
+    label: "Lợi nhuận",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
@@ -62,8 +62,8 @@ export function ChartComponent() {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="Doanh_thu" fill="var(--color-Doanh_thu)" radius={4} />
+            <Bar dataKey="Loi_nhuan" fill="var(--color-Loi_nhuan)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>

@@ -1,9 +1,8 @@
+import WarehouseManagement from "@/components/dashboard/quanly-nhap-kho-hang"
 
 const page = () => {
   return (
-    <div>
-      <h1>Hello</h1>
-    </div>
+     <WarehouseManagement />
   )
 }
 

@@ -5,25 +5,24 @@ const BannerTwo = () => {
 
       <div className=" w-full pb-5 flex justify-between space-x-4">
 
-        <div className="w-1/2">
+        <div className="w-1/2 relative">
           <Image 
             src="/designImage/imageBanner/Banner/bannerTwo1.png" 
             alt="Banner 1" 
-            layout="responsive"
-            width={600}
-            height={200}
-            className='w-[40%]'
+            width={500}
+            height={500}
+            className='w-[98%]'
+            
           />
         </div>
 
-        <div className="w-1/2">
+        <div className="w-1/2 relative">
           <Image 
-          className='w-[48%]'
             src="/designImage/imageBanner/Banner/bannerTwo2.png" 
             alt="Banner 2" 
-            layout="responsive"
-            width={500} 
-            height={200} 
+            className='w-[98%]'
+            width={500}
+            height={500}
           />
         </div>
       </div>

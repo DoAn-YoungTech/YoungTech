@@ -61,7 +61,7 @@ const ButtonSubcategories = () => {
   }, [lastScrollPos]);
 
   return (
-    <div className="w-screen bg-white mb-5">
+    <div className="w-[90%] bg-white mb-5">
       <div
         id="buttonSubcategories"
         className={`transition-all duration-300 ${
