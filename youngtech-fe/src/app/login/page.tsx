@@ -30,7 +30,7 @@ interface IFormInput {
 const Page = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  
+  console.log(session)
   
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({
     resolver: yupResolver(schema), // Attach yup validation schema here
@@ -49,7 +49,7 @@ const Page = () => {
 
 
     if (res?.ok) {
-      if (session && session.user?.role === "user") {
+      if (session && session.user?.role_id === "user" ) {
         toast.success("Đăng nhập thành công !")
         setTimeout(()=>{
           router.push("/");
