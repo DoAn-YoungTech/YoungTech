@@ -227,7 +227,7 @@ export default function SiderbarAdmin() {
                                     type="button"
                                     className={`${
                                       pathname.includes(subItem.url)
-                                        ? "bg-blue-600 hover:bg-blue-600 text-black"
+                                        ? "bg-gray-600 hover:bg-gray-600 text-black"
                                         : ""
                                     }`}
                                     onClick={() =>

@@ -3,13 +3,13 @@ const sequelize = require("../configs/db");
 const supplierRepository = {
   getAllSuppliers: async ({ offset, limit }) => {
     console.log('<< offset, limit >>', offset, limit);
-    const query = `SELECT * FROM supplier WHERE flag = false LIMIT :limit OFFSET :offset`;
+    const query = `SELECT * FROM supplier WHERE flag = true LIMIT :limit OFFSET :offset`;
     const [results] = await sequelize.query(query, {
       replacements: { limit, offset }
     });
 
     // Lấy tổng số nhà cung cấp để tính tổng số trang
-    const totalQuery = `SELECT COUNT(*) AS totalItems FROM supplier WHERE flag = 0`;
+    const totalQuery = `SELECT COUNT(*) AS totalItems FROM supplier WHERE flag = 1`;
     const [totalResult] = await sequelize.query(totalQuery);
     const totalItems = totalResult[0].totalItems;
     console.log('<< totalItems >>', totalItems);
@@ -46,7 +46,7 @@ const supplierRepository = {
   },
 
   deleteSupplier: async (id) => {
-    const query = `UPDATE supplier SET flag = true WHERE id = :id`;
+    const query = `UPDATE supplier SET flag = false WHERE id = :id`;
     const [result] = await sequelize.query(query, { replacements: { id } });
     return result;
   },
