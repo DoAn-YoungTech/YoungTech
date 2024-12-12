@@ -24,7 +24,8 @@
     "@reduxjs/toolkit": "^2.3.0",
     "@tanstack/react-query": "^4.36.1",
     "axios": "^1.7.7",
-    "class-variance-authority": "^0.7.1",
+    "class-variance-authority": "^0.7.0",
+    "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.1",
@@ -58,7 +59,7 @@
     "tailwindcss-motion": "^0.4.3-beta",
     "vietnam-provinces": "^0.0.4",
     "youngtech-fe": "file:",
-    "yup": "^1.5.0"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.13",
