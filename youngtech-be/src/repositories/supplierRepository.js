@@ -46,7 +46,7 @@ const supplierRepository = {
   },
 
   deleteSupplier: async (id) => {
-    const query = `UPDATE supplier SET flag = true WHERE id = :id`;
+    const query = `UPDATE supplier SET flag = false WHERE id = :id`;
     const [result] = await sequelize.query(query, { replacements: { id } });
     return result;
   },
