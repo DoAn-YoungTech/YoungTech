@@ -13,6 +13,7 @@ const inputInvoiceService = {
     }
   },
 
+
   addProductToInventory: async (products) => {
     const result = [];
   
@@ -47,7 +48,13 @@ const inputInvoiceService = {
     }
   
     return result;
-  }
+  },
+
+
+  getAllInputInvoice: async (offset, limit) => {
+    return await inputInvoiceRepository.getAllInputInvoice({ offset, limit });
+  },
+
 };
 
 module.exports = inputInvoiceService;

@@ -10,29 +10,35 @@ const Order = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    
     flag: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
     },
+
     orderDate: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+
     succesDate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
+
     totalAmount: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+
     status: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'Pending',
     },
+
     paymentMethod: {
       type: DataTypes.STRING,
 

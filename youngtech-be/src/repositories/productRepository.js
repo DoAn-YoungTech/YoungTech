@@ -1,4 +1,5 @@
 const sequelize = require('../configs/db');
+const imageRepository = require('./imageRepository');
 
 const productRepository = {
     getAllProduct: async ({ offset, limit }) => {
@@ -33,27 +34,57 @@ const productRepository = {
             totalItems = totalResult[0].totalItems;
         }
 
-    
         // Nhóm các hình ảnh lại theo product_id
-        const productsWithImages = result.reduce((acc, product) => {
-            // Kiểm tra nếu sản phẩm chưa có trong accumulator
-            if (!acc[product.id]) {
-                acc[product.id] = { ...product, images: [] };
-            }
-            // Thêm hình ảnh vào mảng images của sản phẩm
-            if (product.image_url) {
-                acc[product.id].images.push(product.image_url);
-            }
-            return acc;
-        }, {});
-    
-        // Chuyển kết quả thành mảng và trả về
-        const products = Object.values(productsWithImages);
+        const productsWithImages = await Promise.all(
+          result.map(async (product) => {
+            console.log('<< product, product >>', product);
+              const imagesByProductId =  await imageRepository.getAllImagesByProductId(product.id);
+              console.log('<< imagesByProductId 312321>>', imagesByProductId);
+              return ({...product, images:imagesByProductId })
+            
+          })
+        )
+        console.log('<< productsWithImages >>',  productsWithImages);
+        // console.log('<< productsWithImages >>', await productsWithImages);
+        // Chuyển kết quả thành mảng và   trả về
+        // const products = Object.values(productsWithImages);
     
         return {
-            data: products,
+            data: productsWithImages,
             totalItems
         };
+    },
+
+    updatePricesProduct: async (id, data) => {
+      // Lọc ra các trường hợp lệ và có giá trị
+      const allowedFields = ['productRetailPrice', 'productSalePrice'];
+      const updateData = Object.keys(data)
+        .filter((key) => allowedFields.includes(key) && data[key] !== undefined)
+        .reduce((obj, key) => {
+          obj[key] = data[key];
+          return obj;
+        }, {});
+  
+      if (Object.keys(updateData).length === 0) {
+        throw new Error('No valid fields to update');
+      }
+  
+      // Tạo phần SET trong câu lệnh SQL
+      const setQuery = Object.keys(updateData)
+        .map((key) => `${key} = :${key}`)
+        .join(', ');
+  
+      const query = `
+        UPDATE Product 
+        SET ${setQuery}
+        WHERE id = :id
+      `;
+  
+      await sequelize.query(query, {
+        replacements: { ...updateData, id },
+      });
+  
+      return { message: 'Product updated successfully' };
     },
     
     getProductById: async (id) => {
