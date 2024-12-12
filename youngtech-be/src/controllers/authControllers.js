@@ -233,7 +233,7 @@ const authController = {
           message: 'Email not found ! Please enter your email address.',
         });
       }
-      // check email exist . if exist send reset token to email
+  
       const account = await authService.checkEmailExist(email);
 
       if (!account) {
@@ -263,6 +263,7 @@ const authController = {
           .status(403)
           .json({ message: 'Can not generate reset otp !' });
       }
+
       const TOKEN = '12ca1b117ae28fb61627c0973da2586f';
 
       const client = new MailtrapClient({
