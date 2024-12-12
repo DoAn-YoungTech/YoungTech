@@ -149,7 +149,7 @@ const cartService = {
     return await cartRepository.removeCart(cartId)
  
   }
-};
+}};
 
 
 module.exports = cartService
