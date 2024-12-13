@@ -2,6 +2,8 @@
 import HeaderAdmin from "@/components/dashboard/HeaderAdmin";
 import SiderbarAdmin from "@/components/dashboard/Sidebar";
 import { SearchBar } from "@/components/dashboard/SearchBar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   SidebarInset,
   SidebarProvider,
@@ -11,6 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
 <>
  <SidebarProvider className="bg-[#22282E]">
+ <ToastContainer autoClose={3000} />
  <SiderbarAdmin/>
  <SidebarInset > 
   <HeaderAdmin/>
