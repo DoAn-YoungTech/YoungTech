@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/Store';
 import { addProductToTemp } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
 import { useRouter } from 'next/navigation';
+import UploadImage from '@/components/UploadImage';
 
 
 // Validation schema using Yup
@@ -30,6 +31,7 @@ const schema = yup.object({
     .min(1, 'Số lượng phải ít nhất là 1'),
   supplier_id: yup.string().required('Nhà cung cấp là bắt buộc'),
   childCategory_id: yup.string().required('ChildCategory là bắt buộc'),
+  images: yup.array().min(1, 'Ít nhất phải có một ảnh').required('Ảnh là bắt buộc')
 });
 
 // Interface for form inputs
@@ -41,6 +43,7 @@ interface FormInputs {
   childCategory_id: string;
   description: string;
   brand: string;
+  images: string[]
 }
 
 // Mapping server-side validation errors to form fields
@@ -52,6 +55,7 @@ const errorMapping: { [key: string]: keyof FormInputs } = {
   description: 'description',
   brand: 'brand',
   childCategory_id: 'childCategory_id',
+  images: 'images',
 };
 
 export default function WarehouseManagement() {
@@ -128,6 +132,22 @@ export default function WarehouseManagement() {
     router.push('/dashboard/quanly-nhap-khohang/danh-sach')
   }
 
+  const [urlsImage,setUrlsImage] = useState([])
+  
+  const handleGetArrayImage = (urlr : any)=>{
+   console.log('123123', urlsImage)
+    setUrlsImage(urlr)
+  }
+
+  useEffect(() => {
+    if (urlsImage) {
+      setValue('images',urlsImage )
+    }
+
+  },[urlsImage])
+
+ console.log('dfsd',urlsImage)
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -142,6 +162,14 @@ export default function WarehouseManagement() {
               className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
+          </div>
+
+          {/* Album ảnh */}
+          <div>
+            <label className="block text-sm font-semibold mb-2">Album ảnh</label>
+            <UploadImage 
+            handleGetArrayImage={handleGetArrayImage}  />
+            {errors.images && <p className="text-red-500 text-sm mt-1">{errors.images.message}</p>}
           </div>
 
           {/* Description */}
