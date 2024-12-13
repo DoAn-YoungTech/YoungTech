@@ -28,11 +28,11 @@ const productRepository = {
         let totalItems = 0;
     
         // Nếu có limit, tính tổng số sản phẩm để tính tổng số trang
-        if (limit) {
+        
             const totalQuery = `SELECT COUNT(*) AS totalItems FROM product`;
             const [totalResult] = await sequelize.query(totalQuery);
             totalItems = totalResult[0].totalItems;
-        }
+        
 
         // Nhóm các hình ảnh lại theo product_id
         const productsWithImages = await Promise.all(

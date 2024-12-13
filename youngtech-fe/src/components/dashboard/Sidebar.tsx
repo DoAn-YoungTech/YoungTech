@@ -1,38 +1,16 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  BadgeCheck,
-  Bell,
-  BookOpen,
-  ChevronRight,
-  ChevronsUpDown,
-  Command,
-  CreditCard,
-  LogOut,
-  Settings2,
-  Sparkles
-} from "lucide-react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {  ChevronRight,  Command,} from "lucide-react";
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
 } from "@/components/ui/collapsible";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
+
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -40,11 +18,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarTrigger,
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 import { IoIosPeople } from "react-icons/io";
 import { GiJerusalemCross } from "react-icons/gi";
 import {
@@ -55,7 +32,7 @@ import {
 } from "react-icons/fa";
 import { GrCatalog } from "react-icons/gr";
 import { FcTwoSmartphones } from "react-icons/fc";
-import { BiCategoryAlt } from "react-icons/bi";
+
 const data = {
   user: {
     name: "shadcn",
@@ -250,7 +227,7 @@ export default function SiderbarAdmin() {
                                     type="button"
                                     className={`${
                                       pathname.includes(subItem.url)
-                                        ? "bg-blue-600 hover:bg-blue-600 text-black"
+                                        ? "bg-gray-600 hover:bg-gray-600 text-black"
                                         : ""
                                     }`}
                                     onClick={() =>
