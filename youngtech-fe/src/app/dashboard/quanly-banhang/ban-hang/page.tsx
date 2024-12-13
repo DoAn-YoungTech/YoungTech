@@ -42,7 +42,7 @@ const page = () => {
   ];
   return (
     <> 
-
+ 
       <header className="mb-5">
         <h2 className="text-white/90 font-bold text-[1.2rem]">BÁN HÀNG</h2>
       </header>
