@@ -91,6 +91,42 @@ const customerController = {
       res.status(500).json({ message: error });
     }
   },
+
+  getOrderHistoryHandler: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const orders = await customerService.getOrderHistoryByCustomerId(id);
+      res.status(200).json(orders);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  addCustomerOffline: async (req, res) => {
+    try {
+      const data = req.body;
+      const dataCustomer = { ...data, account_id: null };
+      console.log(dataCustomer);
+      const createCustomerOffline = await customerService.createCustomerOffline(
+        dataCustomer
+      );
+      if (!createCustomerOffline) {
+        return res
+          .status(403)
+          .json({
+            message: 'Fail , can not create customer . Please check again .',
+          });
+      }
+      res
+        .status(201)
+        .json({
+          message: 'Create customer success !',
+          data: createCustomerOffline,
+        });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  },
 };
 
 module.exports = customerController;

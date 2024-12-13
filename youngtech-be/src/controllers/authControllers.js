@@ -8,6 +8,8 @@ const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const { MailtrapClient } = require('mailtrap');
 const { meet } = require('googleapis/build/src/apis/meet');
+const passwordEmail = process.env.passwordEmail;
+const Email = process.env.Email
 const authController = {
   register: async (req, res) => {
     try {
@@ -74,7 +76,6 @@ const authController = {
       { expiresIn: '365d' }
     );
   },
-
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -137,7 +138,6 @@ const authController = {
       res.status(500).json({ message: err });
     }
   },
-
   requestRefreshToken: async (req, res) => {
     // take refresh token from user
     const { refreshToken } = req.body;
@@ -192,7 +192,6 @@ const authController = {
 
     //
   },
-
   userLogout: async (req, res) => {
     const { refreshToken } = req.body;
 
@@ -231,7 +230,6 @@ const authController = {
           message: 'Email not found ! Please enter your email address.',
         });
       }
-  
       const account = await authService.checkEmailExist(email);
 
       if (!account) {
@@ -239,7 +237,6 @@ const authController = {
       }
 
       // const OTP = Math.floor(1000 + Math.random() * 9000) this a way manual generate OTP
-
       // using otpGenerator
       const otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
@@ -262,47 +259,32 @@ const authController = {
           .json({ message: 'Can not generate reset otp !' });
       }
 
-      const TOKEN = '12ca1b117ae28fb61627c0973da2586f';
-
-      const client = new MailtrapClient({
-        token: TOKEN,
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: Email,
+          pass: passwordEmail,
+        },
       });
 
-      const sender = {
-        email: 'hello@demomailtrap.com',
-        name: 'Mailtrap Test',
+      var mailOptions = {
+        from: Email,
+        to: email,
+        subject: `Sending Email`,
+        text: `Send OTP ${otp}`,
       };
-      const recipients = [
-        {
-          email: email,
-        },
-      ];
 
-      client
-        .send({
-          from: sender,
-          to: recipients,
-          template_uuid: 'b0700ea9-3ceb-44f9-bd69-f155b829ec06',
-          template_variables: {
-            email: email,
-            company_info_name: 'Test_Company_info_name',
-            company_info_address: 'Test_Company_info_address',
-            company_info_city: 'Test_Company_info_city',
-            company_info_zip_code: otp,
-            company_info_country: 'Test_Company_info_country',
-          },
-        })
-        .then(
-          res.status(200).json({
-            message: `Send email to ${email} Please check then enter OTP`,
-          }),
-          console.error
-        );
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          res.json({ message: error });
+        } else {
+          res.json('Email sent: ' + info.response);
+        }
+      });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   },
-  // send OTP
   sendingOTP: async (req, res) => {
     try {
       const { email, otp } = req.body;
@@ -345,6 +327,7 @@ const authController = {
     }
   },
 };
+
 
 module.exports = authController;
 

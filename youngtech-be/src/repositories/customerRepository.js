@@ -81,6 +81,49 @@ const customerRepository = {
     });
     return result.affectedRows > 0;
   },
+
+  getOrderHistoryByCustomerId: async (customerId) => {
+    const query = `
+      SELECT 
+        o.id AS orderId,
+        o.orderDate,
+        o.succesDate,
+        o.totalAmount,
+        o.status,
+        o.paymentMethod,
+        c.id AS customerId,
+        c.fullName AS customerName,
+        c.phoneNumber AS customerPhone,
+        c.address AS customerAddress
+      FROM 
+        \`Order\` o
+      INNER JOIN 
+        Customer c 
+      ON 
+        o.customer_id = c.id
+      WHERE 
+        c.id = :customerId
+        AND c.flag = true
+        AND o.flag = true
+    `;
+
+    const [results] = await sequelize.query(query, {
+      replacements: { customerId },
+    });
+
+    return results; // Trả về danh sách kết quả
+  },
+  createCustomerOffline: async (data) => {
+    try {
+      const query = `INSERT INTO customer(fullName , phoneNumber , address , account_id) 
+   VALUES (:fullName , :phoneNumber , :address , :account_id)`;
+      const [result] = await sequelize.query(query, { replacements: { ...data } });
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw Error(err.message);
+    }
+  },
 };
 
 module.exports = customerRepository;

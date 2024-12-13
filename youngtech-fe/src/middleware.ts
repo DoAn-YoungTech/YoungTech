@@ -6,15 +6,15 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const { pathname } = req.nextUrl;
    
-  // Nếu đã đăng nhập và cố gắng truy cập login/register
-  if (token && (pathname === '/login' || pathname === '/register'  )) {
-    return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
-  }
+  // // Nếu đã đăng nhập và cố gắng truy cập login/register
+  // if (token && (pathname === '/login' || pathname === '/register'  )) {
+  //   return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
+  // }
 
   // Nếu cố gắng truy cập /dashboard nhưng không phải admin
-  if (pathname.startsWith('/dashboard') && (!token || token.role !== 'admin')) {
-    return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
-  }
+  // if (pathname.startsWith('/dashboard') && (!token || token.role !== 'admin')) {
+  //   return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
+  // }
 
   return NextResponse.next(); // Tiếp tục yêu cầu
 }

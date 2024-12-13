@@ -33,7 +33,6 @@ const middlewareController = {
       }
     });
   },
-
   verifyTokenAndRole: (roles) => {
     return (req, res, next) => {
       // let userType

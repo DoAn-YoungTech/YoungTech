@@ -1,5 +1,5 @@
 "use client"; // Import getSession từ next-auth
-import { signIn } from "next-auth/react";
+import { signIn,useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
@@ -8,10 +8,10 @@ import { Video } from "../../components/video/Video";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useSession } from "next-auth/react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 // Define validation schema with Yup
 const schema = yup.object({
@@ -47,6 +47,7 @@ const Page = () => {
       password,
     })
 
+
     if (res?.ok) {
       if (session && session.user?.role === "user") {
         toast.success("Đăng nhập thành công !")
@@ -67,6 +68,20 @@ const Page = () => {
   
   };
 
+  const handleGoogleLogin = async () => {
+     await signIn("google", { redirect: false });
+    await axios.post('http://localhost:8080/api/auth/register', {
+      userName: "than",  // Lấy tên từ thông tin người dùng Google
+      email: "thhhnnvnn@gmail.com",    // Lấy email từ thông tin người dùng Google
+      password: '',         // Để trống mật khẩu vì Google đã cung cấp thông tin xác thực
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+         
+    
+  };
   return (
     <div className="min-h-screen motion-preset-slide-right motion-duration-3000 flex my-5 justify-center items-center bg-gray-100">
       <ToastContainer />
@@ -81,7 +96,7 @@ const Page = () => {
 
             <div className="text-center mb-6">
               <Link href="#">
-                <button className="flex items-center justify-center w-full py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition duration-300">
+                <button onClick={handleGoogleLogin} className="flex items-center justify-center w-full py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition duration-300">
                   <FcGoogle className="mr-2" size={22} />
                   <span className="text-sm font-medium">Đăng nhập với Google</span>
                 </button>
@@ -90,7 +105,7 @@ const Page = () => {
 
             <h5 className="text-center text-gray-500 mb-6">hoặc</h5>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form className="   " onSubmit={handleSubmit(onSubmit)}>
               {/* Email Field */}
               <div className="mb-4 relative">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -166,6 +181,7 @@ const Page = () => {
               <button
                 type="submit"
                 disabled={!checked}
+
                 className={`w-full py-3 text-white rounded-lg transition duration-300 ${checked ? "bg-blue-600 hover:bg-blue-700 cursor-pointer" : "bg-gray-300 cursor-not-allowed"}`}
               >
                 Đăng nhập

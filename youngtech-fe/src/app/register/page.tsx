@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import './register.css'
+
 import { useRouter } from 'next/navigation';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -16,7 +17,7 @@ const schema = yup.object().shape({
   userName: yup.string().required('Usename là bắt buộc'),
   email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
   password: yup.string().min(6, 'Mật khẩu phải ít nhất 6 ký tự').required('Mật khẩu là bắt buộc'),
-  confirmPassword: yup.string()
+  confirmPassword: yup.string() 
     .oneOf([yup.ref('password')], 'Mật khẩu nhập lại không khớp')
     .required('Nhập lại mật khẩu là bắt buộc'),
 });
@@ -31,34 +32,37 @@ const Page = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-  const onSubmit = async (data: any) => {
-    const { userName, email, password } = data;
-    try {
-      const res = await axios.post('http://localhost:3400/api/auth/register', {
-        userName, 
-        email,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+    const onSubmit = async (data: any) => {
+      const { userName, email, password } = data;
+      try {
+        const res = await axios.post('http://localhost:8080/api/auth/register', {
+          userName, 
+          email,
+          password
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+    
+        if (res.status === 201) {
+          toast.success("Đăng ký thành công !");
+          setTimeout(()=>{
+            router.push('/login')
+          },2000);
+        } else {
+          toast.error("Đăng ký thất bại !")
         }
-      });
-  
-      if (res.status === 201) {
-        toast.success("Đăng ký thành công !");
-        setTimeout(()=>{
-          router.push('/login')
-        },2000);
-      } else {
-        toast.error("Đăng ký thất bại !")
+      } catch (error: any) {
+        const errorMessage = typeof error.response?.data.message === 'string'
+          ? error.response.data.message
+          : 'Đăng ký thất bại';
+        setMessage(errorMessage);
       }
-    } catch (error: any) {
-      const errorMessage = typeof error.response?.data.message === 'string'
-        ? error.response.data.message
-        : 'Đăng ký thất bại';
-      setMessage(errorMessage);
-    }
-  };
+    };
+
+
+    
 
   return (
     <div className="w-full font-sans flex justify-center bg-gray-50 py-10">

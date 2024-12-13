@@ -29,7 +29,7 @@ const BestProducts: React.FC = () => {
 
   // Kiểm tra xem data có hợp lệ trước khi slice
   const visibleProducts = data && Array.isArray(data) ? data.slice(currentIndex * 5, (currentIndex + 1) * 5) : [];
-
+ 
   return (
     <>
       <TitleHome title="Sản phẩm bán chạy nhất" />
