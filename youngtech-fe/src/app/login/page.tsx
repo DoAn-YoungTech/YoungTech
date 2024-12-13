@@ -49,7 +49,7 @@ const Page = () => {
 
 
     if (res?.ok) {
-      if (session && session.user?.role_id === "user" ) {
+      if (session && session.user?.role_id === "customer" ) {
         toast.success("Đăng nhập thành công !")
         setTimeout(()=>{
           router.push("/");

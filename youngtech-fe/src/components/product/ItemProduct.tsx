@@ -13,7 +13,6 @@
       const router = useRouter();
       const dispatch = useDispatch<AppDispatch>();
       const {parentName,childName} = useSelector((state:RootState) => state.categories_child.nameCategory);
-
       const handlClickDetailsPro =  async (id:number,name:string,childCategory_id:number)=>{
         await  dispatch(fetchNameParentCategoriesByChildId(childCategory_id))
         if(parentName && childName && name){
@@ -31,7 +30,7 @@
           <p className='mb-5 overflow-hidden   text-[11px] w-[70px] flex justify-center bg-slate-200'>Trả góp 0%</p>
           <div className="image relative h-[200px]">
             <Image
-              src={`/designImage/imageProducts/${item.productImage}`}
+              src={`/designImage/imageProducts/${item.images[0].imageUrl}`}
               alt={item.productName}
               className='transform transition-transform duration-500 ease-in-out group-hover:-translate-y-4'
               width={400}

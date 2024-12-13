@@ -108,7 +108,7 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
         />
           
           <Image
-            src={`/designImage/imageProducts/${item.image_url}`}
+            src={`/designImage/imageProducts/${item.images[0]}`}
             alt={item.product_name}
             width={100}
             height={100}

@@ -6,10 +6,8 @@ const cartController = {
       const user_id = req.user.id;
       console.log(user_id);
       const { quantity, product_id } = req.body;
-
       const customer_id = await cartService.getCustomerIdByAccountId(user_id);
       console.log(`customer_id`, customer_id);
-
       const checkCustomer = await cartService.checkCustomer(customer_id);
 
       let cartId;
@@ -109,7 +107,7 @@ const cartController = {
       }
       console.log(`cartId ${cartId}`);
       const result = await cartService.viewCart(cartId);
-      console.log(result);
+      console.log("result",result);
       if (!result) {
         return res.status(404).json({ message: 'Not found cart' });
       }
