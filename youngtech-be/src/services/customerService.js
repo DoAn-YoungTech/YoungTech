@@ -1,4 +1,5 @@
 const customerRepository = require('../repositories/customerRepository');
+const customerRoutes = require('../routes/customerRoutes');
 
 const customerService = {
   getAllCustomers: async () => {
@@ -31,6 +32,13 @@ const customerService = {
   getOrderHistoryByCustomerId: async (customerId) => {
     return await customerRepository.getOrderHistoryByCustomerId(customerId);
   },
+
+  // customerService.createCustomerOffline
+  createCustomerOffline : async (data) => {
+    return await customerRepository.createCustomerOffline(data)
+  }
+
+
 };
 
 module.exports = customerService;

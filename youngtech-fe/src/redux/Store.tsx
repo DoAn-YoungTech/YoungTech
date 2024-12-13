@@ -7,6 +7,15 @@ import addRessReducer from "./Address/addressSlice";
 import authReducer from "./User/authSlice";
 import cartReducer from "./Cart/cartSlice";
 import supplierReducer from "./Supplier/supplierSlice";
+import wareHouseMannagementReducer from "./WareHouseManagement/WareHouseMannagementSlice";
+import storage from './configStore';
+import { persistReducer ,persistStore } from 'redux-persist';
+
+const rootPersistConfig = {
+  key: "root",
+  storage,
+  whiteList: ["wareHouseMannagementReducer"],
+};
 const rootReducer = combineReducers({
   comments: commentReducer,
   products: productReducer,
@@ -16,12 +25,21 @@ const rootReducer = combineReducers({
   auth: authReducer,
   cart: cartReducer,
   supplier: supplierReducer,
+  wareHouseMannagement: wareHouseMannagementReducer
 });
+
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
 // Tạo store với rootReducer
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware => 
+    getDefaultMiddleware({
+      serializableCheck: false
+    })
 });
+
+export const persistor = persistStore(store);
 
 // Xuất RootState để sử dụng trong các component
 export type RootState = ReturnType<typeof store.getState>;

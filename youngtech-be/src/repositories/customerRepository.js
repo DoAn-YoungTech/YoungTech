@@ -113,6 +113,17 @@ const customerRepository = {
 
     return results; // Trả về danh sách kết quả
   },
+  createCustomerOffline: async (data) => {
+    try {
+      const query = `INSERT INTO customer(fullName , phoneNumber , address , account_id) 
+   VALUES (:fullName , :phoneNumber , :address , :account_id)`;
+      const [result] = await sequelize.query(query, { replacements: { ...data } });
+      return result;
+    } catch (err) {
+      console.log(err);
+      throw Error(err.message);
+    }
+  },
 };
 
 module.exports = customerRepository;

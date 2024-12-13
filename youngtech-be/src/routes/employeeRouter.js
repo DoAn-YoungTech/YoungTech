@@ -5,8 +5,8 @@ const employeeController = require('../controllers/employeeController');
 
 employeeRouter.post(
   '/createEmployee',
-  middlewareController.verifyToken,
-  middlewareController.verifyTokenAndRole(['admin']),
+  // middlewareController.verifyToken,
+  // middlewareController.verifyTokenAndRole(['admin']),
   employeeController.createEmployee
 );
 
@@ -38,4 +38,5 @@ employeeRouter.delete(
   employeeController.deleteEmployeeById
 );
 
+ 
 module.exports = employeeRouter;
