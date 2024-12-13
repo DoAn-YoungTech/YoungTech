@@ -3,7 +3,7 @@ const sequelize = require('../configs/db');
 const childCategoriesRepository = {
     getAllChildCategories: async () => {
         // Truy vấn để lấy tất cả các danh mục con
-        const query = `SELECT * FROM childcategories`;
+        const query = `SELECT * FROM childcategories WHERE flag=false`;
         const [result] = await sequelize.query(query);
     
         // Truy vấn tổng số bản ghi

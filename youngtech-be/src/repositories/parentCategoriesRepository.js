@@ -2,11 +2,18 @@ const sequelize = require('../configs/db');
 
 const parentCategoriesRepository = {
     getAllParentCategories: async () => {
-        const query = `SELECT * FROM parentcategories`;
+        const query = `SELECT * FROM parentcategories WHERE flag = false`;
         const [result] = await sequelize.query(query);
         return result;
     },
-
+    getIdByName: async (name) => {
+      const query = `SELECT name FROM parentcategories WHERE id = :id AND flag = false`;
+      const [result] = await sequelize.query(query, {
+          replacements: { name },
+          type: sequelize.QueryTypes.SELECT
+      });
+      return result.length > 0 ? result[0].id : null;
+  },
     getParentCategoriesById: async (id) => {
         const query = `SELECT * FROM parentcategories WHERE id = :id`;
         const [result] = await sequelize.query(query, { replacements: { id } });

@@ -125,17 +125,13 @@ const data = {
       url: "quanly-danhmuc-sanpham",
       icon: GrCatalog,
       items: [
-        {
-          title: "Danh sách danh mục",
-          url: "quanly-danhmuc-sanpham/danhsach-danhmuc"
+         {
+          title: "Danh mục cha",
+          url: "quanly-danhmuc-sanpham/danhsach-danhmuc-cha"
         },
         {
-          title: "Chỉnh sửa danh mục",
-          url: "quanly-danhmuc-sanpham/chinhsua-danhmuc"
-        },
-        {
-          title: "Tạo danh mục",
-          url: "quanly-danhmuc-sanpham/taodanhmuc"
+          title: "Danh mục con",
+          url: "quanly-danhmuc-sanpham/danhsach-danhmuc-con"
         }
       ]
     },

@@ -12,6 +12,25 @@ export const addCategory = async (name) => {
     }
 }
 
+export const getAllCategory = async () => {
+    try {
+      const response = await axios.get(`${Api_url}/parencategories`);
+      return response.data; // Trả về dữ liệu danh mục từ API
+    } catch (error) {
+      console.error("Error fetching data:", error.response ? error.response.data : error.message);
+      throw error;
+    }
+}
+// Hàm lấy danh mục theo ID
+export const getCategoryById = async (id) => {
+    try {
+        const response = await axios.get(`${Api_url}/parencategories/${id}`);
+        return response.data; // Trả về danh mục cụ thể
+    } catch (error) {
+        console.error('Error fetching data by ID:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+}
 // Hàm cập nhật dữ liệu category
 export const updateCategory = async (id, updatedCategory) => {
     try {
