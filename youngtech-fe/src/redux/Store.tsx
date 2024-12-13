@@ -11,7 +11,7 @@ import wareHouseMannagementReducer from "./WareHouseManagement/WareHouseMannagem
 import storage from './configStore';
 import { persistReducer ,persistStore } from 'redux-persist';
 
-const authPersistConfig = {
+const rootPersistConfig = {
   key: "root",
   storage,
   whiteList: ["wareHouseMannagementReducer"],
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
   wareHouseMannagement: wareHouseMannagementReducer
 });
 
-const persistedReducer = persistReducer(authPersistConfig, rootReducer);
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
 // Tạo store với rootReducer
 export const store = configureStore({
