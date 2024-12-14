@@ -97,6 +97,8 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
     }
   };
 
+  console.log('123', urls)
+
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Upload Images</h1>

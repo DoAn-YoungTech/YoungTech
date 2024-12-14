@@ -27,12 +27,20 @@ customerRoutes.patch(
 customerRoutes.patch(
   '/softDelete/:id',
   middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['admin']),
   customerController.softDelete
 );
 
 customerRoutes.get(
   '/getOrderHistoryByCustomerId/:id',
-  // middlewareController.verifyTokenAndAdminAuth,
+   middlewareController.verifyToken,
+   middlewareController.verifyTokenAndRole(['salesperson','admin']),
   customerController.getOrderHistoryHandler
 );
-module.exports = customerRoutes;  
+customerRoutes.post(
+  '/addCustomerOffline',
+  middlewareController.verifyToken,
+  middlewareController.verifyTokenAndRole(['salesperson']),
+  customerController.addCustomerOffline
+);
+module.exports = customerRoutes;

@@ -1,13 +1,14 @@
-  import slugify from "../slugify/Slugify";
-  import { useRouter } from 'next/navigation';
-  import Image from "next/image";
-  import "../HotPromotion.css";
-  import { IoIosStar } from "react-icons/io";
-  import { LuHeart } from "react-icons/lu";
-  import { useDispatch,useSelector } from "react-redux";
-  import { RootState,AppDispatch } from "@/redux/Store";
-  import MemoryGb from "../memoryGb/MemoryGb";
-  import { fetchNameParentCategoriesByChildId } from "@/redux/Category/categoryChildThunks";
+import slugify from "../slugify/Slugify";
+import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import "../HotPromotion.css";
+import { IoIosStar } from "react-icons/io";
+import { LuHeart } from "react-icons/lu";
+import { useDispatch,useSelector } from "react-redux";
+import { RootState,AppDispatch } from "@/redux/Store";
+import MemoryGb from "../memoryGb/MemoryGb";
+import { fetchNameParentCategoriesByChildId } from "@/redux/Category/categoryChildThunks";
+
 
   export const ItemProduct = ({item}) => {
     const image = item && item.images && Array.isArray(item.images) && item.images.length > 0 ? item.images[0].imageUrl : [];
@@ -25,6 +26,7 @@
       
       }
       const formattedPrice = new Intl.NumberFormat('de-DE').format(item.productRetailPrice);
+
     return (
     
         <div onClick={()=> handlClickDetailsPro(item.id,item.productName,item.childCategory_id)}  key={item.id} className='flex  group flex-col my-3 hover:shadow-lg border px-3 rounded-lg py-3'>
@@ -73,3 +75,4 @@
       
     )
   }
+

@@ -15,7 +15,6 @@ const BestProducts: React.FC = () => {
   useEffect(() => {
     dispatch(fetchProducts({ limit: 10 }));
   }, [dispatch]);
-
   useEffect(() => {
     // Kiểm tra xem data có tồn tại và là mảng không
     if (data && Array.isArray(data)) {
@@ -30,6 +29,7 @@ const BestProducts: React.FC = () => {
 
   // Kiểm tra xem data có hợp lệ trước khi slice
   const visibleProducts = data && Array.isArray(data) ? data.slice(currentIndex * 5, (currentIndex + 1) * 5) : [];
+ 
   return (
     <>
       <TitleHome title="Sản phẩm bán chạy nhất" />
@@ -40,6 +40,6 @@ const BestProducts: React.FC = () => {
       </div>
     </>
   );
-};
-
+}; 
 export default BestProducts;
+

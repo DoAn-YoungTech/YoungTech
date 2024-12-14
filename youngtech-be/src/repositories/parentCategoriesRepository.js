@@ -2,11 +2,18 @@ const sequelize = require('../configs/db');
 
 const parentCategoriesRepository = {
     getAllParentCategories: async () => {
-        const query = `SELECT * FROM parentcategories`;
+        const query = `SELECT * FROM parentcategories WHERE flag = false`;
         const [result] = await sequelize.query(query);
         return result;
     },
-
+    getIdByName: async (name) => {
+      const query = `SELECT name FROM parentcategories WHERE id = :id AND flag = false`;
+      const [result] = await sequelize.query(query, {
+          replacements: { name },
+          type: sequelize.QueryTypes.SELECT
+      });
+      return result.length > 0 ? result[0].id : null;
+  },
     getParentCategoriesById: async (id) => {
         const query = `SELECT * FROM parentcategories WHERE id = :id`;
         const [result] = await sequelize.query(query, { replacements: { id } });
@@ -14,17 +21,15 @@ const parentCategoriesRepository = {
     },
 
     createParentCategories: async (data) => {
-        console.log(`Repository ${JSON.stringify(data)}`);
-        
-        // Kiểm tra nếu flag không có trong data thì mặc định flag là false
-        const { name } = data; 
-        const flag = data.flag !== undefined ? data.flag : false;  // Mặc định flag là false
-    
+        const { name, flag = true } = data; // Mặc định flag là true nếu không được truyền
         const query = `INSERT INTO parentcategories (name, flag)
                        VALUES (:name, :flag)`;
-        const [result] = await sequelize.query(query, { replacements: { name, flag } });
+        const [result] = await sequelize.query(query, {
+          replacements: { name, flag },
+        });
         return result;
-    },
+      },      
+
     
 
     deleteParentCategories: async (id) => {

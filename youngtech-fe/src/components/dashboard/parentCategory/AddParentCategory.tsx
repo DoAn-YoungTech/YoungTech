@@ -1,68 +1,70 @@
 "use client";
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button"; // Giữ nguyên Button
-import { Input } from "@/components/ui/input"; // Giữ nguyên Input
-import axios from "axios";
+import { addCategory } from "@/services/category/CategoryParentService"; 
+import React, { useState, useEffect } from "react";
+import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 
-interface AddParentCategoryProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onAdd: (parentCategory: { id: number; name: string; flag: boolean }) => void;
-}
+const AddParentCategory = () => {
+  const [categoryName, setCategoryName] = useState("");
+  const [navigate, setNavigate] = useState(false); // State để kiểm tra điều hướng
 
-const AddParentCategory: React.FC<AddParentCategoryProps> = ({
-  isOpen,
-  onClose,
-  onAdd,
-}) => {
-  const [name, setName] = useState("");
-
-  const handleSubmit = async () => {
-    if (!name) {
-      alert("Vui lòng nhập tên danh mục.");
-      return;
+  useEffect(() => {
+    if (navigate) {
+      window.location.href = "/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha";
     }
+  }, [navigate]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      // Gửi dữ liệu đến API backend
-      const response = await axios.post("/api/parent-categories", {
-        name,
-        flag: true, // Mặc định là true
-      });
-
-      // Lấy dữ liệu từ phản hồi API
-      const newCategory = response.data;
-      onAdd(newCategory); // Cập nhật danh sách danh mục
-      resetFields(); // Đặt lại các trường
+      await addCategory({ name: categoryName });
+      console.log("Category added successfully");
+      setCategoryName("");
+      setNavigate(true); // Set navigate to true to trigger useEffect
     } catch (error) {
-      console.error("Lỗi khi thêm danh mục cha:", error);
-      alert("Không thể thêm danh mục. Vui lòng thử lại.");
+      console.error("Error adding category:", error.message);
     }
   };
-
-  const resetFields = () => {
-    setName("");
-    onClose(); // Đóng modal
-  };
-
-  if (!isOpen) return null; // Không hiển thị nếu không mở modal
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-lg font-bold mb-4">Thêm Danh Mục Cha</h2>
-        <Input
-          placeholder="Tên danh mục"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <div className="flex justify-end mt-4">
-          <Button onClick={handleSubmit} className="mr-2">
-            Lưu
-          </Button>
-          <Button onClick={resetFields}>Hủy</Button>
+    <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            type="button"
+            onClick={() => setNavigate(true)}
+            className="text-blue-600 hover:text-blue-800"
+          >
+            <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
+          </button>
+          <h2 className="text-2xl font-bold text-white text-center flex-1">
+            Thêm danh mục cha
+          </h2>
         </div>
-      </div>
+        <div>
+          <label
+            htmlFor="categoryName"
+            className="block text-sm font-medium text-white/50 mb-2"
+          >
+            Tên danh mục
+          </label>
+          <input
+            id="categoryName"
+            type="text"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Nhập tên danh mục"
+          />
+        </div>
+        <div className="flex justify-center gap-4">
+          <button
+            type="submit"
+            className="px-4 py-2 text-white rounded-md "
+          >
+            <ShinyRotatingBorderButton>Thêm danh mục cha</ShinyRotatingBorderButton>
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
