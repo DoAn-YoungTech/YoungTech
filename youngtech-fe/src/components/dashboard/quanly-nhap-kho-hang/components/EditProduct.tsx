@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/Store';
 import { addProductToTemp, resetError, updateProduct } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
 import { useRouter } from 'next/navigation';
+import UploadImage from '@/components/UploadImage';
 
 interface EditProduct {
     selectedProduct: any
@@ -37,6 +38,7 @@ interface FormInputs {
     description: 'description',
     brand: 'brand',
     childCategory_id: 'childCategory_id',
+    images: 'images'
   };
 
   // Validation schema using Yup
@@ -78,6 +80,12 @@ const EditProduct = (props: EditProduct) => {
       resolver: yupResolver(schema),
     });
 
+    const [urlsImage,setUrlsImage] = useState([])
+      
+    const handleGetArrayImage = (urlr : any)=>{
+        setUrlsImage(urlr)
+    }
+
     const handleClose = () => {
         dispatch(resetError())
         handleCloseModal()
@@ -114,7 +122,7 @@ const EditProduct = (props: EditProduct) => {
   
     // Form submission handler
     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-
+console.log('data' ,data, urlsImage)
         firstRender.current = false
       try {
         const response = await axios.get('http://localhost:3200/api/product/validate', {
@@ -137,7 +145,6 @@ const EditProduct = (props: EditProduct) => {
     };
     
     useEffect(() => {
-       
         if (selectedProduct) {
             Object.entries(selectedProduct).map(([key,value]) => {
                 const formKey = errorMapping[key];
@@ -145,11 +152,11 @@ const EditProduct = (props: EditProduct) => {
                   setValue(formKey, value as any);
                 }
             })
+            setUrlsImage(selectedProduct.images)
         }
     }, [selectedProduct])
 
     useEffect(() => {
-        console.log(firstRender.current, isErrorStore, 'hr')
         if (isErrorStore) {
             setError('productName',{ type: 'store', message: 'Sản phẩm đã tồn tại'})
         } else {
@@ -160,7 +167,7 @@ const EditProduct = (props: EditProduct) => {
     }, [isErrorStore, wareHouseMannagementItems])
   
     return <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className=" inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded shadow-md w-[100%] max-w-md">
           <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="w-[600px] p-8 bg-white shadow-lg rounded border border-gray-300">
@@ -175,6 +182,15 @@ const EditProduct = (props: EditProduct) => {
             />
             {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
           </div>
+
+                  {/* Album ảnh */}
+        <div>
+          <label className="block text-sm font-semibold text-white mb-2">Album ảnh</label>
+          <UploadImage 
+          handleGetArrayImage={handleGetArrayImage}  />
+          {errors.images && <p className="text-red-500 text-sm mt-1">{errors.images.message}</p>}
+        </div>
+
 
           {/* Description */}
           <div>
