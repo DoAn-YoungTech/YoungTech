@@ -30,14 +30,14 @@ const Page = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-[#282F36]  rounded-xl mt-3">
+            {/* <div className="bg-[#282F36]  rounded-xl mt-3">
               <div className="p-4">
                 <div className="flex gap-4 items-center">
                   <ShinyRotatingBorderButton>Hủy</ShinyRotatingBorderButton>
                   <ShinyRotatingBorderButton>Thêm</ShinyRotatingBorderButton>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

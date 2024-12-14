@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Table } from '@/components/ui/table'; // Kiểm tra đường dẫn chính xác
 import { Button } from '@/components/ui/button'; // Kiểm tra đường dẫn chính xác
 import { FaEdit } from "react-icons/fa";
@@ -13,31 +13,44 @@ interface ParentCategoryTableProps {
 
 const ParentCategoryTable: React.FC<ParentCategoryTableProps> = ({ categories, onEdit, onDelete }) => {
   return (
-    <Table>
-      <thead className="text-left">
-        <tr>
-          <th className="py-5">ID</th>
-          <th className="py-5">Tên Danh Mục</th>
-          <th className="py-5">Thao Tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        {categories.map((category) => (
-          <tr key={category.id}>
-            <td>{category.id}</td>
-            <td>{category.name}</td>
-                        <td className="gap-2 flex">
-              <Button className="bg-blue-500 hover:bg-blue-600" onClick={() => onEdit(category)}>
-                <FaEdit />
-              </Button>
-              <Button className="bg-red-500 hover:bg-red-600" onClick={() => onDelete(category.id)}>
-                <MdDeleteOutline />
-              </Button>
-            </td>
+    <div className=" ">
+      <table className="min-w-full divide-y ">
+        <thead className="text-left bg-[#282F36] text-white/80 w-[calc(100%-95%)]">
+          <tr>
+            <th className="py-3 px-4 text-sm font-medium text-gray-300 text-center">STT</th>
+            <th className="py-3 px-4 text-sm font-medium text-gray-300 text-center">Tên Danh Mục</th>
+            <th className="py-3 px-5 text-sm font-medium text-gray-300 text-center">Thao Tác</th>
           </tr>
-        ))}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody className="text-gray-800">
+          {categories.map((category, index) => (
+            <tr key={category.id} className="product-item text-white/80 border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]">
+              <td className="py-3 px-4 text-sm text-gray-400 text-center">{index + 1}</td>
+              <td className="py-3 px-4 text-sm text-center text-gray-200">{category.name}</td>
+              <td className="py-3 px-4 flex justify-center gap-4">
+                <button
+                  className="hover:bg-blue-300 rounded-md bg-black/50  transition-all duration-300 ease-in-out w-[40px] h-[40px]  flex  justify-center items-center"
+                  onClick={() => onEdit(category)}
+                  title="Chỉnh sửa"
+                >
+                  <FaEdit className="text-[1.1rem] text-blue-600"/>
+                </button>
+                <button
+                  className="hover:bg-red-300 bg-black/50 rounded-md  transition-all duration-300 ease-in-out w-[40px] h-[40px]  flex  justify-center items-center"
+                  onClick={() => onDelete(category.id)}
+                  title="Xóa"
+                >
+                  <MdDeleteOutline className="text-[1.1rem] text-red-600"/>
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {categories.length === 0 && (
+        <div className="py-4 text-center text-gray-400 text-sm">Không có danh mục nào để hiển thị.</div>
+      )}
+    </div>
   );
 };
 

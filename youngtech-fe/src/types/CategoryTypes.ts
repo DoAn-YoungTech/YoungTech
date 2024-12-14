@@ -6,13 +6,13 @@
 
   export interface Category_Child {
     id: number; 
-    name: string;
-    parent_id:number
+    childCateName: string;
+    parentCategory_id:number
 
   }
 
   export interface CategoryParenState {
-    categoryChild: Category_Paren[];
+    categoryParent: Category_Paren[];
     loading: boolean;
     error: string | null;
     idCateParen :number;
