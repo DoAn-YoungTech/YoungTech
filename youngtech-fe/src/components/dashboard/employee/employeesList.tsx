@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
 import { getEmployees, deleteEmployee } from "@/services/employee/EmployeeService";
 import { toast } from "react-toastify";
 import { FaEye, FaTrashAlt, FaEdit } from "react-icons/fa";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Paginator } from "primereact/paginator";
+import Image from "next/image"; // Import Image từ Next.js
 
 const ListEmployees = () => {
   const [employees, setEmployees] = useState<any[]>([]);
@@ -15,6 +17,8 @@ const ListEmployees = () => {
   const [loading, setLoading] = useState(true);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(5);
+
+  const router = useRouter(); // Khởi tạo useRouter
 
   const searchOptions = [
     { label: "Tên", value: "fullName" },
@@ -58,6 +62,10 @@ const ListEmployees = () => {
     }
   };
 
+  const handleEdit = (id: string) => {
+    router.push(`/dashboard/quanly-nhanvien/chinhsua-nhanvien/${id}`);
+  };
+
   const renderRow = (employee: any) => (
     <tr
       key={employee.id}
@@ -66,10 +74,12 @@ const ListEmployees = () => {
       <td className="p-4">{employee.id}</td>
       <td className="p-4">{employee.fullName}</td>
       <td className="p-4">
-        <img
-          src={employee.profilePicture}
-          alt=""
-          className="rounded-full w-12 h-12"
+        <Image
+          src={employee.profilePicture || "/default-avatar.png"} // Đường dẫn ảnh mặc định nếu không có profilePicture
+          alt="Avatar"
+          width={48} // Chiều rộng cố định
+          height={48} // Chiều cao cố định
+          className="rounded-full"
         />
       </td>
       <td className="p-4">{employee.phoneNumber}</td>
@@ -87,6 +97,7 @@ const ListEmployees = () => {
         <FaEdit
           className="text-green-500 hover:text-green-300 cursor-pointer"
           title="Sửa"
+          onClick={() => handleEdit(employee.id)} // Gọi hàm handleEdit
         />
       </td>
     </tr>
@@ -145,18 +156,18 @@ const ListEmployees = () => {
         </tbody>
       </table>
       <div className="flex justify-center mt-4">
-      <Paginator
-        first={first}
-        rows={rows}
-        totalRecords={filteredEmployees.length}
-        onPageChange={(e) => {
-          setFirst(e.first);
-          setRows(e.rows);
-        }}
-        className="p-paginator p-component bg-gray-800 p-4 rounded-lg shadow-md"
-        template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-      />
-    </div>
+        <Paginator
+          first={first}
+          rows={rows}
+          totalRecords={filteredEmployees.length}
+          onPageChange={(e) => {
+            setFirst(e.first);
+            setRows(e.rows);
+          }}
+          className="p-paginator p-component bg-gray-800 p-4 rounded-lg shadow-md"
+          template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+        />
+      </div>
     </div>
   );
 };
