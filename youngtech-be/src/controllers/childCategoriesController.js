@@ -6,7 +6,7 @@ getAllChildCategories: async (req, res) => {
     try {
         // Lấy page và limit từ query, mặc định page = 1 và limit = 10 nếu không có
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 2;
+        const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
 
         // Gọi service với các tham số phân trang

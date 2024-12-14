@@ -25,6 +25,7 @@ interface FormInputs {
     childCategory_id: string;
     description: string;
     brand: string;
+    images: string[]
   }
   
   // Mapping server-side validation errors to form fields
@@ -55,6 +56,8 @@ interface FormInputs {
       .min(1, 'Số lượng phải ít nhất là 1'),
     supplier_id: yup.string().required('Nhà cung cấp là bắt buộc'),
     childCategory_id: yup.string().required('ChildCategory là bắt buộc'),
+    images: yup.array().min(1, 'Ít nhất phải có một ảnh').required('Ảnh là bắt buộc')
+    
   });
 
 const EditProduct = (props: EditProduct) => {
