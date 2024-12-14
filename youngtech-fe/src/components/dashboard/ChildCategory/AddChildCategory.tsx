@@ -1,56 +1,64 @@
 "use client";
 import { addChildCategory } from "@/services/category/CategoryChildService";
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Import axios for API call
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddChildCategory = () => {
-  const [parentCategories, setParentCategories] = useState([]); // State to store parent categories
-  const [parentCategoryName, setParentCategoryName] = useState(""); // State for selected parent category
-  const [childCategoryName, setChildCategoryName] = useState(""); // State for child category name
-  const [navigate, setNavigate] = useState(false); // State to handle navigation
+  const [parentCategories, setParentCategories] = useState([]);
+  const [parentCategoryName, setParentCategoryName] = useState("");
+  const [childCategoryName, setChildCategoryName] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchParentCategories = async () => {
       try {
         const response = await axios.get(`http://localhost:3400/api/parencategories`);
-        setParentCategories(response.data.data); // Ensure response.data is an array
+        setParentCategories(response.data.data);
       } catch (error) {
         console.error("Error fetching parent categories:", error.message);
-        console.error("Error details:", error.response ? error.response.data : 'No response data available');
       }
     };
 
     fetchParentCategories();
   }, []);
 
-  useEffect(() => {
-    if (navigate) {
-      window.location.href = "/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con";
-    }
-  }, [navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Clear previous error
+
+    if (!childCategoryName || !parentCategoryName) {
+      toast.error("Vui lòng điền đầy đủ thông tin!"); // Show error toast
+      return;
+    }
     try {
-      // Find the ID of the selected parent category
-      const selectedCategory = parentCategories.find(cat => cat.name === parentCategoryName);
+      const selectedCategory = parentCategories.find((cat) => cat.name === parentCategoryName);
       if (selectedCategory) {
         await addChildCategory({
           childCateName: childCategoryName,
           parentCategory_id: selectedCategory.id,
-          flag: false // Default flag to false
+          flag: false,
         });
-        console.log("Child category added successfully");
+
+        // Hiển thị toast thành công
+        toast.success("Danh mục con đã được thêm thành công!");
         setChildCategoryName("");
         setParentCategoryName("");
-        setNavigate(true); // Set navigate to true to trigger useEffect
+
+        // Điều hướng sau 2 giây
+        setTimeout(() => {
+          router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con");
+        }, 6000);
       } else {
-        console.error("Selected parent category not found");
+        toast.error("Không tìm thấy danh mục cha đã chọn.");
       }
     } catch (error) {
       console.error("Error adding child category:", error.message);
-      console.error("Error details:", error.response ? error.response.data : 'No response data available');
+      toast.error("Lỗi khi thêm danh mục con!");
     }
   };
 
@@ -60,7 +68,9 @@ const AddChildCategory = () => {
         <div className="flex items-center justify-between mb-6">
           <button
             type="button"
-            onClick={() => setNavigate(true)}
+            onClick={() =>
+              router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con")
+            }
             className="text-blue-600 hover:text-blue-800"
           >
             <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
@@ -106,11 +116,11 @@ const AddChildCategory = () => {
             placeholder="Nhập tên danh mục con"
           />
         </div>
+        {error && (
+          <div className="text-red-500 text-sm mt-2">{error}</div>
+        )}
         <div className="flex justify-center gap-4">
-          <button
-            type="submit"
-            className="px-4 py-2 text-white rounded-md"
-          >
+          <button type="submit" className="px-4 py-2 text-white rounded-md">
             <ShinyRotatingBorderButton>Thêm danh mục con</ShinyRotatingBorderButton>
           </button>
         </div>

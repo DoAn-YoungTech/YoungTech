@@ -2,12 +2,12 @@ const sequelize = require('../configs/db');
 
 const parentCategoriesRepository = {
     getAllParentCategories: async () => {
-        const query = `SELECT * FROM parentcategories WHERE flag = false`;
+        const query = `SELECT * FROM parentcategories WHERE flag = true`;
         const [result] = await sequelize.query(query);
         return result;
     },
     getIdByName: async (name) => {
-      const query = `SELECT name FROM parentcategories WHERE id = :id AND flag = false`;
+      const query = `SELECT name FROM parentcategories WHERE id = :id AND flag = true`;
       const [result] = await sequelize.query(query, {
           replacements: { name },
           type: sequelize.QueryTypes.SELECT
@@ -33,12 +33,12 @@ const parentCategoriesRepository = {
     
 
     deleteParentCategories: async (id) => {
-        const query = `UPDATE parentcategories SET flag = true WHERE id = :id`; // Đánh dấu xóa mềm
+        const query = `UPDATE parentcategories SET flag = false WHERE id = :id`; // Đánh dấu xóa mềm
         const [result] = await sequelize.query(query, { replacements: { id } });
         return result;
     },
     restoreParentCategories: async (id) => {
-        const query = `UPDATE parentcategories SET flag = false WHERE id = :id`; // Khôi phục xóa mềm
+        const query = `UPDATE parentcategories SET flag = true WHERE id = :id`; // Khôi phục xóa mềm
         const [result] = await sequelize.query(query, { replacements: { id } });
         return result;
       },

@@ -3,6 +3,8 @@ import { updateChildCategory } from "@/services/category/CategoryChildService";
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios for API call
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UpdateChildCategory: React.FC<UpdateChildCategoryProps> = ({
   category,
@@ -40,14 +42,12 @@ const UpdateChildCategory: React.FC<UpdateChildCategoryProps> = ({
     setChildCategoryName(category.childCateName);
   }, [category.parentCategory_id, category.childCateName]);
 
-  useEffect(() => {
-    if (navigate) {
-      // window.location.href = "/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con";
-    }
-  }, [navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!parentCategoryName) {
+      toast.error("Vui lòng chọn danh mục cha!"); // Hiển thị toast lỗi
+      return;
+    }
     try {
       const selectedCategory = parentCategories.find(cat => cat.name === parentCategoryName);
       if (selectedCategory) {
@@ -59,14 +59,16 @@ const UpdateChildCategory: React.FC<UpdateChildCategoryProps> = ({
 
         await updateChildCategory(updatedCategory); // Gọi API để cập nhật danh mục con
         console.log("Danh mục con đã được cập nhật:", updatedCategory);
+        toast.success("Danh mục con đã được cập nhật thành công!"); // Hiển thị toast thành công
         onUpdateSuccess(updatedCategory); // Thông báo cho cha cập nhật thành công
-        setNavigate(true); // Set navigate to true to trigger useEffect
+        setNavigate(true); // Set navigate to true để trigger useEffect
       } else {
         console.error("Selected parent category not found");
       }
     } catch (error) {
       console.error("Error updating child category:", error.message);
       console.error("Error details:", error.response ? error.response.data : 'No response data available');
+      toast.error("Lỗi khi cập nhật danh mục con!"); // Hiển thị toast lỗi
     }
   };
 
