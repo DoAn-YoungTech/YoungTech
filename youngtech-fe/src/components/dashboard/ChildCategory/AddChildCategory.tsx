@@ -1,12 +1,28 @@
 "use client";
-import { addChildCategory } from "@/services/category/CategoryChildService"; 
+import { addChildCategory } from "@/services/category/CategoryChildService";
 import React, { useState, useEffect } from "react";
+import axios from "axios"; // Import axios for API call
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 
 const AddChildCategory = () => {
-  const [categoryName, setCategoryName] = useState("");
-  const [parentCategoryId, setParentCategoryId] = useState(""); // State để nhập ID danh mục cha
-  const [navigate, setNavigate] = useState(false); // State để kiểm tra điều hướng
+  const [parentCategories, setParentCategories] = useState([]); // State to store parent categories
+  const [parentCategoryName, setParentCategoryName] = useState(""); // State for selected parent category
+  const [childCategoryName, setChildCategoryName] = useState(""); // State for child category name
+  const [navigate, setNavigate] = useState(false); // State to handle navigation
+
+  useEffect(() => {
+    const fetchParentCategories = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3400/api/parencategories`);
+        setParentCategories(response.data.data); // Ensure response.data is an array
+      } catch (error) {
+        console.error("Error fetching parent categories:", error.message);
+        console.error("Error details:", error.response ? error.response.data : 'No response data available');
+      }
+    };
+
+    fetchParentCategories();
+  }, []);
 
   useEffect(() => {
     if (navigate) {
@@ -17,17 +33,24 @@ const AddChildCategory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addChildCategory({
-        childCateName: categoryName,
-        parentCategory_id: parentCategoryId,
-        flag: false // Default flag to false
-      });
-      console.log("Child category added successfully");
-      setCategoryName("");
-      setParentCategoryId("");
-      setNavigate(true); // Set navigate to true to trigger useEffect
+      // Find the ID of the selected parent category
+      const selectedCategory = parentCategories.find(cat => cat.name === parentCategoryName);
+      if (selectedCategory) {
+        await addChildCategory({
+          childCateName: childCategoryName,
+          parentCategory_id: selectedCategory.id,
+          flag: false // Default flag to false
+        });
+        console.log("Child category added successfully");
+        setChildCategoryName("");
+        setParentCategoryName("");
+        setNavigate(true); // Set navigate to true to trigger useEffect
+      } else {
+        console.error("Selected parent category not found");
+      }
     } catch (error) {
       console.error("Error adding child category:", error.message);
+      console.error("Error details:", error.response ? error.response.data : 'No response data available');
     }
   };
 
@@ -48,32 +71,37 @@ const AddChildCategory = () => {
         </div>
         <div>
           <label
-            htmlFor="parentCategoryId"
+            htmlFor="parentCategoryName"
             className="block text-sm font-medium text-white/50 mb-2"
           >
-            ID danh mục cha
+            Chọn danh mục cha
           </label>
-          <input
-            id="parentCategoryId"
-            type="text"
-            value={parentCategoryId}
-            onChange={(e) => setParentCategoryId(e.target.value)}
+          <select
+            id="parentCategoryName"
+            value={parentCategoryName}
+            onChange={(e) => setParentCategoryName(e.target.value)}
             className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Nhập ID danh mục cha"
-          />
+          >
+            <option value="">--Chọn danh mục cha--</option>
+            {parentCategories.map((category) => (
+              <option key={category.id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label
-            htmlFor="categoryName"
+            htmlFor="childCategoryName"
             className="block text-sm font-medium text-white/50 mb-2"
           >
             Tên danh mục con
           </label>
           <input
-            id="categoryName"
+            id="childCategoryName"
             type="text"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
+            value={childCategoryName}
+            onChange={(e) => setChildCategoryName(e.target.value)}
             className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Nhập tên danh mục con"
           />
