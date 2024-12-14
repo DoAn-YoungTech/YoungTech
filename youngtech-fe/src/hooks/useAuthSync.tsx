@@ -1,27 +1,29 @@
-"use client";
 
-import { useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useDispatch } from "react-redux";
-import { setUser, clearUser } from "@/redux/User/authSlice";
 
-const useAuthSync = () => {
-  const { data: session, status } = useSession();
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { clearUser, setUser } from '@/redux/User/authSlice';
+
+const AuthSync = () => {
+  const { data: session } = useSession();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      dispatch(
-        setUser({
-          id: session.user.id || null, // Assuming `id` exists in the user object
+    if (session) {
+      dispatch(setUser({
+          id: session.user.id || null, 
           email: session.user.email || null,
           role: session.user.role || null,
+          accessToken:session.accessToken || null,
         })
       );
-    } else if (status === "unauthenticated") {
+    }else {
       dispatch(clearUser());
     }
-  }, [session, status, dispatch]);
+  }, [session, dispatch]);
+
 };
 
-export default useAuthSync;
+export default AuthSync;
+

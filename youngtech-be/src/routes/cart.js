@@ -37,14 +37,14 @@ cart.delete(
   '/removeProductId/:productId',
   middlewareController.verifyToken,
   middlewareController.verifyTokenAndRole(['customer']),
-  middlewareController.checkPermission('Cart_Management', 'delete'),
+  // middlewareController.checkPermission('Cart_Management', 'delete'),
   cartController.removeProductId
 );
 cart.delete(
   '/removeIn',
   middlewareController.verifyToken,
   middlewareController.verifyTokenAndRole(['customer']),
-  middlewareController.checkPermission('Cart_Management', 'delete'),
+  // middlewareController.checkPermission('Cart_Management', 'delete'),
   cartController.removeIn
 );
 
@@ -52,7 +52,7 @@ cart.delete(
   '/removeAll',
   middlewareController.verifyToken,
   middlewareController.verifyTokenAndRole(['customer']),
-  middlewareController.checkPermission('Cart_Management', 'delete'),
+  // middlewareController.checkPermission('Cart_Management', 'delete'),
   cartController.removeAll
 );
 

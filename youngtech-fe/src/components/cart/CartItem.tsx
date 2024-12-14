@@ -4,9 +4,10 @@ import Image from "next/image";
 import { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AlertClearCart } from "./AlertClearCart";
-import { updateCartItemQuantity } from "@/redux/Cart/cartThunks";
+import { fetchCartItems, removeCartItem, updateCartItemQuantity } from "@/redux/Cart/cartThunks";
 import { formatCurrency } from "../formatCurrency/formatCurrency";
-
+import { ToastContainer,toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 type CartItemProps = {
   item: {
     id: number;
@@ -20,17 +21,20 @@ type CartItemProps = {
 };
 
 const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
+ 
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isAlertClear, setIsAlertClear] = useState(false);
+  const [idCartItem ,setIdCartItem] = useState(null);
   const [quantity,setQuantity] = useState(item.quantity);
   const totalItem = quantity * Number(item.price);
   const handleEditClick = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleClearItemCart = () => {
+  const handleClearItemCart = (id:number) => {
     setIsAlertClear(true);
+    setIdCartItem(id)
   };
 
   const handleIncreaseQuantity = (newQuantity,product_id) => {
@@ -74,6 +78,18 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
     }
   };
 
+  const handleClickClearItemCart = async () => {
+    try {
+      toast.success("Xoá 1 sản phẩm thành công")
+      setIsAlertClear(false);
+      await dispatch(removeCartItem(idCartItem));
+      await dispatch(fetchCartItems());
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+    }
+  };
+
+ 
   useEffect(()=>{
     setQuantity(item.quantity)
   },[item.quantity])
@@ -81,7 +97,7 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
   return (
     
     <div className="bg-white py-4 px-4 border-b border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-     
+     <ToastContainer/>
       <div className="flex lg:hidden items-center justify-between w-full">
       <input
           type="checkbox"
@@ -108,7 +124,7 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
         />
           
           <Image
-            src={`/designImage/imageProducts/${item.images[0]}`}
+            src={item.images && item.images[0] ? `/designImage/imageProducts/${item.images[0]}` : '/path/to/default/image.jpg'}
             alt={item.product_name}
             width={100}
             height={100}
@@ -172,10 +188,10 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
       {/* Delete Button */}
       <div className="hidden lg:block sm:w-[10%] flex justify-center items-center text-red-500 cursor-pointer">
         <MdDeleteOutline
-          onClick={handleClearItemCart}
+          onClick={()=>handleClearItemCart(item.product_id)}
           className="text-[25px]"
         />
-        {isAlertClear && <AlertClearCart setIsAlertClear={setIsAlertClear}  idItemCart={item.product_id} />}
+        {isAlertClear && <AlertClearCart handleClickClearItemCart={handleClickClearItemCart} setIsAlertClear={setIsAlertClear} />}
       </div>
     </div>
   );

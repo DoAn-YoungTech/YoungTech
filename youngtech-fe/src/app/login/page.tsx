@@ -30,7 +30,6 @@ interface IFormInput {
 const Page = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  console.log(session)
   
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({
     resolver: yupResolver(schema), // Attach yup validation schema here

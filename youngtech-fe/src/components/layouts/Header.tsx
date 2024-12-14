@@ -32,9 +32,8 @@ const Header = () => {
   }, []);
 
   useEffect(()=>{
-    if(idUser){
       dispatch(fetchCartItems())
-    }
+    
   },[dispatch])
 
   return (

@@ -336,6 +336,12 @@ GROUP BY
     const query = `DELETE FROM cart WHERE id = :cart_id`
     const [result] = await sequelize.query(query, {replacements : {cart_id : cartId}})
     return result.affectedRows> 0
+  },
+
+  removeAllCartItem : async (cartId) => {
+    const query = `DELETE FROM cartItem WHERE cart_id = :cart_id`
+    const [result] = await sequelize.query(query, {replacements : {cart_id : cartId}})
+    return result.affectedRows> 0
   }
 };
 

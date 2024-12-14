@@ -1,6 +1,6 @@
 // src/store/cartSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchCartItems, addToCartThunk, updateCartItemQuantity, removeCartItem } from './cartThunks';
+import { fetchCartItems, addToCartThunk, updateCartItemQuantity, removeCartItem, removeCartItemIn,removeAllCartItem } from './cartThunks';
 
 export interface CartItem {
   id: number;
@@ -51,7 +51,18 @@ const cartSlice = createSlice({
       })
       .addCase(removeCartItem.fulfilled, (state, action) => {
         state.cartItems = state.cartItems.filter((item) => item.product_id !== action.payload);
-      });
+      })
+
+      .addCase(removeCartItemIn.fulfilled, (state, action) => {
+        const {productId} = action.payload; 
+        console.log(productId)  
+        // Lọc các item trong cartItems mà product_id không có trong idsToRemove
+        state.cartItems = state.cartItems.filter(item => !productId.includes(item.product_id));
+      })
+      .addCase(removeAllCartItem.fulfilled, (state, action) => {
+       
+        state.cartItems = [];
+      })
   },
 });
 

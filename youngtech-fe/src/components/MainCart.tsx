@@ -8,9 +8,12 @@ import { useDispatch, useSelector} from 'react-redux';
 import { fetchCartItems } from '@/redux/Cart/cartThunks';
 import EmptyCart from './cart/EmptyCart/EmptyCart';
 import Loadingcss from './loadingcss/Loadingcss';
+import MainPay from './MainPay';
+
 const CartPage: React.FC = () => {
   const dispatch = useDispatch();
   const {cartItems,loading} = useSelector(state=>state.cart);
+  console.log(cartItems)
   const [cartItemS,setCartItemS] = useState(cartItems);
 
   const handleSelectAllChange = (selected: boolean) => {
@@ -52,7 +55,7 @@ const CartPage: React.FC = () => {
 
    
     <div className="w-full  mb-[100px]">
-
+      <MainPay/>
          <Breadcrumb name="Cart"/>
         <div className="lg:w-[90%] w-full m-auto">
         <CartHeader />

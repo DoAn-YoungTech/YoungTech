@@ -3,30 +3,22 @@ import Link from 'next/link'
 import { useState,useCallback } from "react";
 import NameProduct from "./NameProduct";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCartThunk } from "@/redux/Cart/cartThunks";
 import Promotions from "./descriptionSmall";
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { debounce } from 'lodash';
-import { Router } from 'lucide-react';
 export default function InfoDetailProduct({ dataProduct }) {
-  const { data: session } = useSession();
   const searchParams = useSearchParams(); // Lấy tất cả các query params
   const id = searchParams.get("id");
+    const user = useSelector((state: RootState) => state.auth.user);
+    console.log(user)
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const router = useRouter();
-
   const handleAddToCart = async (quantity, id) => {
-    if (!session) {
-      toast.warning("Vui lòng đăng nhập ");
-       setTimeout(()=>{
-        router.push("/login");
-       },2000)
-      return
-    }
 
     const cartItem = {
       quantity: quantity,
@@ -37,7 +29,7 @@ export default function InfoDetailProduct({ dataProduct }) {
       // Dispatch và chờ kết quả từ thunk
       const result = await dispatch(addToCartThunk(cartItem)) 
   
-      if (result && result.success) {
+      if (result ) {
         // Nếu API trả về trạng thái thành công
         toast.success("Thêm vào giỏ hàng thành công");
       } else {
@@ -60,13 +52,20 @@ export default function InfoDetailProduct({ dataProduct }) {
       setQuantity("");  // Nếu người dùng xóa hết nội dung, cho phép giá trị là chuỗi rỗng
     }
   };
-
   const debouncedAddToCart = useCallback(
     debounce((quantity, id) => {
-      handleAddToCart(quantity, id);
+      if (user?.accessToken) {
+        handleAddToCart(quantity, id);
+      } else {
+        toast.warning("Vui lòng đăng nhập");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      }
     }, 500),
-    []
+    [user, handleAddToCart]
   );
+  
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev)); // Không cho phép giá trị nhỏ hơn 1
 
