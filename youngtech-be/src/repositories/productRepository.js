@@ -3,7 +3,7 @@ const imageRepository = require('./imageRepository');
 
 const productRepository = {
     getAllProduct: async ({ offset, limit }) => {
-        let query = `SELECT * FROM product`; // Lấy tất cả sản phẩm
+        let query = `SELECT * FROM product WHERE flag = true AND productRetailPrice IS NOT NULL`; // Lấy tất cả sản phẩm
         let replacements = {};
     
         // Kiểm tra nếu có limit
@@ -102,21 +102,25 @@ const productRepository = {
     
 
     // Thêm hàm mới để lấy sản phẩm theo childCategory_id
-    getProductByChildCategory: async ({ childCategoryId, limit, offset }) => {
+  getProductByChildCategory: async ({ childCategoryId, limit, offset }) => {
       try {
           // Câu truy vấn chính để lấy danh sách sản phẩm
           const query = `
-              SELECT * 
-              FROM product 
-              WHERE childCategory_id = :childCategoryId
-              ${limit ? 'LIMIT :limit OFFSET :offset' : ''}
-          `;
+    SELECT * 
+    FROM product 
+    WHERE childCategory_id = :childCategoryId 
+      AND flag = true 
+      AND productRetailPrice IS NOT NULL
+    ${limit ? 'LIMIT :limit OFFSET :offset' : ''}
+`;
   
           // Câu truy vấn phụ để tính tổng số sản phẩm
           const countQuery = `
-              SELECT COUNT(*) as totalItems 
-              FROM product 
-              WHERE childCategory_id = :childCategoryId
+             SELECT COUNT(*) as totalItems 
+             FROM product 
+             WHERE childCategory_id = :childCategoryId 
+             AND flag = true 
+             AND productRetailPrice IS NOT NULL;
           `;
   
           // Thực thi câu truy vấn chính
@@ -156,10 +160,12 @@ const productRepository = {
     try {
         // Khởi tạo câu truy vấn cơ bản để lấy dữ liệu sản phẩm
         let query = `
-          SELECT p.*
-          FROM product p
-          JOIN childcategories c ON p.childCategory_id = c.id
-          WHERE c.parentCategory_id = :parentCategoryId
+          SELECT p.* 
+          FROM product p 
+          JOIN childcategories c ON p.childCategory_id = c.id 
+          WHERE c.parentCategory_id = :parentCategoryId 
+          AND p.flag = true 
+          AND p.productRetailPrice IS NOT NULL;
         `;
 
         // Nếu có limit và offset, thêm các điều kiện phân trang
@@ -172,7 +178,9 @@ const productRepository = {
           SELECT COUNT(*) as total
           FROM product p
           JOIN childcategories c ON p.childCategory_id = c.id
-          WHERE c.parentCategory_id = :parentCategoryId
+          WHERE c.parentCategory_id = :parentCategoryId 
+          AND p.flag = true 
+          AND p.productRetailPrice IS NOT NULL;
         `;
 
         // Thực thi truy vấn lấy danh sách sản phẩm
