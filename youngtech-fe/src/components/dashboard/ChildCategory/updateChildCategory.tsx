@@ -4,17 +4,22 @@ import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios for API call
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Category_Child } from "@/types/CategoryTypes";
+
+interface UpdateChildCategoryProps {
+  category: Category_Child;
+  onCancel: () => void;
+  onUpdateSuccess: (updatedCategory: Category_Child) => void;
+}
 
 const UpdateChildCategory: React.FC<UpdateChildCategoryProps> = ({
   category,
   onCancel,
   onUpdateSuccess,
 }) => {
-  const [parentCategories, setParentCategories] = useState<Category_Parent[]>([]);
+  const [parentCategories, setParentCategories] = useState<Category_Child[]>([]);
   const [parentCategoryName, setParentCategoryName] = useState<string>("");
   const [childCategoryName, setChildCategoryName] = useState<string>("");
-  const [navigate, setNavigate] = useState(false);
 
   useEffect(() => {
     const fetchParentCategories = async () => {
@@ -54,16 +59,21 @@ const UpdateChildCategory: React.FC<UpdateChildCategoryProps> = ({
         const updatedCategory = {
           ...category,
           childCateName: childCategoryName,
-          parentCategory_id: selectedCategory.id // Sử dụng ID của danh mục cha đã chọn
+          parentCategory_id: selectedCategory.id // Giữ nguyên kiểu dữ liệu là number
         };
-
-        await updateChildCategory(updatedCategory); // Gọi API để cập nhật danh mục con
-        console.log("Danh mục con đã được cập nhật:", updatedCategory);
-        toast.success("Danh mục con đã được cập nhật thành công!"); // Hiển thị toast thành công
-        onUpdateSuccess(updatedCategory); // Thông báo cho cha cập nhật thành công
-        setNavigate(true); // Set navigate to true để trigger useEffect
+  
+        if (updatedCategory.id && updatedCategory.childCateName) {
+          await updateChildCategory(updatedCategory.id, updatedCategory); // Gọi API để cập nhật danh mục con
+          console.log("Danh mục con đã được cập nhật:", updatedCategory);
+          toast.success("Danh mục con đã được cập nhật thành công!"); // Hiển thị toast thành công
+          onUpdateSuccess(updatedCategory); // Thông báo cho cha cập nhật thành công
+        } else {
+          console.error("Invalid category or category ID for update");
+          toast.error("Vui lòng chọn một danh mục hợp lệ!");
+        }
       } else {
         console.error("Selected parent category not found");
+        toast.error("Danh mục cha không hợp lệ!");
       }
     } catch (error) {
       console.error("Error updating child category:", error.message);
@@ -71,6 +81,7 @@ const UpdateChildCategory: React.FC<UpdateChildCategoryProps> = ({
       toast.error("Lỗi khi cập nhật danh mục con!"); // Hiển thị toast lỗi
     }
   };
+  
 
   return (
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
@@ -125,9 +136,8 @@ const UpdateChildCategory: React.FC<UpdateChildCategoryProps> = ({
           />
         </div>
         <div className="flex justify-center gap-4">
-          <button type="submit" className="px-4 py-2 text-white rounded-md">
-            <ShinyRotatingBorderButton>Lưu thay đổi</ShinyRotatingBorderButton>
-          </button>
+            <ShinyRotatingBorderButton type="submit">Lưu thay đổi</ShinyRotatingBorderButton>
+          
         </div>
       </form>
     </div>

@@ -21,7 +21,10 @@ const AddParentCategory = () => {
       console.log("Category added successfully");
       setCategoryName(""); // Reset trạng thái form
       toast.success("Danh mục đã được thêm thành công!"); // Hiển thị toast thành công
-      router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha"); // Điều hướng về danh sách danh mục cha
+      setTimeout(() => {
+        router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      }, 6000);
+      // Điều hướng về danh sách danh mục cha
     } catch (error) {
       console.error("Error adding category:", error.message);
       toast.error("Lỗi khi thêm danh mục!"); // Hiển thị toast lỗi
@@ -60,12 +63,9 @@ const AddParentCategory = () => {
           />
         </div>
         <div className="flex justify-center gap-4">
-          <button
-            type="submit"
-            className="px-4 py-2 text-white rounded-md"
-          >
-            <ShinyRotatingBorderButton>Thêm danh mục cha</ShinyRotatingBorderButton>
-          </button>
+        
+            <ShinyRotatingBorderButton type="submit" >Thêm danh mục cha</ShinyRotatingBorderButton>
+          
         </div>
       </form>
     </div>

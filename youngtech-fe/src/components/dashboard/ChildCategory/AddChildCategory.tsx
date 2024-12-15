@@ -120,9 +120,7 @@ const AddChildCategory = () => {
           <div className="text-red-500 text-sm mt-2">{error}</div>
         )}
         <div className="flex justify-center gap-4">
-          <button type="submit" className="px-4 py-2 text-white rounded-md">
-            <ShinyRotatingBorderButton>Thêm danh mục con</ShinyRotatingBorderButton>
-          </button>
+            <ShinyRotatingBorderButton type="submit" >Thêm danh mục con</ShinyRotatingBorderButton>
         </div>
       </form>
     </div>
