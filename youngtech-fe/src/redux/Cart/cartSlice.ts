@@ -1,6 +1,7 @@
 // src/store/cartSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchCartItems, addToCartThunk, updateCartItemQuantity, removeCartItem } from './cartThunks';
+import { fetchCartItems, addToCartThunk, updateCartItemQuantity, removeCartItem, removeCartItemIn,removeAllCartItem } from './cartThunks';
+import { Item } from '@radix-ui/react-dropdown-menu';
 
 export interface CartItem {
   id: number;
@@ -40,7 +41,18 @@ const cartSlice = createSlice({
         state.status = 'failed';
       })
       .addCase(addToCartThunk.fulfilled, (state, action) => {
-        state.cartItems.push(action.payload);
+        const payload = action.payload
+        console.log(payload)
+        const existingItem = state.cartItems.filter(item => item.product_id === payload.product_id);
+         
+        if (existingItem) {
+          // Nếu tồn tại, tăng số lượng
+          existingItem.quantity += payload.quantity;
+        } else {
+          // Nếu không tồn tại, thêm sản phẩm vào giỏ hàng
+          state.cartItems.push(payload);
+        }
+     
       })
       .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
         console.log('Action Payload:', action.payload);
@@ -51,7 +63,18 @@ const cartSlice = createSlice({
       })
       .addCase(removeCartItem.fulfilled, (state, action) => {
         state.cartItems = state.cartItems.filter((item) => item.product_id !== action.payload);
-      });
+      })
+
+      .addCase(removeCartItemIn.fulfilled, (state, action) => {
+        const {productId} = action.payload; 
+        console.log(productId)  
+        // Lọc các item trong cartItems mà product_id không có trong idsToRemove
+        state.cartItems = state.cartItems.filter(item => !productId.includes(item.product_id));
+      })
+      .addCase(removeAllCartItem.fulfilled, (state, action) => {
+       
+        state.cartItems = [];
+      })
   },
 });
 

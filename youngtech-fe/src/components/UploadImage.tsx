@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useState } from 'react';
+import Image from 'next/image';
 
 interface UploadImageProps {
   handleGetArrayImage: (urls: { url: string; public_id: string }[]) => void; // Define the callback type
@@ -76,17 +76,9 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
 
       const data = await response.json();
       if (response.ok) {
-        const imageUrls = data.urls.map((item: { url: string }) => item.url);
-
-        const imagesAvailable = imagePreviews.filter((item: string) => item.startsWith('http'))
-        
-        // Append new uploaded images to the existing ones
-        setUploadedImages((prevImages) => [...prevImages, ...imageUrls, ...imagesAvailable]);
-        
-        handleGetArrayImage(imageUrls); // Update parent component with uploaded image URLs
-        setImagePreviews([]); // Clear the previews after upload
-        setImages([]); // Clear selected images
-
+        const imageUrls = data.urls.map((item: { url: string }) => item.url); // Only extract URLs
+        setUrls(imageUrls); 
+        handleGetArrayImage(imageUrls);
       } else {
         console.error("Upload failed:", data.message);
       }

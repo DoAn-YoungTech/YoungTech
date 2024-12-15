@@ -8,7 +8,20 @@ const customerController = {
       if (!customers) {
         return res.status(404).json({ message: 'Can not get customers ' });
       }
-      res.status(200).json({ message: customers });
+      res.status(200).json({ data:customers });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  getCustomersById: async (req, res) => {
+    const id = req.user.id
+    try {
+      const customers = await customerService.getCustomersById(id);
+
+      if (!customers) {
+        return res.status(404).json({ message: 'Can not get customers ' });
+      }
+      res.status(200).json({ customers });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

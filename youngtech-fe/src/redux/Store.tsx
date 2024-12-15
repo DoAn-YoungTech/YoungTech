@@ -10,6 +10,7 @@ import supplierReducer from "./Supplier/supplierSlice";
 import wareHouseMannagementReducer from "./WareHouseManagement/WareHouseMannagementSlice";
 import storage from './configStore';
 import { persistReducer ,persistStore } from 'redux-persist';
+import customerReducer from './Customers/customerSlice';
 
 const rootPersistConfig = {
   key: "root",
@@ -25,7 +26,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   cart: cartReducer,
   supplier: supplierReducer,
-  wareHouseMannagement: wareHouseMannagementReducer
+  wareHouseMannagement: wareHouseMannagementReducer,
+  customers: customerReducer, 
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

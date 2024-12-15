@@ -8,30 +8,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { removeCartItem, fetchCartItems } from "@/redux/Cart/cartThunks";
-import { useDispatch } from "react-redux";
 
-export function AlertClearCart({ setIsAlertClear, idItemCart }) {
-  const dispatch = useDispatch();
+export function AlertClearCart({ handleClickClearItemCart,setIsAlertClear,totalCartItem=1 }) {
+  
 
-  const handleClickClearItemCart = async (id: number) => {
-    try {
-      setIsAlertClear(false);
-      // Xóa mục khỏi giỏ hàng
-      await dispatch(removeCartItem(id));
-
-      // Sau khi xóa thành công, gọi lại dữ liệu giỏ hàng
-      await dispatch(fetchCartItems());
-    } catch (error) {
-      console.error("Lỗi khi xóa sản phẩm:", error);
-    }
-  };
 
   return (
+    
     <AlertDialog defaultOpen>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Bạn có chắc chắn muốn xóa không?</AlertDialogTitle>
+          <AlertDialogTitle>Bạn có chắc chắn muốn xóa {totalCartItem} sản phẩm không?</AlertDialogTitle>
           <AlertDialogDescription>
             Sản phẩm sẽ được xóa khỏi giỏ hàng của bạn.
           </AlertDialogDescription>
@@ -40,7 +27,7 @@ export function AlertClearCart({ setIsAlertClear, idItemCart }) {
           <AlertDialogCancel onClick={() => setIsAlertClear(false)}>
             Không
           </AlertDialogCancel>
-          <AlertDialogAction onClick={() => handleClickClearItemCart(idItemCart)}>
+          <AlertDialogAction onClick={() => handleClickClearItemCart()}>
             Có
           </AlertDialogAction>
         </AlertDialogFooter>

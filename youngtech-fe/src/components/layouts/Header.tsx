@@ -32,9 +32,8 @@ const Header = () => {
   }, []);
 
   useEffect(()=>{
-    if(idUser){
       dispatch(fetchCartItems())
-    }
+    
   },[dispatch])
 
   return (
@@ -50,8 +49,8 @@ const Header = () => {
             }`}
           >
             <div className="lg:container px-1 m-auto">
-              <div className="flex items-center">
-                <div id="logo-shop">
+              <div className="flex  items-center">
+                <div id="  logo-shop">
                   <Link href="/">
                     <Image
                       className="w-[100px] h-[100px]"

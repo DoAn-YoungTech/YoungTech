@@ -9,6 +9,11 @@ customerRoutes.get(
   customerController.getAllCustomers
 );
 
+customerRoutes.get(
+  '/viewCustomerById',
+  middlewareController.verifyToken,
+  customerController.getCustomersById
+);
 // addInformationByAccount
 customerRoutes.put(
   '/updateCustomer',
