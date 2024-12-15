@@ -7,8 +7,8 @@
   export interface Category_Child {
     id: number; 
     childCateName: string;
-    parentCategory_id:number
-
+    parentCategory_id:number;
+    name: string;
   }
 
   export interface CategoryParenState {

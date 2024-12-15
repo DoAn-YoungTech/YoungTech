@@ -39,7 +39,7 @@ const ListChildCategories: React.FC = () => {
   };
 
   const filteredCategories = categorieschild.filter((category) =>
-    category.childCateName ? category.childCateName.toLowerCase().includes(searchTerm.toLowerCase()) : false
+    category.childCateName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (category: Category_Child) => {
