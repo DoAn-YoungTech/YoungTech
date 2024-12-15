@@ -31,7 +31,7 @@ export const addToCartThunk = createAsyncThunk(
           Authorization: ` ${session?.accessToken}`, // Gửi token trong header
         },
       });
-    return response.data; // Dữ liệu sản phẩm sau khi được thêm vào giỏ hàng
+    return cartItem; // Dữ liệu sản phẩm sau khi được thêm vào giỏ hàng
   }
 );
 
@@ -65,6 +65,44 @@ export const removeCartItem = createAsyncThunk(
   
   );
     return id; 
+  }
+);
+
+export const removeCartItemIn = createAsyncThunk(
+  'cart/removeCartItemIn',
+  async (data) => {
+    try {
+      const session = await getSession();
+      const req = await axios.delete(`${API_URL_Cart}/removeIn`, {
+        headers: {
+          Authorization: `${session?.accessToken}`, // Gửi token trong header
+        },
+        data, // Gửi dữ liệu trong phần config
+      });
+
+      return data; // Trả về dữ liệu API trả về
+    } catch (error) {
+      console.error('Error removing cart item:', error);
+      throw error; // Đẩy lỗi lên để xử lý trong reducer
+    }
+  }
+);
+export const removeAllCartItem = createAsyncThunk(
+  'cart/removeAllCartItem',
+  async (_, { rejectWithValue }) => {
+    try {
+      const session = await getSession();
+      const res = await axios.delete(`${API_URL_Cart}/removeAll`, {
+        headers: {
+          Authorization: `${session.accessToken}`, // Đảm bảo không có dấu cách thừa
+        },
+      });
+
+      return res.data; // Trả về dữ liệu từ API
+    } catch (error) {
+      console.error('Error removing all cart items:', error);
+      return rejectWithValue(error.response?.data || 'Something went wrong');
+    }
   }
 );
 

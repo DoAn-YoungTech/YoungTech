@@ -65,23 +65,34 @@ const cartRepository = {
 
   viewCart: async (cartId) => {
     const query = `
-    SELECT
+   SELECT
     cartitem.id AS cart_item_id,
     cartitem.quantity,
     cartitem.cart_id,
     product.id AS product_id,
-    product.productName AS product_name,
+    product.productName AS productName,
     product.description,
-    product.productPrice AS price,  
-    product.productImage AS image_url
-    FROM cartitem
-    JOIN product ON cartitem.product_id = product.id
-    LEFT JOIN image ON product.id = image.product_id
-    WHERE cartitem.cart_id =:cart_id
+    product.productPrice AS productPrice,
+    product.productRetailPrice AS productRetailPrice,
+    product.productSalePrice AS productSalePrice,
+    GROUP_CONCAT(image.imageUrl) AS images
+FROM cartitem
+JOIN product ON cartitem.product_id = product.id
+LEFT JOIN image ON product.id = image.product_id
+WHERE cartitem.cart_id = 1
+GROUP BY
+    cartitem.id, cartitem.quantity, cartitem.cart_id, product.id, product.productName, product.description, product.productPrice;
+
      `;
-    const [result] = await sequelize.query(query, {
+    const [formattedResult] = await sequelize.query(query, {
       replacements: { cart_id: cartId },
     });
+
+    const result = formattedResult.map(item => ({
+      ...item,
+      images: item.images ? item.images.split(',') : [] // Nếu có ảnh, tách chuỗi thành mảng, nếu không có ảnh thì trả mảng rỗng
+    }));
+
     return result;
   },
 
@@ -325,6 +336,12 @@ const cartRepository = {
   }, 
   removeCart : async (cartId) => {
     const query = `DELETE FROM cart WHERE id = :cart_id`
+    const [result] = await sequelize.query(query, {replacements : {cart_id : cartId}})
+    return result.affectedRows> 0
+  },
+
+  removeAllCartItem : async (cartId) => {
+    const query = `DELETE FROM cartItem WHERE cart_id = :cart_id`
     const [result] = await sequelize.query(query, {replacements : {cart_id : cartId}})
     return result.affectedRows> 0
   }

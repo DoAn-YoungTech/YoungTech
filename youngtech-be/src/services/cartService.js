@@ -90,65 +90,67 @@ const cartService = {
     return await cartRepository.updateProduct(quantity, getProductId);
   },
 
-
   // checkUserIdExist(userId)
-  checkUserIdExist : async (userId) => {
-    return await cartRepository.checkUserIdExist(userId)
+  checkUserIdExist: async (userId) => {
+    return await cartRepository.checkUserIdExist(userId);
   },
   //getCartId(checkUserIdExist)
-  getCartId : async (checkUserIdExist) => {
-    return await  cartRepository.getCartId(checkUserIdExist)
+  getCartId: async (checkUserIdExist) => {
+    return await cartRepository.getCartId(checkUserIdExist);
   },
 
-  // getOrder(getCartId) 
-  getOrder : async (getCartId) => {
-    return await cartRepository.getOrder(getCartId)
+  // getOrder(getCartId)
+  getOrder: async (getCartId) => {
+    return await cartRepository.getOrder(getCartId);
   },
 
-  // check product in stock 
-  checkStock : async (product_id) => {
-   return await cartRepository.checkStock(product_id)
+  // check product in stock
+  checkStock: async (product_id) => {
+    return await cartRepository.checkStock(product_id);
+  },
+
+  // add product to order
+  addProductToOrder: async (totalAmount, customerId) => {
+    return await cartRepository.addProductToOrder(totalAmount, customerId);
+  },
+
+  // clearUpdateCart(getCartId)
+  clearUpdateCart: async (getCartId) => {
+    return await cartRepository.clearUpdateCart(getCartId);
+  },
+
+  // addProductOrderDetail(getCartId)
+
+  addProductOrderDetail: async (getCartId) => {
+    return await cartRepository.addProductOrderDetail(getCartId);
+  },
+
+  // getCart(customerId)
+  getCart: async (customerId, productIds) => {
+    return await cartRepository.getCart(customerId, productIds);
+  },
+  // checkAllProductIdExist(productId)
+  checkAllProductIdExist: async (productId) => {
+    return await cartRepository.checkAllProductIdExist(productId);
+  },
+  cartId: async (getCustomerId) => {
+    return await cartRepository.cartId(getCustomerId);
+  },
+  deleteIn: async (productId, cartId) => {
+    return await cartRepository.deleteIn(productId, cartId);
+  },
+
+  removeAll: async (getCartId) => {
+    return await cartRepository.removeAll(getCartId);
   },
 
 
-  // add product to order 
-  addProductToOrder : async (totalAmount, customerId) => {
-     return await cartRepository.addProductToOrder(totalAmount, customerId)
-  },
-
-  // clearUpdateCart(getCartId) 
-  clearUpdateCart : async (getCartId) => {
-    return await cartRepository.clearUpdateCart(getCartId)
-  },
-
-  // addProductOrderDetail(getCartId) 
-
-  addProductOrderDetail : async (getCartId) => {
-    return await cartRepository.addProductOrderDetail(getCartId)
-  },
-
-  // getCart(customerId) 
-  getCart : async (customerId, productIds) => {
-    return await cartRepository.getCart(customerId, productIds)
-  },
-  // checkAllProductIdExist(productId) 
-  checkAllProductIdExist : async (productId) => {
-    return await cartRepository.checkAllProductIdExist(productId)
-  },
-  cartId : async (getCustomerId) => {
-    return await cartRepository.cartId(getCustomerId)
-  },
-  deleteIn : async (productId,cartId) =>{
-    return await cartRepository.deleteIn(productId,cartId)
-  },
-
-  removeAll : async (getCartId) => {
-    return await cartRepository.removeAll(getCartId)
-  },
   removeCart : async (cartId) => {
     return await cartRepository.removeCart(cartId) 
+  },
+  removeAllCartItem : async (cartId) => {
+    return await cartRepository.removeAllCartItem(cartId) 
   }
 };
 
-
-module.exports = cartService
+module.exports = cartService;

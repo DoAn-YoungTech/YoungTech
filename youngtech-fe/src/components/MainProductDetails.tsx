@@ -14,7 +14,7 @@ const MainProductDetails = () => {
   const id = searchParams.get('id');
   const dispatch = useDispatch<AppDispatch>();
   const {data,loading} = useSelector((state: RootState) => state.products);
-  console.log(loading)
+
   useEffect(()=>{
     if(id){
       dispatch(fetchProductsId(id))

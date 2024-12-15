@@ -3,7 +3,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Category_Paren } from '@/types/CategoryTypes';
 const Api_url = process.env.NEXT_PUBLIC_API_URL
-
 const API_URL_PARENT = `${Api_url}/parencategories`;
 
 export const fetchCategoriesParent = createAsyncThunk(

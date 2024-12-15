@@ -56,8 +56,7 @@ const employeeController = {
       // create account employee
       const dataAccount = req.body;
       const { userName, email, password, ...dataEmployee } = dataAccount;
-      // check user name exist
-
+      // check user name exist 
       // check email exist
       const checkEmailExist = await authService.findUserByEmail(email);
 
@@ -88,6 +87,7 @@ const employeeController = {
         email,
         hashPassword
       );
+      console.log(newAccount)
       if (!newAccount) {
         return res
           .status(403)
@@ -135,10 +135,10 @@ const employeeController = {
   updateInformationEmployee: async (req, res) => {
     try {
       // update account id
-      const accountId = req.params.accountId;
+      const employeeId = req.params.employeeId;
       const data = req.body;
       console.log(`data`, data);
-      console.log(`account_id `, accountId);
+      console.log(`employeeId `, employeeId);
       if (
         (data.fullName == '' || data.profilePicture == '',
         data.dateOfBirth == '',
@@ -150,7 +150,7 @@ const employeeController = {
         }
 
       const updateInformationEmployee =
-        await employeeService.updateInformationEmployee(data, accountId);
+        await employeeService.updateInformationEmployee(data, employeeId);
       if (!updateInformationEmployee) {
         return res.status(403).json({ message: 'Update employee fail !' });
       }

@@ -39,14 +39,19 @@ const parentCategoriesController = {
     }
   },
   
+  
   createParentCategories: async (req, res) => {
     try {
-      const data = req.body;
-      const result = await parentCategoriesService.createParentCategories(data);
+      const { name } = req.body;
+      if (!name) {
+        return res.status(400).json({ message: "Name is required" });
+      }
+  
+      const result = await parentCategoriesService.createParentCategories(name);
       if (!result) {
         res.status(400).json({ message: "Create parent categories failed!" });
       } else {
-        res.status(201).json({ message: "parent categories created successfully!", data: result });
+        res.status(201).json({ message: "Parent category created successfully!", data: result });
       }
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error", error: err.message });
