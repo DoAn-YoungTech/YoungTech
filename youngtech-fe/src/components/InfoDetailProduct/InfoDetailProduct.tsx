@@ -9,12 +9,12 @@ import Promotions from "./descriptionSmall";
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { formatCurrency } from '../formatCurrency/formatCurrency';
 import { debounce } from 'lodash';
 export default function InfoDetailProduct({ dataProduct }) {
   const searchParams = useSearchParams(); // Lấy tất cả các query params
   const id = searchParams.get("id");
     const user = useSelector((state: RootState) => state.auth.user);
-    console.log(user)
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -69,8 +69,25 @@ export default function InfoDetailProduct({ dataProduct }) {
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev)); // Không cho phép giá trị nhỏ hơn 1
 
-  const formattedPrice = new Intl.NumberFormat("de-DE").format(dataProduct.productPrice || 0);
+  const formattedPrice = dataProduct.productRetailPrice || 0
+  const priceRetailSale = Number(dataProduct.productRetailPrice) - (Number(dataProduct.productRetailPrice) * Number(dataProduct.productSalePrice /100))
 
+  const handleProceedToPay = () => {
+    const orderDetail = [{
+      unitPrice: priceRetailSale,
+      quantity: quantity,
+      product_id :id,
+      item: dataProduct,
+    }]
+  
+    // Encode JSON thành chuỗi URL-safe
+    const encodedOrderDetail = encodeURIComponent(JSON.stringify(orderDetail));
+  
+    // Sử dụng router.push với query param
+    router.push(`/pay?orderDetail=${encodedOrderDetail}`);
+  };
+  
+  
   return (
    <>
   
@@ -85,7 +102,13 @@ export default function InfoDetailProduct({ dataProduct }) {
         {/* Giá bán */}
         <div className="w-full mt-4 flex items-center gap-4">
           <p className="font-medium">Giá bán:</p>
-          <strong className="price text-[18px] text-red-600">{formattedPrice}₫</strong>
+          <strong className="price text-[18px] text-red-600">{ Number(dataProduct.productSalePrice) ===0 ? formatCurrency(formattedPrice)  : formatCurrency(priceRetailSale)}</strong>
+          {
+              Number(dataProduct.productSalePrice) === 0 ? "" : <div className="flex  space-x-2">
+              <span className="line-through text-gray-400 text-sm">{formatCurrency(formattedPrice)}</span>
+              <span className="text-red-500 text-sm">-{dataProduct.productSalePrice}%</span>
+            </div>
+           }
         </div>
 
         {/* Số lượng */}
@@ -123,14 +146,15 @@ export default function InfoDetailProduct({ dataProduct }) {
           >
             Thêm vào giỏ hàng
           </button>
-         <Link href="/cart" >
+       
          <button
+           onClick={handleProceedToPay}
             type="button"
             className="bg-slate-800 active:scale-95  transform duration-200 hover:bg-slate-900 transition w-[200px] py-3 text-white rounded-lg text-[16px]"
           >
             Mua ngay
           </button>
-         </Link>
+        
         
         </div>
        

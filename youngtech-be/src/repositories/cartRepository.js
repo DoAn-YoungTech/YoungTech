@@ -70,9 +70,11 @@ const cartRepository = {
     cartitem.quantity,
     cartitem.cart_id,
     product.id AS product_id,
-    product.productName AS product_name,
+    product.productName AS productName,
     product.description,
-    product.productPrice AS price,
+    product.productPrice AS productPrice,
+    product.productRetailPrice AS productRetailPrice,
+    product.productSalePrice AS productSalePrice,
     GROUP_CONCAT(image.imageUrl) AS images
 FROM cartitem
 JOIN product ON cartitem.product_id = product.id

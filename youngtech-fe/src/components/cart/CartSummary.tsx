@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"; // Để chuyển trang
 import { toast,ToastContainer } from "react-toastify"; // Import thư viện Toastify
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
-import { fetchCartItems, removeAllCartItem, removeCartItem, removeCartItemIn} from "@/redux/Cart/cartThunks";
+import {  removeAllCartItem, removeCartItem, removeCartItemIn} from "@/redux/Cart/cartThunks";
 import { GiConsoleController } from "react-icons/gi";
 type CartSummaryProps = {
   totalAmount: number;
@@ -17,14 +17,25 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onSelectedAllChange,dataCart}
   const router = useRouter();
   const dispatch = useDispatch();
   const [idCartItem,setIdCartItem] = useState([])
+
   const totalCartItem =  dataCart.reduce(
     (total, item) => total + (item.selected ?  item.selected : 0),
     0
   );
-  const totalAmount = dataCart.reduce(
-    (total, item) => total + (item.selected ?  Number(item.price) * item.quantity : 0),
-    0
-  );
+  const totalAmount = dataCart.reduce((total, item) => {
+    if (!item.selected) return total;
+  
+    const salePrice = Number(item.productSalePrice);
+    const retailPrice = Number(item.productRetailPrice);
+    const quantity = item.quantity;
+  
+    const itemTotal = salePrice === 0
+      ? retailPrice * quantity
+      : (retailPrice - (retailPrice * (salePrice / 100))) * quantity;
+  
+    return total + itemTotal;
+  }, 0);
+  
 
 
   const arrIdCartItem = dataCart
@@ -47,7 +58,8 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onSelectedAllChange,dataCart}
 
 
   const handleClearItemCart = (arr) => {
-    if(totalCartItem.length > 0 ){
+    console.log(totalCartItem)
+    if(totalCartItem > 0 ){
       setIsAlertClear(true);
       setIdCartItem(arr)
     }else{
@@ -60,7 +72,6 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onSelectedAllChange,dataCart}
   
   const handleClickClearItemCart = async () => {
       try {
-    
         if( dataCart.length !== totalCartItem){
           toast.success(`Xoá ${totalCartItem} sản phẩm thành công`)
 

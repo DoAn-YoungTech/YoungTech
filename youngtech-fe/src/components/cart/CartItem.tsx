@@ -21,13 +21,16 @@ type CartItemProps = {
 };
 
 const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
- 
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isAlertClear, setIsAlertClear] = useState(false);
   const [idCartItem ,setIdCartItem] = useState(null);
   const [quantity,setQuantity] = useState(item.quantity);
-  const totalItem = quantity * Number(item.price);
+  const priceRetail = item.productRetailPrice;
+  const productSalePrice = item.productSalePrice
+  const priceSale =(priceRetail) - (priceRetail * (productSalePrice /100));
+  const totalRetail = priceRetail * quantity;
+  const totalSale = priceSale * quantity;
   const handleEditClick = () => {
     setIsEditing(!isEditing);
   };
@@ -125,15 +128,15 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
           
           <Image
             src={item.images && item.images[0] ? `/designImage/imageProducts/${item.images[0]}` : '/path/to/default/image.jpg'}
-            alt={item.product_name}
+            alt={item.productName}
             width={100}
             height={100}
             className="sm:w-16 sm:h-16 mr-4 rounded"
           />
           <div className="flex-grow">
-            <div className="font-semibold text-sm sm:text-base">{item.product_name}</div>
+            <div className="font-semibold text-sm sm:text-base">{item.productName}</div>
             <div className="text-gray-500 text-xs sm:hidden">
-              {item.price}₫ x {item.quantity}
+              {Number(productSalePrice) ===0 ? formatCurrency(priceRetail) : formatCurrency(priceSale)}
             </div>
           </div>
         </div>
@@ -149,8 +152,16 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
       </div>
 
       {/* Price */}
-      <div className="sm:w-[12%] text-left sm:text-center hidden sm:block">
-        <span className="font-semibold"> {formatCurrency(item.price)}</span>
+      <div className="sm:w-[12%] text-left  sm:text-center hidden sm:block">
+       <div className="w-full flex gap-2 items-center ">
+       <span className="font-semibold"> { Number(productSalePrice) ===0 ? formatCurrency(priceRetail) : formatCurrency(priceSale) }</span>
+        {
+              Number(productSalePrice) === 0 ? "" :    <div className="flex  space-x-2">
+              <span className="line-through text-gray-400 text-sm">{formatCurrency(priceRetail)}</span>
+              <span className="text-red-500 text-sm">-{productSalePrice}%</span>
+            </div>
+           }
+       </div>
       </div>
 
       {/* Quantity */}
@@ -182,7 +193,7 @@ const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
 
       {/* Total Price */}
       <div className="w-full sm:w-[10%] text-left sm:text-center text-red-500 font-semibold hidden sm:block">
-        {formatCurrency(totalItem)}
+         {Number(productSalePrice) ===0 ? formatCurrency(totalRetail) : formatCurrency(totalSale) }
       </div>
 
       {/* Delete Button */}

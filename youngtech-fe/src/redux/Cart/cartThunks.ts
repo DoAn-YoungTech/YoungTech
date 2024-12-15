@@ -31,7 +31,7 @@ export const addToCartThunk = createAsyncThunk(
           Authorization: ` ${session?.accessToken}`, // Gửi token trong header
         },
       });
-    return response.data; // Dữ liệu sản phẩm sau khi được thêm vào giỏ hàng
+    return cartItem; // Dữ liệu sản phẩm sau khi được thêm vào giỏ hàng
   }
 );
 

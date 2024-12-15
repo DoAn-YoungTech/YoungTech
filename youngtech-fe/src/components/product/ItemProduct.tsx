@@ -26,8 +26,8 @@ import { fetchNameParentCategoriesByChildId } from "@/redux/Category/categoryChi
       
       }
       const formattedPrice = new Intl.NumberFormat('de-DE').format(item.productRetailPrice);
-
-    return (
+      const priceRetailSale = new Intl.NumberFormat('de-DE').format((item.productRetailPrice) - (item.productRetailPrice * (item.productSalePrice /100)))
+      return (
     
         <div onClick={()=> handlClickDetailsPro(item.id,item.productName,item.childCategory_id)}  key={item.id} className='flex  group flex-col my-3 hover:shadow-lg border px-3 rounded-lg py-3'>
           <p className='mb-5 overflow-hidden   text-[11px] w-[70px] flex justify-center bg-slate-200'>Trả góp 0%</p>
@@ -48,11 +48,19 @@ import { fetchNameParentCategoriesByChildId } from "@/redux/Category/categoryChi
             <span className='text-[12px] bg-slate-200 px-2 rounded-lg'>Super Retina XDR</span>
           </div>
           <MemoryGb />
-          <strong className='price w-full text-[16px] text-red-600'>{formattedPrice}₫</strong>
-          <div className='star flex items-center py-1 text-slate-500'>
+          <strong className='price w-full text-[16px] text-red-600'>{Number(item.productSalePrice) === 0 ? formattedPrice : priceRetailSale}₫</strong>
+           {
+              Number(item.productSalePrice) === 0 ? "" :              <div className="flex  space-x-2">
+              <span className="line-through text-gray-400 text-sm">{formattedPrice}₫</span>
+              <span className="text-red-500 text-sm">-{item.productSalePrice}%</span>
+            </div>
+           }
+
+<div className='star flex items-center py-1 text-slate-500'>
             <IoIosStar className="text-yellow-400 text-[12px]" />
             <span className=''>{item.rating}</span> ({item.reviewCount})
           </div>
+         
           <div data-tooltip={`-10%`} className="mt-3 button">
             <div className="button-wrapper">
               <div className="text text-[.9rem]">Mua ngay</div>

@@ -43,7 +43,7 @@ const orderController = {
   // },
   addOrderWithDetails: async (req, res) => {
     const { order, orderDetails, cartId } = req.body;
-  
+     console.log(order, orderDetails)
     if (!order || !orderDetails || orderDetails.length === 0) {
       return res.status(400).json({ message: 'Order and order details are required' });
     }

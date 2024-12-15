@@ -12,6 +12,7 @@ const customerRepository = {
     return results;
   },
 
+
   // addInformationByAccount
   addInformationByAccount: async (data, accountId) => {
     try {
@@ -41,6 +42,21 @@ const customerRepository = {
       result.status(500).json({ message: err });
     }
   },
+
+    //checkAccountExist(userId)
+    getCustomersById: async (id) => {
+      try {
+        const query = `SELECT * FROM customer  WHERE id = :id AND flag = ${true}`;
+  
+        const [result] = await sequelize.query(query, {
+          replacements: { id: id },
+        });
+  
+        return result.length > 0 ? result[0] : null;
+      } catch (err) {
+        result.status(500).json({ message: err });
+      }
+    },
 
   // editCustomer(checkUserIdExist)
   editCustomer: async (customerId, updateData) => {
