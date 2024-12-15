@@ -19,8 +19,8 @@ const employeeService = {
     return await employeeRepository.viewingListEmployee();
   },
   // updateInformationEmployee
-  updateInformationEmployee: async (data, accountId) => {
-    return await employeeRepository.updateInformationEmployee(data, accountId);
+  updateInformationEmployee: async (data, employeeId) => {
+    return await employeeRepository.updateInformationEmployee(data, employeeId);
   },
   // viewOnlyEmployee
   viewOnlyEmployee: async (id) => {

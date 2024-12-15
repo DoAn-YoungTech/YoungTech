@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+import { useState } from 'react';
+import Image from 'next/image';
 
 interface UploadImageProps {
   handleGetArrayImage: (urls: { url: string; public_id: string }[]) => void; // Define the callback type
@@ -65,7 +65,6 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
             })
         )
       );
-
       // Send base64 files to the API
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -77,16 +76,9 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
 
       const data = await response.json();
       if (response.ok) {
-        const imageUrls = data.urls.map((item: { url: string }) => item.url);
-        
-        // Append new uploaded images to the existing ones
-        setUploadedImages((prevImages) => [...prevImages, ...imageUrls]);
-        
-        console.log(imageUrls)
-        handleGetArrayImage(imageUrls.url); // Update parent component with uploaded image URLs
-
-        setImagePreviews([]); // Clear the previews after upload
-        setImages([]); // Clear selected images
+        const imageUrls = data.urls.map((item: { url: string }) => item.url); // Only extract URLs
+        setUrls(imageUrls); 
+        handleGetArrayImage(imageUrls);
       } else {
         console.error("Upload failed:", data.message);
       }
@@ -96,8 +88,6 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
       setLoading(false);
     }
   };
-
-  console.log('123', urls)
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">

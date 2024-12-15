@@ -1,5 +1,6 @@
 const orderService = require('../services/orderService');
 const cartService = require('../services/cartService')
+const cartItemService = require('../services/cartItemServices')
 
 
 const orderController = {
@@ -42,22 +43,27 @@ const orderController = {
   //   }
   // },
   addOrderWithDetails: async (req, res) => {
-    const { order, orderDetails, cartId } = req.body;
-     console.log(order, orderDetails)
+
+    const { order, orderDetails, cartId, cartItems } = req.body;
     if (!order || !orderDetails || orderDetails.length === 0) {
       return res.status(400).json({ message: 'Order and order details are required' });
     }
   
     try {
-      // Nếu có cartId, xóa cart tương ứng
-      if (cartId) {
+      // Nếu có cartId, duyệt qua mảng cartItems và xóa từng cartItem
+      if (cartId && cartItems && Array.isArray(cartItems)) {
         try {
+          for (const cartItem of cartItems) {
+            await cartItemService.deleteCartItem(cartItem.id);
+            console.log(`CartItem with ID ${cartItem.id} has been removed successfully.`);
+          }
+          // Sau khi xóa hết cartItems, xóa cart tương ứng
           await cartService.removeCart(cartId);
           console.log(`Cart with ID ${cartId} has been removed successfully.`);
         } catch (cartError) {
-          console.error('Error removing cart:', cartError);
+          console.error('Error removing cart or cart items:', cartError);
           return res.status(500).json({
-            message: 'Failed to remove cart',
+            message: 'Failed to remove cart or cart items',
             error: cartError.message,
           });
         }
