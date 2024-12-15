@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { updateSupplier } from "@/services/supplier/SupplierService";
 import { Supplier } from '@/types/SupplierTypes';
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface UpdateSupplierProps {
   supplier: Supplier;
@@ -25,6 +27,7 @@ const UpdateSupplier: React.FC<UpdateSupplierProps> = ({
 
   const handleEditSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
     try {
       const updatedSupplier = {
         supplierName,
@@ -35,11 +38,16 @@ const UpdateSupplier: React.FC<UpdateSupplierProps> = ({
       };
       
       await updateSupplier(supplier.id, updatedSupplier);
-      console.log("Updated supplier successfully");
+      toast.success("Nhà cung cấp đã được chỉnh sửa thành công!");
       onUpdateSuccess({ ...supplier, ...updatedSupplier });
-      router.push("/dashboard/quanly-nha-cungcap");
+      
+      // Chuyển hướng đến trang quản lý nhà cung cấp sau 2 giây
+      setTimeout(() => {
+        router.push("/dashboard/quanly-nha-cungcap");
+      }, 2000);
     } catch (error) {
-      console.error("Error updating supplier:", error.message);
+      console.error("Lỗi khi chỉnh sửa nhà cung cấp:", error.message);
+      toast.error("Lỗi khi chỉnh sửa nhà cung cấp!");
     }
   };
 
@@ -59,7 +67,7 @@ const UpdateSupplier: React.FC<UpdateSupplierProps> = ({
           </h2>
         </div>
         
-        {/* Supplier Name */}
+        {/* Tên nhà cung cấp */}
         <div>
           <label
             htmlFor="supplierName"
@@ -77,7 +85,7 @@ const UpdateSupplier: React.FC<UpdateSupplierProps> = ({
           />
         </div>
 
-        {/* Contact Name */}
+        {/* Tên liên lạc */}
         <div>
           <label
             htmlFor="contactName"
@@ -95,7 +103,7 @@ const UpdateSupplier: React.FC<UpdateSupplierProps> = ({
           />
         </div>
 
-        {/* Phone Number */}
+        {/* Số điện thoại */}
         <div>
           <label
             htmlFor="phoneNumber"
@@ -131,7 +139,7 @@ const UpdateSupplier: React.FC<UpdateSupplierProps> = ({
           />
         </div>
 
-        {/* Address */}
+        {/* Địa chỉ */}
         <div>
           <label
             htmlFor="address"
@@ -151,7 +159,7 @@ const UpdateSupplier: React.FC<UpdateSupplierProps> = ({
 
         <div className="flex justify-center gap-4">
           <button type="submit" className="px-4 py-2 text-white rounded-md">
-          <ShinyRotatingBorderButton>Lưu thay đổi</ShinyRotatingBorderButton>
+            <ShinyRotatingBorderButton>Lưu thay đổi</ShinyRotatingBorderButton>
           </button>
         </div>
       </form>

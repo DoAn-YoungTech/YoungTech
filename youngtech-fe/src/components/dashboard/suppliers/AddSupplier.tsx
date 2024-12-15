@@ -1,7 +1,10 @@
 "use client";
 import { addSupplier } from "@/services/supplier/SupplierService"; 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddSupplier = () => {
   const [supplierName, setSupplierName] = useState("");
@@ -9,16 +12,21 @@ const AddSupplier = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
-  const [navigate, setNavigate] = useState(false); // State to trigger navigation
-
-  useEffect(() => {
-    if (navigate) {
-      window.location.href = "/dashboard/quanly-nha-cungcap";
-    }
-  }, [navigate]);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault();  // Ngừng hành động mặc định của form (tránh reload trang)
+    setError(""); // Xóa lỗi cũ
+
+    console.log('Form Submitted');  // Log để kiểm tra form đã được submit
+
+    // Kiểm tra nếu các trường bị bỏ trống
+    if (!supplierName || !contactName || !phoneNumber || !email || !address) {
+      toast.error("Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
+
     try {
       const supplierData = {
         supplierName,
@@ -27,16 +35,29 @@ const AddSupplier = () => {
         email,  
         address,
       };
+      
+      console.log('Adding Supplier', supplierData); // Log API call
+
+      // Gọi API để thêm nhà cung cấp
       await addSupplier(supplierData);
-      console.log('Supplier added successfully');
+      toast.success("Nhà cung cấp đã được thêm thành công!");
+
+      // Đặt lại các trường nhập liệu về rỗng
       setSupplierName("");
       setContactName("");
       setPhoneNumber("");
       setEmail("");
       setAddress("");
-      setNavigate(true); // Trigger navigation
+
+      console.log('Navigating to list page'); // Log điều hướng
+
+      // Điều hướng đến trang quản lý nhà cung cấp sau 2 giây
+      setTimeout(() => {
+        router.push("/dashboard/quanly-nha-cungcap");
+      }, 2000);
     } catch (error) {
-      console.error('Error adding supplier:', error.message);
+      console.error("Lỗi khi thêm nhà cung cấp:", error.message);
+      toast.error("Lỗi khi thêm nhà cung cấp!");
     }
   };
 
@@ -46,7 +67,7 @@ const AddSupplier = () => {
         <div className="flex items-center justify-between mb-6">
           <button
             type="button"
-            onClick={() => setNavigate(true)}
+            onClick={() => router.push("/dashboard/quanly-nha-cungcap")}
             className="text-blue-600 hover:text-blue-800"
           >
             <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
@@ -56,7 +77,7 @@ const AddSupplier = () => {
           </h2>
         </div>
 
-        {/* Supplier Name */}
+        {/* Tên nhà cung cấp */}
         <div>
           <label htmlFor="supplierName" className="block text-sm font-medium text-white/50 mb-2">
             Tên nhà cung cấp
@@ -71,7 +92,7 @@ const AddSupplier = () => {
           />
         </div>
 
-        {/* Contact Name */}
+        {/* Tên người liên hệ */}
         <div>
           <label htmlFor="contactName" className="block text-sm font-medium text-white/50 mb-2">
             Tên người liên hệ
@@ -86,7 +107,7 @@ const AddSupplier = () => {
           />
         </div>
 
-        {/* Phone Number */}
+        {/* Số điện thoại */}
         <div>
           <label htmlFor="phoneNumber" className="block text-sm font-medium text-white/50 mb-2">
             Số điện thoại
@@ -116,7 +137,7 @@ const AddSupplier = () => {
           />
         </div>
 
-        {/* Address */}
+        {/* Địa chỉ */}
         <div>
           <label htmlFor="address" className="block text-sm font-medium text-white/50 mb-2">
             Địa chỉ
