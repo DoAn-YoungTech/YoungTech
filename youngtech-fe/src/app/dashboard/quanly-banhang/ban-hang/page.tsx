@@ -4,7 +4,10 @@ import ListProductsChoose from "@/components/dashboard/sell/listProductChoose/li
 import { LiaAmazonPay } from "react-icons/lia";
 import ColProduct from "@/components/dashboard/sell/listProductChoose/ColProduct";
 import DynamicCardsVariant2 from "@/components/dashboard/payment/chooseMethod";
+import EnterOrder from "@/components/dashboard/sell/enterOrder/enterOrder";
+ 
 const page = () => {
+  
   interface ListProductChoose {
     id: number;
     nameProduct: string;
@@ -38,7 +41,8 @@ const page = () => {
     }
   ];
   return (
-    <div>
+    <> 
+ 
       <header className="mb-5">
         <h2 className="text-white/90 font-bold text-[1.2rem]">BÁN HÀNG</h2>
       </header>
@@ -53,12 +57,8 @@ const page = () => {
             <div className="enterOrder bg-[#282F36] rounded-xl p-4">
               <ShinyRotatingBorderButton>
                 Chọn sản phẩm
-              </ShinyRotatingBorderButton>
-              <ColProduct />
-              {/* list product choose */}
-              {listProductsChoose.map((product, index) => (
-                <ListProductsChoose key={index} product={product} />
-              ))}
+              </ShinyRotatingBorderButton> 
+               <EnterOrder/>
             </div>
             <div className="bg-[#282F36] rounded-xl ">
               <div className="flex items-center justify-between rounded-tl-xl rounded-tr-xl p-4 bg-[#2F3943]">
@@ -75,7 +75,7 @@ const page = () => {
         </div>
         {/*  */}
       </div>
-    </div>
+    </>
   );
 };
 

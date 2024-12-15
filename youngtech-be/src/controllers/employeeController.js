@@ -56,8 +56,7 @@ const employeeController = {
       // create account employee
       const dataAccount = req.body;
       const { userName, email, password, ...dataEmployee } = dataAccount;
-      // check user name exist
-
+      // check user name exist 
       // check email exist
       const checkEmailExist = await authService.findUserByEmail(email);
 
@@ -88,6 +87,7 @@ const employeeController = {
         email,
         hashPassword
       );
+      console.log(newAccount)
       if (!newAccount) {
         return res
           .status(403)

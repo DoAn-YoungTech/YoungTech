@@ -10,8 +10,7 @@ export default function Home() {
     <div className="w-full banner">
       <Carousels/>
     </div>
-     <div className="w-[90%] m-auto">
-    
+     <div className="w-[90%] m-auto"> 
      <MainHome/>
      </div>
     </>

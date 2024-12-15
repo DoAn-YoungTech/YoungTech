@@ -3,7 +3,7 @@ const imageRepository = require('./imageRepository');
 
 const productRepository = {
     getAllProduct: async ({ offset, limit }) => {
-        let query = `SELECT * FROM product`; // Lấy tất cả sản phẩm
+        let query = `SELECT * FROM product WHERE flag = true AND productRetailPrice IS NOT NULL`; // Lấy tất cả sản phẩm
         let replacements = {};
     
         // Kiểm tra nếu có limit
@@ -28,11 +28,11 @@ const productRepository = {
         let totalItems = 0;
     
         // Nếu có limit, tính tổng số sản phẩm để tính tổng số trang
-        if (limit) {
+        
             const totalQuery = `SELECT COUNT(*) AS totalItems FROM product`;
             const [totalResult] = await sequelize.query(totalQuery);
             totalItems = totalResult[0].totalItems;
-        }
+        
 
         // Nhóm các hình ảnh lại theo product_id
         const productsWithImages = await Promise.all(
@@ -102,86 +102,116 @@ const productRepository = {
     
 
     // Thêm hàm mới để lấy sản phẩm theo childCategory_id
-    getProductByChildCategory: async ({ childCategoryId, limit, offset }) => {
-        try {
+  getProductByChildCategory: async ({ childCategoryId, limit, offset }) => {
+      try {
           // Câu truy vấn chính để lấy danh sách sản phẩm
           const query = `
-            SELECT * 
-            FROM product 
-            WHERE childCategory_id = :childCategoryId
-            ${limit ? 'LIMIT :limit OFFSET :offset' : ''}
-          `;
-      
+    SELECT * 
+    FROM product 
+    WHERE childCategory_id = :childCategoryId 
+      AND flag = true 
+      AND productRetailPrice IS NOT NULL
+    ${limit ? 'LIMIT :limit OFFSET :offset' : ''}
+`;
+  
           // Câu truy vấn phụ để tính tổng số sản phẩm
           const countQuery = `
-            SELECT COUNT(*) as totalItems 
-            FROM product 
-            WHERE childCategory_id = :childCategoryId
+             SELECT COUNT(*) as totalItems 
+             FROM product 
+             WHERE childCategory_id = :childCategoryId 
+             AND flag = true 
+             AND productRetailPrice IS NOT NULL;
           `;
-      
+  
           // Thực thi câu truy vấn chính
           const [result] = await sequelize.query(query, {
-            replacements: {
-              childCategoryId,
-              limit,
-              offset,
-            },
+              replacements: {
+                  childCategoryId,
+                  limit,
+                  offset,
+              },
           });
-      
+  
           // Thực thi câu truy vấn để lấy tổng số sản phẩm
           const [countResult] = await sequelize.query(countQuery, {
-            replacements: { childCategoryId },
+              replacements: { childCategoryId },
           });
-      
+  
+          // Nhóm các hình ảnh lại theo product_id
+          const productsWithImages = await Promise.all(
+              result.map(async (product) => {
+                  const imagesByProductId = await imageRepository.getAllImagesByProductId(product.id);
+                  return { ...product, images: imagesByProductId };
+              })
+          );
+  
           // Trả về kết quả
           return {
-            data: result, // Danh sách sản phẩm
-            totalItems: countResult[0].totalItems, // Tổng số sản phẩm
+              data: productsWithImages, // Danh sách sản phẩm kèm hình ảnh
+              totalItems: countResult[0].totalItems, // Tổng số sản phẩm
           };
-        } catch (error) {
+      } catch (error) {
           console.error('Error in getProductByChildCategory:', error);
           throw error; // Ném lỗi ra ngoài để controller xử lý
-        }
-      },
+      }
+  },
       
-    getProductByParentCategory: async ({ parentCategoryId, limit = null,offset = null }) => {
+  getProductByParentCategory: async ({ parentCategoryId, limit = null, offset = null }) => {
+    try {
         // Khởi tạo câu truy vấn cơ bản để lấy dữ liệu sản phẩm
         let query = `
-          SELECT p.*
-          FROM product p
-          JOIN childcategories c ON p.childCategory_id = c.id
-          WHERE c.parentCategory_id = :parentCategoryId
+          SELECT p.* 
+          FROM product p 
+          JOIN childcategories c ON p.childCategory_id = c.id 
+          WHERE c.parentCategory_id = :parentCategoryId 
+          AND p.flag = true 
+          AND p.productRetailPrice IS NOT NULL;
         `;
-      
+
         // Nếu có limit và offset, thêm các điều kiện phân trang
         if (limit) {
-          query += offset !== null ? ` LIMIT :limit OFFSET :offset` : ` LIMIT :limit`;
+            query += offset !== null ? ` LIMIT :limit OFFSET :offset` : ` LIMIT :limit`;
         }
-      
+
         // Khởi tạo truy vấn để tính tổng số sản phẩm
         const totalCountQuery = `
           SELECT COUNT(*) as total
           FROM product p
           JOIN childcategories c ON p.childCategory_id = c.id
-          WHERE c.parentCategory_id = :parentCategoryId
+          WHERE c.parentCategory_id = :parentCategoryId 
+          AND p.flag = true 
+          AND p.productRetailPrice IS NOT NULL;
         `;
-      
+
         // Thực thi truy vấn lấy danh sách sản phẩm
         const [result] = await sequelize.query(query, {
-          replacements: { parentCategoryId, limit, offset },
+            replacements: { parentCategoryId, limit, offset },
         });
-      
+
         // Thực thi truy vấn để lấy tổng số sản phẩm
         const [[totalCount]] = await sequelize.query(totalCountQuery, {
-          replacements: { parentCategoryId },
+            replacements: { parentCategoryId },
         });
-      
+
+        // Nhóm các hình ảnh lại theo product_id
+        const productsWithImages = await Promise.all(
+            result.map(async (product) => {
+                const imagesByProductId = await imageRepository.getAllImagesByProductId(product.id);
+                return { ...product, images: imagesByProductId };
+            })
+        );
+
         // Trả về dữ liệu theo định dạng yêu cầu
         return {
-          data: result, // Danh sách sản phẩm
-          totalItems: totalCount.total, // Tổng số sản phẩm
+            data: productsWithImages, // Danh sách sản phẩm kèm hình ảnh
+            totalItems: totalCount.total, // Tổng số sản phẩm
         };
-      },
+    } catch (error) {
+        console.error('Error in getProductByParentCategory:', error);
+        throw error; // Ném lỗi ra ngoài để controller xử lý
+    }
+},
+
       
     
     

@@ -1,13 +1,14 @@
 'use client';
 
 import { Provider } from 'react-redux';
-import { store } from '@/redux/Store';
+import { persistor, store } from '@/redux/Store';
 import { SessionProvider } from "next-auth/react";
 import useAuthSync from "@/hooks/useAuthSync";
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { PersistGate } from 'redux-persist/integration/react';
 
 export function ReduxProvider({ pageProps, children }: { pageProps: any; children: React.ReactNode }) {
   const session = pageProps?.session || null; // Kiểm tra session có tồn tại không
@@ -19,9 +20,11 @@ export function ReduxProvider({ pageProps, children }: { pageProps: any; childre
     <SessionProvider session={session}>
       <QueryClientProvider  client={queryClient}>
       <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor} >
         <AuthSyncWrapper>
           {children}
         </AuthSyncWrapper>
+        </PersistGate>
       </Provider>
       </QueryClientProvider>
     </SessionProvider>
