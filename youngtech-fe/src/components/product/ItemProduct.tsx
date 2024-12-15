@@ -24,6 +24,6 @@ export const ItemProduct = ({item}) => {
       
       }
       const formattedPrice = new Intl.NumberFormat('de-DE').format(item.productRetailPrice);
-    return (    
-  )
+  //   return (    
+  // )
 }

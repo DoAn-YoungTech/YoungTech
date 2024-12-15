@@ -5,12 +5,15 @@ import { SearchBar } from "@/components/dashboard/SearchBar";
 import {
   SidebarInset,
   SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
 <>
  <SidebarProvider className="bg-[#22282E]">
+ <ToastContainer />
  <SiderbarAdmin/>
  <SidebarInset > 
   <HeaderAdmin/>
