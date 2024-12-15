@@ -1,187 +1,153 @@
-'use client'
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+"use client";
 
-export default function UpdateUserForm() {
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { getEmployeeById, updateEmployee } from "@/services/employee/EmployeeService";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import UploadImage from "@/components/UploadImage/UploadImgEmployee";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// Schema xác thực
+const schema = yup.object({
+  userName: yup.string().required("Tên tài khoản là bắt buộc"),
+  email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
+  fullName: yup.string().required("Tên đầy đủ là bắt buộc"),
+  phoneNumber: yup
+    .string()
+    .matches(/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ")
+    .required("Số điện thoại là bắt buộc"),
+  position: yup.string().required("Chức vụ là bắt buộc"),
+  profilePicture: yup.string().required("Ảnh đại diện là bắt buộc"),
+});
+
+// Các trường dữ liệu
+const fields = [
+  { label: "Tên tài khoản", name: "userName", type: "text" },
+  { label: "Email", name: "email", type: "email" },
+  { label: "Tên đầy đủ", name: "fullName", type: "text" },
+  { label: "Số điện thoại", name: "phoneNumber", type: "text" },
+  { label: "Chức vụ", name: "position", type: "text" },
+];
+
+const UpdateEmployee = () => {
+  const { id } = useParams();
   const router = useRouter();
-  const [id, setId] = useState(null); // Lưu accountId
-  const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
-    password: '',
-    fullName: '',
-    phoneNumber: '',
-    position: '',
-    profilePicture: '',
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const formik = useFormik({
+    initialValues: {
+      userName: "",
+      email: "",
+      fullName: "",
+      phoneNumber: "",
+      position: "",
+      profilePicture: "",
+    },
+    validationSchema: schema,
+    onSubmit: async (values) => {
+      setError("");
+      try {
+        await updateEmployee(id, values);
+        toast.success("Cập nhật thông tin nhân viên thành công!");
+        router.push("/dashboard/quanly-nhanvien");
+      } catch (err) {
+        const errorMsg = err.message || "Có lỗi xảy ra khi cập nhật";
+        toast.error(errorMsg);
+        setError(errorMsg);
+      }
+    },
   });
 
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
-
-  useEffect(() => {
-    if (router.isReady) {
-      setId(router.query.id); // Lấy accountId từ URL
-    }
-  }, [router.isReady, router.query.id]);
-
-  // Hàm xử lý khi thay đổi input
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Hàm xử lý khi submit form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!id) {
-      setMessage('Account ID is not available!');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await fetch(`http://localhost:8080/api/employees/updateInformationEmployee/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update employee information');
-      }
-
-      const data = await response.json();
-      setMessage('Employee information updated successfully!');
-      console.log(data);
-    } catch (error) {
-      setMessage(`Error: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Lấy dữ liệu ban đầu của nhân viên
   useEffect(() => {
     if (id) {
-      const fetchUserData = async () => {
+      const fetchEmployee = async () => {
         try {
-          setLoading(true);
-          const response = await fetch(`http://localhost:8080/api/employees/viewOnlyEmployee/${id}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch employee data');
-          }
-          const data = await response.json();
-          setFormData(data); // Điền dữ liệu vào form
-        } catch (error) {
-          setMessage(`Error: ${error.message}`);
+          const response = await getEmployeeById(id);
+          const data = response.message;
+
+          formik.setValues({
+            userName: data?.userName || "",
+            email: data?.email || "",
+            fullName: data?.fullName || "",
+            phoneNumber: data?.phoneNumber || "",
+            position: data?.position || "",
+            profilePicture: data?.profilePicture || "",
+          });
+        } catch (err) {
+          toast.error("Không thể tải dữ liệu nhân viên");
+          setError("Không thể tải dữ liệu nhân viên");
         } finally {
           setLoading(false);
         }
       };
-      fetchUserData();
+
+      fetchEmployee();
+    } else {
+      toast.error("Không tìm thấy ID nhân viên");
+      setError("Không tìm thấy ID nhân viên");
+      setLoading(false);
     }
   }, [id]);
 
+  // Hàm xử lý khi ảnh được tải lên
+  const handleGetArrayImage = (imageArray) => {
+    if (Array.isArray(imageArray) && imageArray.length > 0) {
+      const imageUrl = imageArray[0]?.url || ""; // Lấy URL đầu tiên từ mảng
+      formik.setFieldValue("profilePicture", imageUrl); // Cập nhật giá trị
+    }
+  };
+  
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
-      <h1 className="text-2xl font-bold text-center mb-6">Update Employee Information</h1>
+    <div className="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
+      <h1 className="text-3xl font-bold mb-6">Cập nhật thông tin nhân viên</h1>
+      {error && <p className="mb-4 text-red-600">{error}</p>}
       {loading ? (
-        <p className="text-center text-blue-500">Loading...</p>
+        <p className="text-center">Đang tải dữ liệu...</p>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex flex-col">
-            <label className="font-medium">Username</label>
-            <input
-              type="text"
-              name="userName"
-              value={formData.userName}
-              onChange={handleChange}
-              required
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Phone Number</label>
-            <input
-              type="text"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              required
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Position</label>
-            <input
-              type="text"
-              name="position"
-              value={formData.position}
-              onChange={handleChange}
-              required
-              className="border rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="font-medium">Profile Picture (URL)</label>
-            <input
-              type="text"
-              name="profilePicture"
-              value={formData.profilePicture}
-              onChange={handleChange}
-              className="border rounded-md p-2"
-            />
+        <form onSubmit={formik.handleSubmit} className="space-y-6">
+          {fields.map(({ label, name, type }) => (
+            <div key={name} className="mb-4">
+              <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+                {label}
+              </label>
+              <input
+                id={name}
+                name={name}
+                type={type}
+                value={formik.values[name]}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+              {formik.touched[name] && formik.errors[name] && (
+                <p className="mt-1 text-sm text-red-600">{formik.errors[name]}</p>
+              )}
+            </div>
+          ))}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Ảnh đại diện</label>
+            <UploadImage 
+  handleGetArrayImage={handleGetArrayImage} 
+  initialImage={formik.values.profilePicture} 
+/>
+            {formik.errors.profilePicture && formik.touched.profilePicture && (
+              <p className="mt-1 text-sm text-red-600">{formik.errors.profilePicture}</p>
+            )}
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-            disabled={loading}
+            className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            {loading ? 'Updating...' : 'Update'}
+            Cập nhật
           </button>
         </form>
       )}
-      {message && (
-        <p className={`text-center mt-4 ${message.startsWith('Error') ? 'text-red-500' : 'text-green-500'}`}>
-          {message}
-        </p>
-      )}
     </div>
   );
-}
+};
+
+export default UpdateEmployee;

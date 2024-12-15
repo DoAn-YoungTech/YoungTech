@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { AiOutlineCamera } from "react-icons/ai";
 import { GoCheckCircleFill } from "react-icons/go";
@@ -7,13 +7,20 @@ import { toast } from "react-toastify";
 
 interface UploadImageProps {
   handleGetArrayImage: (urls: { url: string; public_id: string }[]) => void;
+  initialImage?: string | null; // Cho phép truyền URL ảnh cũ
 }
 
-const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
+const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage, initialImage }) => {
   const [images, setImages] = useState<File[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [publicId, setPublicId] = useState<string | null>(null); // Store Cloudinary public_id
+
+  useEffect(() => {
+    if (initialImage) {
+      setImageUrl(initialImage); // Nếu có ảnh cũ, set giá trị vào state
+    }
+  }, [initialImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

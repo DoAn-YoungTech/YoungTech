@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import { getEmployees, deleteEmployee } from "@/services/employee/EmployeeService";
 import { toast } from "react-toastify";
 import { FaEye, FaTrashAlt, FaEdit } from "react-icons/fa";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Paginator } from "primereact/paginator";
-import Image from "next/image"; // Import Image từ Next.js
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import Image from "next/image";
 
 const ListEmployees = () => {
   const [employees, setEmployees] = useState<any[]>([]);
@@ -18,7 +19,7 @@ const ListEmployees = () => {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(5);
 
-  const router = useRouter(); // Khởi tạo useRouter
+  const router = useRouter();
 
   const searchOptions = [
     { label: "Tên", value: "fullName" },
@@ -50,16 +51,34 @@ const ListEmployees = () => {
     );
   }, [searchTerm, searchField, employees]);
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Xác nhận xóa?")) {
-      try {
-        await deleteEmployee(id);
-        setEmployees(employees.filter((emp) => emp.id !== id));
-        toast.success("Xóa thành công!");
-      } catch {
-        toast.error("Xóa thất bại, vui lòng thử lại.");
-      }
+  const acceptDelete = async (id: string) => {
+    try {
+      await deleteEmployee(id);
+      setEmployees(employees.filter((emp) => emp.id !== id));
+      setFilteredEmployees(filteredEmployees.filter((emp) => emp.id !== id));
+      toast.success("Xóa thành công!");
+    } catch {
+      toast.error("Xóa thất bại, vui lòng thử lại.");
     }
+  };
+
+  const rejectDelete = () => {
+    toast.warn("Bạn đã hủy hành động");
+  };
+
+  const handleDelete = (id: string) => {
+    confirmDialog({
+      group: "templating",
+      header: "Xác nhận",
+      message: (
+        <div className="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+          <i className="pi pi-exclamation-circle text-6xl text-primary-500"></i>
+          <span>Bạn có chắc chắn muốn xóa nhân viên này?</span>
+        </div>
+      ),
+      accept: () => acceptDelete(id),
+      reject: rejectDelete,
+    });
   };
 
   const handleEdit = (id: string) => {
@@ -75,10 +94,10 @@ const ListEmployees = () => {
       <td className="p-4">{employee.fullName}</td>
       <td className="p-4">
         <Image
-          src={employee.profilePicture || "/default-avatar.png"} // Đường dẫn ảnh mặc định nếu không có profilePicture
+          src={employee.profilePicture || "/default-avatar.png"}
           alt="Avatar"
-          width={48} // Chiều rộng cố định
-          height={48} // Chiều cao cố định
+          width={48}
+          height={48}
           className="rounded-full"
         />
       </td>
@@ -97,7 +116,7 @@ const ListEmployees = () => {
         <FaEdit
           className="text-green-500 hover:text-green-300 cursor-pointer"
           title="Sửa"
-          onClick={() => handleEdit(employee.id)} // Gọi hàm handleEdit
+          onClick={() => handleEdit(employee.id)}
         />
       </td>
     </tr>
@@ -109,6 +128,7 @@ const ListEmployees = () => {
 
   return (
     <div className="p-4 text-white">
+      <ConfirmDialog group="templating" />
       <h1 className="text-xl font-bold mb-4">Danh sách nhân viên</h1>
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <InputText

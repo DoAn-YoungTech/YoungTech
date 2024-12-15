@@ -18,7 +18,7 @@ employeeRouter.get(
 );
 
 employeeRouter.put(
-  '/updateInformationEmployee/:accountId',
+  '/updateInformationEmployee/:employeeId',
   // middlewareController.verifyToken,
   // middlewareController.verifyTokenAndRole(['admin']),
   employeeController.updateInformationEmployee

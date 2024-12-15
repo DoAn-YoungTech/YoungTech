@@ -26,9 +26,9 @@ export const getEmployees = async () => {
   }
 };
 
-export const getEmployeeById = async (id: string) => {
+export const getEmployeeById = async (accountID: string) => {
   try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/employees/viewOnlyEmployee/${id}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/employees/viewOnlyEmployee/${accountID}`);
       return response.data;
   } catch (error: any) {
       console.error('Error fetching employee by ID:', error.response?.data || error.message);

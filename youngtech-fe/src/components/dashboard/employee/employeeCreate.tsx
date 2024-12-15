@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import UploadImage from "@/components/UploadImage/UploadImgEmployee";
 import { createEmployee } from "@/services/employee/EmployeeService";
+import { getRoles } from "@/services/role/RoleService";
 
 const schema = yup.object({
   userName: yup.string().required("Tên tài khoản là bắt buộc"),
@@ -22,6 +23,8 @@ const schema = yup.object({
 
 const AddEmployeeForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const [roles, setRoles] = useState<{ id: number; roleName: string }[]>([]); // State lưu danh sách chức vụ
+
   const {
     register,
     handleSubmit,
@@ -30,6 +33,27 @@ const AddEmployeeForm: React.FC = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  // Lấy danh sách chức vụ từ API
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const rolesData = await getRoles();
+        console.log("Dữ liệu chức vụ:", rolesData); // Kiểm tra dữ liệu trả về
+        if (rolesData && Array.isArray(rolesData.result)) {
+          setRoles(rolesData.result);
+        } else {
+          throw new Error("Dữ liệu chức vụ không hợp lệ");
+        }
+      } catch (error: any) {
+        toast.error("Lỗi khi tải danh sách chức vụ!");
+        console.error("Lỗi chi tiết:", error.response?.data || error.message);
+      }
+    };
+  
+    fetchRoles();
+  }, []);
+  
 
   const handleGetArrayImage = (newUrls: { url: string; public_id: string }[]) => {
     if (newUrls.length > 0) {
@@ -54,8 +78,7 @@ const AddEmployeeForm: React.FC = () => {
       <h2 className="text-2xl font-semibold mb-4 text-center">Thêm nhân viên</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            { label: "Tên tài khoản", name: "userName", type: "text", placeholder: "Tên tài khoản" },
+          {[{ label: "Tên tài khoản", name: "userName", type: "text", placeholder: "Tên tài khoản" },
             { label: "Email", name: "email", type: "email", placeholder: "Email" },
             { label: "Mật khẩu", name: "password", type: "password", placeholder: "Mật khẩu" },
             { label: "Tên đầy đủ", name: "fullName", type: "text", placeholder: "Tên đầy đủ" },
@@ -70,9 +93,15 @@ const AddEmployeeForm: React.FC = () => {
                   className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-700"
                 >
                   <option value="">Chọn chức vụ</option>
-                  <option value="storekeeper">Storekeeper</option>
-                  <option value="salesperson">Sales</option>
-                  <option value="businessEmployee">Business Employee</option>
+                  {roles.length > 0 ? (
+                    roles.map((role) => (
+                      <option key={role.id} value={role.roleName}>
+                        {role.roleName}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="">Không có chức vụ nào</option>
+                  )}
                 </select>
               ) : (
                 <input
@@ -88,7 +117,7 @@ const AddEmployeeForm: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm ont-medium mb-1">Ảnh đại diện</label>
+          <label className="block text-sm font-medium mb-1">Ảnh đại diện</label>
           <UploadImage handleGetArrayImage={handleGetArrayImage} />
           {errors.profilePicture && <p className="text-red-500 text-xs mt-1">{errors.profilePicture?.message}</p>}
         </div>
