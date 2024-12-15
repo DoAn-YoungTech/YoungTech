@@ -7,6 +7,8 @@ import * as yup from "yup";
 import UploadImage from "@/components/UploadImage/UploadImgEmployee";
 import { createEmployee } from "@/services/employee/EmployeeService";
 import { getRoles } from "@/services/role/RoleService";
+import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { useRouter } from "next/navigation";
 
 const schema = yup.object({
   userName: yup.string().required("Tên tài khoản là bắt buộc"),
@@ -24,7 +26,7 @@ const schema = yup.object({
 const AddEmployeeForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<{ id: number; roleName: string }[]>([]); // State lưu danh sách chức vụ
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -50,12 +52,13 @@ const AddEmployeeForm: React.FC = () => {
         console.error("Lỗi chi tiết:", error.response?.data || error.message);
       }
     };
-  
+
     fetchRoles();
   }, []);
-  
 
-  const handleGetArrayImage = (newUrls: { url: string; public_id: string }[]) => {
+  const handleGetArrayImage = (
+    newUrls: { url: string; public_id: string }[]
+  ) => {
     if (newUrls.length > 0) {
       setValue("profilePicture", newUrls[0].url);
     }
@@ -74,23 +77,65 @@ const AddEmployeeForm: React.FC = () => {
   };
 
   return (
-    <div className="p-4 bg-gray-900 text-white rounded-md">
-      <h2 className="text-2xl font-semibold mb-4 text-center">Thêm nhân viên</h2>
+    <div className="p-4 bg-[#282F36] text-white rounded-md">
+      <div className="p-4 relative flex items-center mb-6">
+        <ShinyRotatingBorderButton
+          onClick={() => router.push("/dashboard/quanly-nhanvien")}
+          className="absolute left-0 text-center text-blue-600 hover:text-blue-800"
+        >
+          Quay lại
+        </ShinyRotatingBorderButton>
+
+        <h2 className="absolute inset-x-0 text-center text-2xl font-semibold">
+          Thêm nhân viên
+        </h2>
+      </div>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[{ label: "Tên tài khoản", name: "userName", type: "text", placeholder: "Tên tài khoản" },
-            { label: "Email", name: "email", type: "email", placeholder: "Email" },
-            { label: "Mật khẩu", name: "password", type: "password", placeholder: "Mật khẩu" },
-            { label: "Tên đầy đủ", name: "fullName", type: "text", placeholder: "Tên đầy đủ" },
-            { label: "Số điện thoại", name: "phoneNumber", type: "text", placeholder: "Số điện thoại" },
-            { label: "Chức vụ", name: "position", type: "select", placeholder: "" },
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white/50">
+          {[
+            {
+              label: "Tên tài khoản",
+              name: "userName",
+              type: "text",
+              placeholder: "Tên tài khoản",
+            },
+            {
+              label: "Email",
+              name: "email",
+              type: "email",
+              placeholder: "Email",
+            },
+            {
+              label: "Mật khẩu",
+              name: "password",
+              type: "password",
+              placeholder: "Mật khẩu",
+            },
+            {
+              label: "Tên đầy đủ",
+              name: "fullName",
+              type: "text",
+              placeholder: "Tên đầy đủ",
+            },
+            {
+              label: "Số điện thoại",
+              name: "phoneNumber",
+              type: "text",
+              placeholder: "Số điện thoại",
+            },
+            {
+              label: "Chức vụ",
+              name: "position",
+              type: "select",
+              placeholder: "",
+            },
           ].map(({ label, name, type, placeholder }) => (
             <div key={name}>
               <label className="block text-sm font-medium mb-1">{label}</label>
               {type === "select" ? (
                 <select
                   {...register(name)}
-                  className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-700"
+                  className="w-full px-3 py-2 rounded bg-[#282F36] text-white border border-gray-700"
                 >
                   <option value="">Chọn chức vụ</option>
                   {roles.length > 0 ? (
@@ -108,28 +153,38 @@ const AddEmployeeForm: React.FC = () => {
                   {...register(name)}
                   type={type}
                   placeholder={placeholder}
-                  className="w-full px-3 py-2 rounded bg-gray-800 text-white border border-gray-700"
+                  className="w-full px-3 py-2 rounded bg-[#282F36] text-white border border-gray-700"
                 />
               )}
-              {errors[name] && <p className="text-red-500 text-xs mt-1">{errors[name]?.message}</p>}
+              {errors[name] && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors[name]?.message}
+                </p>
+              )}
             </div>
           ))}
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Ảnh đại diện</label>
+          <label className="block text-sm text-white/50 font-medium mb-1">
+            Ảnh đại diện
+          </label>
           <UploadImage handleGetArrayImage={handleGetArrayImage} />
-          {errors.profilePicture && <p className="text-red-500 text-xs mt-1">{errors.profilePicture?.message}</p>}
+          {errors.profilePicture && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.profilePicture?.message}
+            </p>
+          )}
         </div>
 
         <div className="flex justify-end">
-          <button
+          <ShinyRotatingBorderButton
             type="submit"
-            className={`px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 ${loading && "cursor-wait"}`}
+            className={`${loading && "cursor-wait"}`}
             disabled={loading}
           >
             {loading ? "Đang xử lý..." : "Thêm nhân viên"}
-          </button>
+          </ShinyRotatingBorderButton>
         </div>
       </form>
     </div>

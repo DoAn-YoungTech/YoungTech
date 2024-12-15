@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getEmployeeById, updateEmployee } from "@/services/employee/EmployeeService";
+import {
+  getEmployeeById,
+  updateEmployee,
+} from "@/services/employee/EmployeeService";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import UploadImage from "@/components/UploadImage/UploadImgEmployee";
@@ -99,7 +102,6 @@ const UpdateEmployee = () => {
       formik.setFieldValue("profilePicture", imageUrl); // Cập nhật giá trị
     }
   };
-  
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
@@ -111,7 +113,10 @@ const UpdateEmployee = () => {
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {fields.map(({ label, name, type }) => (
             <div key={name} className="mb-4">
-              <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor={name}
+                className="block text-sm font-medium text-gray-700"
+              >
                 {label}
               </label>
               <input
@@ -124,18 +129,24 @@ const UpdateEmployee = () => {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               />
               {formik.touched[name] && formik.errors[name] && (
-                <p className="mt-1 text-sm text-red-600">{formik.errors[name]}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {formik.errors[name]}
+                </p>
               )}
             </div>
           ))}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Ảnh đại diện</label>
-            <UploadImage 
-  handleGetArrayImage={handleGetArrayImage} 
-  initialImage={formik.values.profilePicture} 
-/>
+            <label className="block text-sm font-medium text-gray-700">
+              Ảnh đại diện
+            </label>
+            <UploadImage
+              handleGetArrayImage={handleGetArrayImage}
+              initialImage={formik.values.profilePicture}
+            />
             {formik.errors.profilePicture && formik.touched.profilePicture && (
-              <p className="mt-1 text-sm text-red-600">{formik.errors.profilePicture}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {formik.errors.profilePicture}
+              </p>
             )}
           </div>
           <button
