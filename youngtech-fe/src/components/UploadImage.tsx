@@ -65,6 +65,8 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
             })
         )
       );
+
+      console.log(base64Files, base64Files)
       // Send base64 files to the API
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -78,10 +80,8 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
       if (response.ok) {
         const imageUrls = data.urls.map((item: { url: string }) => item.url);
 
-        const imagesAvailable = imagePreviews.filter((item: string) => item.startsWith('http'))
-        
         // Append new uploaded images to the existing ones
-        setUploadedImages((prevImages) => [...prevImages, ...imageUrls, ...imagesAvailable]);
+        setUploadedImages((prevImages) => [...prevImages, ...imageUrls]);
         
         handleGetArrayImage(imageUrls); // Update parent component with uploaded image URLs
         setImagePreviews([]); // Clear the previews after upload
@@ -104,7 +104,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
         <input
           type="file"
           onChange={handleFileChange}
-          accept="image/*"
+          accept=".pdf,image/*"
           multiple
           className="block w-full text-sm text-gray-500 
             file:mr-4 file:py-2 file:px-4

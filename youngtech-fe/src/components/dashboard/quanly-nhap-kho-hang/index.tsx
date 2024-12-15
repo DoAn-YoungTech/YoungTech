@@ -143,9 +143,6 @@ export default function WarehouseManagement() {
       setValue('images',urlsImage )
     }
   },[urlsImage])
-  console.log('123', urlsImage)
-
-
 
   return (
     // <div className="flex items-center justify-center min-h-screen bg-gray-50">

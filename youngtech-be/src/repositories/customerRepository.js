@@ -4,13 +4,36 @@ const customerController = require('../controllers/customerController');
 const customerRepository = {
   // all customer , only admin can viewing them
 
-  getAllCustomers: async () => {
-    const query = `SELECT * FROM customer WHERE flag = ${true}`;
-
-    const [results] = await sequelize.query(query);
-
-    return results;
+  getAllCustomers : async () => {
+    try {
+      // Viết native SQL query để JOIN Customer và Account
+      const query = `
+        SELECT
+          c.id,
+          c.fullName,
+          c.phoneNumber,
+          c.address,
+          c.account_id,
+          c.flag,
+          a.email
+        FROM
+          Customer c
+        LEFT JOIN
+          Account a ON c.account_id = a.id
+        WHERE
+          c.flag = true
+      `;
+  
+      // Thực thi truy vấn SQL
+      const [results] = await sequelize.query(query);
+  
+      return results;
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      throw error;
+    }
   },
+  
 
   // addInformationByAccount
   addInformationByAccount: async (data, accountId) => {
