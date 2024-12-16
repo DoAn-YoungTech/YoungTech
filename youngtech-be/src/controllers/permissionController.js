@@ -35,7 +35,7 @@ const PermissionController = {
 
     // role Admin has all permission => CRUD [PersonInformation management, Employee management, Sales management, Business management , viewListOrder , viewProduct information , Supplier management , warehouse management ]
 
-    // role Sales person has permission for Sales Management  => [READ , Create ] .
+    // role Sales person has permission for Sales Management  => [READ , Create] .
     // role Sales person has permission for Person information Management  => [READ , Update ] .
 
     // role Business employee has permission for Person information Management  => [READ , Update ] .
@@ -52,26 +52,26 @@ const PermissionController = {
     // role Customer has permission for View Cart Management  => [READ , Update , Create = Add product  , Delete ]
     // create default
 
-    // const roleName = 'admin';
-    // const roleName = 'storekeeper';
+    //  const roleName = 'admin';
+       const roleName = 'storekeeper';
     // const roleName = 'businessEmployee';
     // const roleName = 'salesperson';
-        const roleName = 'customer';
-      //  const roleName = 'user';
-
+    // const roleName = 'customer';
+    //  const roleName = 'user'; 
     const getRoleId = await PermissionService.getRoleId(roleName);
     if (!getRoleId) {
       return res.status(404).json({ message: 'Role not found !' });
     }
+    
     // [1-create , 2-read , 3-update , 4-delete]
 
     //  const permissionId = [1,2,3,4]; const module = 'all' // admin
 
-    // const permissionId = [2, 3]; const module = 'PersonInformation_Management' // storekeeper
-    // const permissionId = [2]; const module = 'ViewProduct_information' // storekeeper
+      //  const permissionId = [2, 3]; const module = 'PersonInformation_Management' // storekeeper
+       const permissionId = [2]; const module = 'ViewProduct_information' // storekeeper
 
     // const permissionId = [2, 3] ; const module ='PersonInformation_Management'  // businessEmployee
-    // const permissionId = [1 , 2, 3] ; const module ='Business_Management' // businessEmployee
+      //  const permissionId = [1,2, 3] ; const module ='Business_Management' // businessEmployee
     // const permissionId = [2] ; const module ='ViewProduct_information' // businessEmployee
     // const permissionId = [2] ; const module ='Supplier_Management' // businessEmployee
 
@@ -81,7 +81,7 @@ const PermissionController = {
       // const permissionId = [2, 3] ; const module ='PersonInformation_Management' // customer
     //  const permissionId = [2] ; const module ='ViewProduct_information' // customer
     // const permissionId = [1,2,3,4] ; const module ='Order_Management' // customer
-    const permissionId = [1,2,3,4] ; const module ='Cart_Management' // customer
+    // const permissionId = [1,2,3,4] ; const module ='Cart_Management' // customer
 
     // const permissionId = [1, 2, 3];  const module = 'PersonInformation_Management' // user
 
@@ -90,6 +90,7 @@ const PermissionController = {
       permissionId,
       module
     );
+
 
     if (!addPermission) {
       return res.status(403).json({ message: 'fail' });

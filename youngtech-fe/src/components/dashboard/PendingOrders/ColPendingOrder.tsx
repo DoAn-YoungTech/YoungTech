@@ -19,14 +19,13 @@ const ColPendingOrder = () => {
           </div>
           <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
             Ngày
-          </div> 
+          </div>  
           <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
-            Hành động
-          </div>
+            Cập nhập
+          </div>  
         </div>
       </div>
     </div>
   );
 };
-
 export default ColPendingOrder;

@@ -13,7 +13,6 @@ const orderService = {
   },
   addOrderWithDetails: async (orderData, orderDetails) => {
     const transaction = await sequelize.transaction();
-
     try {
       const newOrderId = await orderRepository.createOrder(orderData);
 
@@ -22,11 +21,17 @@ const orderService = {
       }
 
       console.log('New Order ID:', newOrderId);
-
+      
       for (const detail of orderDetails) {
+        console.log(detail)
+        // console.log(
+        //   detail.Number(productRetailPrice) * detail.Number(productSalePrice)
+        // );
         const orderDetailData = {
           ...detail,
-          order_id: newOrderId, 
+          order_id: newOrderId,
+          // unitPrice:
+          //   detail.Number(productRetailPrice) * detail.Number(productSalePrice),
         };
 
         console.log('OrderDetail Data:', orderDetailData);
@@ -35,7 +40,10 @@ const orderService = {
       }
 
       await transaction.commit();
-      return { message: 'Order and details added successfully', orderId: newOrderId };
+      return {
+        message: 'Order and details added successfully',
+        orderId: newOrderId,
+      };
     } catch (error) {
       await transaction.rollback();
       console.error('Error adding order and details:', error);
@@ -56,11 +64,10 @@ const orderService = {
       const result = await orderRepository.updateOrderStatus(orderId, status);
       return result;
     } catch (error) {
-      console.error("Error in updateStatusOrder service:", error);
+      console.error('Error in updateStatusOrder service:', error);
       throw error;
     }
   },
 };
-
 
 module.exports = orderService;
