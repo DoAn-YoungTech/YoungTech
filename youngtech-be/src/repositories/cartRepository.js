@@ -65,37 +65,39 @@ const cartRepository = {
 
   viewCart: async (cartId) => {
     const query = `
-   SELECT
-    cartitem.id AS id,
-    cartitem.quantity,
-    cartitem.cart_id,
-    product.id AS product_id,
-    product.productName AS productName,
-    product.description,
-    product.productPrice AS productPrice,
-    product.productRetailPrice AS productRetailPrice,
-    product.productSalePrice AS productSalePrice,
-    GROUP_CONCAT(image.imageUrl) AS images
-FROM cartitem
-JOIN product ON cartitem.product_id = product.id
-LEFT JOIN image ON product.id = image.product_id
-WHERE cartitem.cart_id = 1
-GROUP BY
-    cartitem.id, cartitem.quantity, cartitem.cart_id, product.id, product.productName, product.description, product.productPrice;
-
-     `;
+      SELECT
+        cartitem.id AS id,
+        cartitem.quantity,
+        cartitem.cart_id,
+        product.id AS product_id,
+        product.productName AS productName,
+        product.description,
+        product.productPrice AS productPrice,
+        product.productRetailPrice AS productRetailPrice,
+        product.productSalePrice AS productSalePrice,
+        GROUP_CONCAT(image.imageUrl) AS images
+      FROM cartitem
+      JOIN product ON cartitem.product_id = product.id
+      LEFT JOIN image ON product.id = image.product_id
+      WHERE cartitem.cart_id = :cartId
+      GROUP BY
+        cartitem.id, cartitem.quantity, cartitem.cart_id, product.id, product.productName, product.description, product.productPrice;
+    `;
+  
+    // Đảm bảo sử dụng đúng tên parameter
     const [formattedResult] = await sequelize.query(query, {
-      replacements: { cart_id: cartId },
+      replacements: { cartId }, // Thay thế :cartId bằng cartId
     });
-
-    const result = formattedResult.map(item => ({
+  
+    // Kiểm tra nếu formattedResult là mảng và map kết quả
+    const result = Array.isArray(formattedResult) ? formattedResult.map(item => ({
       ...item,
       images: item.images ? item.images.split(',') : [] // Nếu có ảnh, tách chuỗi thành mảng, nếu không có ảnh thì trả mảng rỗng
-    }));
-
+    })) : [];
+  
     return result;
   },
-
+  
   // getCustomerId(userId)
 
   getCustomerId: async (userId) => {

@@ -32,7 +32,7 @@ const PayCart = ({userInfo, handleOpen,totalOrder, CartProduct,CartProductOrder,
   
       const order = {
         totalAmount:Number(totalOrder) + Number(50000),
-        status:"pending",
+        status:"Pending",
         customer_id	:Number(customers.id)
       }
   
