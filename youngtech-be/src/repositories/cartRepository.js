@@ -66,7 +66,7 @@ const cartRepository = {
   viewCart: async (cartId) => {
     const query = `
    SELECT
-    cartitem.id AS cart_item_id,
+    cartitem.id AS id,
     cartitem.quantity,
     cartitem.cart_id,
     product.id AS product_id,

@@ -77,6 +77,7 @@ export default function InfoDetailProduct({ dataProduct }) {
       unitPrice: priceRetailSale,
       quantity: quantity,
       product_id :id,
+      totalItem:Number(priceRetailSale) * Number(quantity),
       item: dataProduct,
     }]
   
