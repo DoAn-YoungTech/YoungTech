@@ -23,13 +23,6 @@ const orderController = {
  
   addOrderWithDetails: async (req, res) => {
  
-    const { order, orderDetails, cartId } = req.body;
-    console.log('hello');
-    console.log(`order :`, order);
-    console.log(`orderDetails :`, orderDetails);
- 
-
-
     const { order, orderDetails,cartId, cartItems } = req.body;
 
     if (!order || !orderDetails || orderDetails.length === 0) {
