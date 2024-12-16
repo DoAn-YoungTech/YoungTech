@@ -1,4 +1,4 @@
-import ReportLayout from "@/components/dashboard/revenue_profit/ReportLayout";
+import RevenueReport from "@/components/dashboard/revenue_profit/RevenueReport";
 const page = () => {
   return (
     <>
@@ -9,7 +9,7 @@ const page = () => {
           </h2>
         </header>
         <div className="">
-          <ReportLayout />
+          <RevenueReport />
         </div>
       </div>
     </>

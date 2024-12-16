@@ -25,7 +25,7 @@ const Order = sequelize.define(
 
     succesDate: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
 
     totalAmount: {

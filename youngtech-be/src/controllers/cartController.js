@@ -6,10 +6,8 @@ const cartController = {
       const user_id = req.user.id;
       console.log(user_id);
       const { quantity, product_id } = req.body;
-
       const customer_id = await cartService.getCustomerIdByAccountId(user_id);
       console.log(`customer_id`, customer_id);
-
       const checkCustomer = await cartService.checkCustomer(customer_id);
 
       let cartId;
@@ -90,9 +88,7 @@ const cartController = {
       // get cart id
       // const user
       const userId = req.user.id;
-      console.log(`userId ${userId}`);
       const getCustomerId = await cartService.getCustomerId(userId);
-      console.log(`getCustomerId`, getCustomerId);
       if (!getCustomerId) {
         return res.status(404).json({ message: 'customer id not found!' });
       }
@@ -107,9 +103,8 @@ const cartController = {
       if (!cartId) {
         return res.status(404).json({ message: 'cart id not found!' });
       }
-      console.log(`cartId ${cartId}`);
+  
       const result = await cartService.viewCart(cartId);
-      console.log(result);
       if (!result) {
         return res.status(404).json({ message: 'Not found cart' });
       }
@@ -261,15 +256,30 @@ const cartController = {
   },
   removeIn: async (req, res) => {
     try {
-      const { productId } = req.body;
+     const {productId } = req.body;
       const userId = req.user.id;
-      const getCartId = await cartController.getCartId(userId);
-      const deleteIn = await cartService.deleteIn(productId, getCartId);
+      console.log("userId",userId,productId);
+      const customerId = await cartService.checkCustomerId(userId);
+      console.log(`customerId ${customerId}`);
+      if (!customerId) {
+        return res.status(404).json({ message: 'Customer id not exist !' });
+      }
+      const getCartIdByCustomerId = await cartService.getCartIdByCustomerId(
+        customerId
+      );
+
+      console.log(`cart id ${getCartIdByCustomerId}`);
+      if (!getCartIdByCustomerId) {
+        return res.status(404).json({ message: 'Cart id  not exist!' });
+      }
+      
+      const deleteIn = await cartService.deleteIn(productId,getCartIdByCustomerId);
 
       if (!deleteIn) {
         return res.status(403).json({ message: 'fail' });
       }
       res.status(200).json({ message: 'success' });
+     
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -277,8 +287,21 @@ const cartController = {
   removeAll: async (req, res) => {
     try {
       const userId = req.user.id;
-      const getCartId = await cartController.getCartId(userId);
-      const deleteAll = await cartService.removeAll(getCartId);
+      console.log("userId",userId);
+      const customerId = await cartService.checkCustomerId(userId);
+      console.log(`customerId ${customerId}`);
+      if (!customerId) {
+        return res.status(404).json({ message: 'Customer id not exist !' });
+      }
+      const getCartIdByCustomerId = await cartService.getCartIdByCustomerId(
+        customerId
+      );
+
+      console.log(`cart id ${getCartIdByCustomerId}`);
+      if (!getCartIdByCustomerId) {
+        return res.status(404).json({ message: 'Cart id  not exist!' });
+      }
+      const deleteAll = await cartService.removeAllCartItem(getCartIdByCustomerId);
       if (!deleteAll) {
         return res
           .status(403)
