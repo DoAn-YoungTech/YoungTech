@@ -9,13 +9,13 @@ const ColInvoice = () => {
             STT
           </div>
           <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
-            Mã hóa đơn
+            Mã order 
           </div>
           <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
-           Ngày
+           Số lượng order 
           </div>
           <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-75%)]">
-            Sản phẩm
+           Tê<noscript></noscript> Sản phẩm
           </div> 
           <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
             Thành tiền

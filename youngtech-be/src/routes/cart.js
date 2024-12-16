@@ -7,8 +7,9 @@ const authController = require('../controllers/authControllers');
 cart.post(
   '/addProductToCart',
   middlewareController.verifyToken,
-  // middlewareController.verifyTokenAndRole(['user', 'customer']),
+  middlewareController.verifyTokenAndRole(['user', 'customer']),
   // middlewareController.checkPermission('Cart_Management', 'create'),
+ 
   cartController.addProductToCart
 );
 cart.get(
