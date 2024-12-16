@@ -20,7 +20,7 @@ const PayCart = ({userInfo, handleOpen,totalOrder, CartProduct }) => {
      const orderDetails= CartProduct.map((item) => ({
       unitPrice: item.unitPrice,
       quantity: item.quantity,
-      product_id: item.product_id, 
+      product_id: parseInt(1), 
     }));
 
     const order = {

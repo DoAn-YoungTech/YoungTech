@@ -59,19 +59,16 @@ const orderRepository = {
 
   createOrder: async (orderData) => {
     const query = `
-      INSERT INTO \`Order\` (flag, orderDate, succesDate, totalAmount, status, paymentMethod, customer_id)
-      VALUES (:flag, :orderDate, :succesDate, :totalAmount, :status, :paymentMethod, :customer_id)
+      INSERT INTO \`Order\` (  totalAmount, customer_id)
+      VALUES (  :totalAmount,  :customer_id)
     `;
 
 
     const [result] = await sequelize.query(query, {
       replacements: {
-        flag: orderData.flag,
-        orderDate: orderData.orderDate,
-        succesDate: orderData.succesDate,
+      
         totalAmount: orderData.totalAmount,
-        status: orderData.status,
-        paymentMethod: orderData.paymentMethod,
+        
         customer_id: orderData.customer_id,
       },
     });
