@@ -18,13 +18,36 @@ const MainPay = () => {
     });
     const searchParams = useSearchParams();
     const orderDetailParam = searchParams.get('orderDetail');
-  
+    const orderDetailParamCart = searchParams.get('orderDetailCart');
+
     // Giải mã danh sách sản phẩm từ URL
     const CartProduct = orderDetailParam ? JSON.parse(decodeURIComponent(orderDetailParam)) : [];
+    const CartProductOrder = orderDetailParamCart ? JSON.parse(decodeURIComponent(orderDetailParamCart)) : [];
+    const result = CartProductOrder.flatMap(group =>
+      group.item.map(item => ({
+        unitPrice:
+          Number(item.productSalePrice) !== 0
+            ? (Number(item.productRetailPrice) - (Number(item.productRetailPrice) * (Number(item.productSalePrice) / 100)))
+            : Number(item.productRetailPrice),
+        quantity: item.quantity,
+        totalItem:  (Number(item.productRetailPrice) - (Number(item.productRetailPrice) * (Number(item.productSalePrice) / 100))) * item.quantity,
+        product_id :item.product_id,
+        cartId:item.cart_id,
+        item: item
+      }))
+    );
+    console.log(result)
+    
     const totalOrder =  CartProduct.reduce(
       (total, item) => total + Number(item.unitPrice * item.quantity ),
       0
     );
+
+    const totalOrderCart =  result.reduce(
+      (total, item) => total + Number(item.totalItem ),
+      0
+    );
+
 
 
     const handleClose = () => {
@@ -33,9 +56,7 @@ const MainPay = () => {
     const handleOpen = () => {
       setIsOpen(true);
     };
-    useEffect(() => {
-      dispatch(fetchCustomersById());
-    }, [dispatch]);
+ 
 
     useEffect(() => {
       if (customers?.customers && customers?.customers.fullName !=="" && customers?.customers.phoneNumber !==""  ) {
@@ -48,6 +69,7 @@ const MainPay = () => {
         setIsOpen(true)
       }
     }, [customers]);
+
  
   return (
    <div className="w-full mb-10 flex flex-col justify-center items-center">
@@ -56,7 +78,15 @@ const MainPay = () => {
     <section  className="pay w-[95%]">
       <div className="flex gap-5 justify-between">
       <OrderInfoUser userInfo={userInfo}/>
-        <PayCart userInfo={userInfo}  handleOpen={handleOpen} totalOrder={totalOrder} CartProduct={CartProduct}/>
+        <PayCart 
+          userInfo={userInfo} 
+           handleOpen={handleOpen}
+            totalOrder={totalOrder}
+             CartProduct={CartProduct}
+              CartProductOrder={result}
+              totalOrderCart={totalOrderCart}
+              />
+             
       </div>
     </section>
    </div>
