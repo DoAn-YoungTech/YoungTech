@@ -26,6 +26,19 @@ const customerController = {
       res.status(500).json({ error: error.message });
     }
   },
+  viewCustomerById: async (req, res) => {
+    const id = req.params.id;
+    try {
+      const customers = await customerService.getCustomersById(id);
+
+      if (!customers) {
+        return res.status(404).json({ message: 'Can not get customers ' });
+      }
+      res.status(200).json({ customers });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
   // addInformation
   addInformationCustomer: async (req, res) => {
     try {

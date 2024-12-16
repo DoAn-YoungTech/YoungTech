@@ -29,7 +29,7 @@ const productRepository = {
     
         // Nếu có limit, tính tổng số sản phẩm để tính tổng số trang
         
-            const totalQuery = `SELECT COUNT(*) AS totalItems FROM product`;
+            const totalQuery = `SELECT COUNT(*) AS totalItems FROM product WHERE flag = true AND productRetailPrice IS NOT NULL`;
             const [totalResult] = await sequelize.query(totalQuery);
             totalItems = totalResult[0].totalItems;
         
@@ -54,6 +54,59 @@ const productRepository = {
             totalItems
         };
     },
+
+    viewListProduct: async ({ offset, limit }) => {
+      let query = `SELECT * FROM product WHERE flag = true `; // Lấy tất cả sản phẩm
+      let replacements = {};
+  
+      // Kiểm tra nếu có limit
+      if (limit) {
+          // Nếu có cả limit và page, tính offset và phân trang
+          if (offset) {
+              query += ` LIMIT :limit OFFSET :offset`;  // Thêm LIMIT và OFFSET vào query
+              replacements = { limit, offset };
+          } else {
+              // Nếu chỉ có limit mà không có page, lấy limit sản phẩm
+              query += ` LIMIT :limit`;
+              replacements = { limit };
+          }
+      }
+  
+      // Thực thi truy vấn lấy sản phẩm
+      const [result] = await sequelize.query(query, {
+          replacements: replacements
+      });
+  
+
+      let totalItems = 0;
+  
+      // Nếu có limit, tính tổng số sản phẩm để tính tổng số trang
+      
+          const totalQuery = `SELECT COUNT(*) AS totalItems FROM product`;
+          const [totalResult] = await sequelize.query(totalQuery);
+          totalItems = totalResult[0].totalItems;
+      
+
+      // Nhóm các hình ảnh lại theo product_id
+      const productsWithImages = await Promise.all(
+        result.map(async (product) => {
+          console.log('<< product, product >>', product);
+            const imagesByProductId =  await imageRepository.getAllImagesByProductId(product.id);
+            console.log('<< imagesByProductId 312321>>', imagesByProductId);
+            return ({...product, images:imagesByProductId })
+          
+        })
+      )
+      console.log('<< productsWithImages >>',  productsWithImages);
+      // console.log('<< productsWithImages >>', await productsWithImages);
+      // Chuyển kết quả thành mảng và   trả về
+      // const products = Object.values(productsWithImages);
+  
+      return {
+          data: productsWithImages,
+          totalItems
+      };
+  },
 
     updatePricesProduct: async (id, data) => {
       // Lọc ra các trường hợp lệ và có giá trị

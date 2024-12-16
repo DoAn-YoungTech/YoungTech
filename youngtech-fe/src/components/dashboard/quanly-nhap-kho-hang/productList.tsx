@@ -147,7 +147,7 @@ const ListProduct = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3200/api/inputinvoice/addProduct", formattedData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/inputinvoice/addProduct`, formattedData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -171,7 +171,7 @@ const ListProduct = () => {
   const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
     ['suppliers'],
     async () => {
-      const response = await axios.get('http://localhost:3200/api/suppliers?limit=100&offset=0');
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/suppliers?limit=100&offset=0`);
       return response.data;
     },
 
@@ -184,7 +184,7 @@ const ListProduct = () => {
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
-    const response = await axios.get('http://localhost:3200/api/childcategories?limit=100&page=1');
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);
     return response.data;
   });
 

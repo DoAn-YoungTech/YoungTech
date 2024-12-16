@@ -4,6 +4,9 @@ const productService = {
     getAllProduct: async ({ offset, limit })=>{
         return await productRepository.getAllProduct({ offset, limit });
     },
+    viewListProduct: async ({ offset, limit })=>{
+        return await productRepository.viewListProduct({ offset, limit });
+    },
     
     getProductById: async (id) => {
         return await productRepository.getProductById(id);
