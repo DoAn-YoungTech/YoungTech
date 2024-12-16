@@ -27,7 +27,7 @@ import { fetchNameParentCategoriesByChildId } from "@/redux/Category/categoryChi
       }
       const formattedPrice = new Intl.NumberFormat('de-DE').format(item.productRetailPrice);
  
-}
+
  
       const priceRetailSale = new Intl.NumberFormat('de-DE').format((item.productRetailPrice) - (item.productRetailPrice * (item.productSalePrice /100)))
       return (

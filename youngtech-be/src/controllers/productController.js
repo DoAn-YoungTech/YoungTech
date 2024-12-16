@@ -285,6 +285,5 @@ const productController = {
 
     res.status(200).json({ message: 'Product data is valid.' });
   },
-};
 
 module.exports = productController;
