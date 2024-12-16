@@ -30,15 +30,12 @@ const orderDetailRepository = {
     // Kiểm tra log dữ liệu đầu vào
     console.log('Creating OrderDetail with data:', orderDetailData);
 
-    const initPrice =
-      orderDetailData.productRetailPrice * orderDetailData.productSalePrice;
-
     await sequelize.query(query, {
       replacements: {
-        unitPrice: initPrice,
+        unitPrice: orderDetailData.unitPrice,
         quantity: orderDetailData.quantity,
         order_id: orderDetailData.order_id, // Đảm bảo truyền đúng order_id
-        product_id: orderDetailData.id,
+        product_id: orderDetailData.product_id,
       },
     });
   },
