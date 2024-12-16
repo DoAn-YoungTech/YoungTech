@@ -117,8 +117,13 @@ const customerRepository = {
     try {
       const query = `INSERT INTO customer(fullName , phoneNumber , address , account_id) 
    VALUES (:fullName , :phoneNumber , :address , :account_id)`;
-      const [result] = await sequelize.query(query, { replacements: { ...data } });
-      return result;
+      const [result] = await sequelize.query(query, {
+        replacements: { ...data },
+      });
+
+      const [lastInserted] = await sequelize.query("SELECT LAST_INSERT_ID() AS id");
+      return lastInserted[0].id; // Trả về customer_id chp front end nhận được
+ 
     } catch (err) {
       console.log(err);
       throw Error(err.message);

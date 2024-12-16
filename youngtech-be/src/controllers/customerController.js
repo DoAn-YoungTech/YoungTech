@@ -91,7 +91,6 @@ const customerController = {
       res.status(500).json({ message: error });
     }
   },
-
   getOrderHistoryHandler: async (req, res) => {
     const { id } = req.params;
     try {
@@ -117,6 +116,7 @@ const customerController = {
             message: 'Fail , can not create customer . Please check again .',
           });
       }
+      console.log(createCustomerOffline)
       res
         .status(201)
         .json({
