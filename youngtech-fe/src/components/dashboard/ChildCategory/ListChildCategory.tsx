@@ -1,5 +1,5 @@
 "use client";
-import { getAllChildCategories, deleteChildCategory, updateChildCategory } from "@/services/category/CategoryChildService";
+import { getAllChildCategories, deleteChildCategory} from "@/services/category/CategoryChildService";
 import React, { useEffect, useState } from "react";
 import { Category_Child } from "@/types/CategoryTypes";
 import ChildCategoriesTable from "./TableChildCategory"; // Bảng hiển thị danh mục con
