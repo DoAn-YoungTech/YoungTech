@@ -19,7 +19,7 @@ const revenueRepository = {
                   \`Product\` p ON od.product_id = p.id
               WHERE 
                   o.orderDate BETWEEN :startDate AND :endDate
-                  AND o.status = 'Completed'
+                  AND o.status = 'Success'
               GROUP BY 
                   o.orderDate
 
@@ -37,7 +37,7 @@ const revenueRepository = {
                   \`Product\` p ON od.product_id = p.id
               WHERE 
                   o.orderDate BETWEEN :startDate AND :endDate
-                  AND o.status = 'Completed'`,
+                  AND o.status = 'Success'`,
               {
                 replacements: { startDate, endDate },
                 type: sequelize.QueryTypes.SELECT // Chỉ định đây là truy vấn SELECT
