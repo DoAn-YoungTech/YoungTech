@@ -16,9 +16,12 @@ type Customer = {
 const ListCustomer = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  
 
   const [currentPage, setCurrentPage] = useState<number>(0);  // Trang hiện tại (index bắt đầu từ 0)
-  const [customersPerPage] = useState<number>(5);  // Số khách hàng trên mỗi trang
+  const [currentCustomers, setCurrentCustomers] = useState<Customer[]>([]);  // Trang hiện tại (index bắt đầu từ 0)
+  // const [customersPerPage] = useState<number>(5);  // Số khách hàng trên mỗi trang
+  const customersPerPage = 5
 
   // Fetch data from API
   useEffect(() => {
@@ -26,8 +29,8 @@ const ListCustomer = () => {
       try {
         const response = await fetch("http://localhost:3200/api/customers/viewListCustomer");
         const data = await response.json();
-        if (data.message) {
-          setCustomers(data.message);
+        if (data.data) {
+          setCustomers(data.data);
         }
       } catch (error) {
         console.error("Error fetching customers:", error);
@@ -40,6 +43,8 @@ const ListCustomer = () => {
   }, []);
 
   const handlePageChange = (selectedPage: { selected: number }) => {
+    console.log(selectedPage.selected)
+    
     setCurrentPage(selectedPage.selected);
   };
 
@@ -48,14 +53,30 @@ const ListCustomer = () => {
     // Redirect or handle history logic
   };
 
+  useEffect(() => {
   // Xác định các khách hàng cần hiển thị cho trang hiện tại
   const indexOfLastCustomer = (currentPage + 1) * customersPerPage;
   const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
-  const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
+  console.log(customers.slice(indexOfFirstCustomer, indexOfLastCustomer))
+  setCurrentCustomers(customers.slice(indexOfFirstCustomer, indexOfLastCustomer))
+  // const currentCustomers = ;
+  }, [currentPage])
+
+  useEffect(() => {
+    // Xác định các khách hàng cần hiển thị cho trang hiện tại
+    const indexOfLastCustomer = (currentPage + 1) * customersPerPage;
+    const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
+    console.log(customers.slice(indexOfFirstCustomer, indexOfLastCustomer))
+    setCurrentCustomers(customers.slice(indexOfFirstCustomer, indexOfLastCustomer))
+    // const currentCustomers = ;
+    }, [customers])
+
+
 
   if (loading) {
     return <div className="text-white">Đang tải dữ liệu khách hàng...</div>;
   }
+  console.log('as', currentCustomers)
 
   return (
     <div className="list-customer">

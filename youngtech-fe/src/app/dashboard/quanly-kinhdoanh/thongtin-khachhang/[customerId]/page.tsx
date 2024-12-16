@@ -1,6 +1,4 @@
 import React from "react";
-import CustomerLayout from "@/components/dashboard/customers/CustomerLayout";
-import HeaderTable from "@/components/dashboard/customers/Header_table";
 import ListCustomer from "@/components/dashboard/customers/listCustomer";
 
 const Page = () => {
@@ -12,7 +10,6 @@ const Page = () => {
         </h2>
       </header>
       <main>
-          <HeaderTable />
           <ListCustomer />
       </main>
     </div>

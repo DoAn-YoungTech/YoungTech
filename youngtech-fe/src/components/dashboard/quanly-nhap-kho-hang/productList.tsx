@@ -156,8 +156,8 @@ const ListProduct = () => {
       if (response.status === 200) {
         alert("Thêm sản phẩm thành công!");
         // tải file pdf
-        // doc.save("DanhSachSanPham.pdf");
-        // dispatch(resetWareHouseMannagementItems())
+        doc.save("DanhSachSanPham.pdf");
+        dispatch(resetWareHouseMannagementItems())
       } else {
         alert(`Thêm sản phẩm thất bại: ${response.statusText}`);
       }
