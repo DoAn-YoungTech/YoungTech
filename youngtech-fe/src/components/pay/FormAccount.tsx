@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { MdClear } from "react-icons/md";
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form'; // Import react-hook-form
-import { updateCustomer } from '@/redux/Customers/customerThunks';
+import { updateCustomer,fetchCustomersById } from '@/redux/Customers/customerThunks';
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { set } from 'date-fns';
@@ -38,6 +38,7 @@ const OrderInfoUser = ({isOpen,handleClose}) => {
       address: fullAddress,
     }
     const res =  await dispatch(updateCustomer(customerData));
+    await dispatch(fetchCustomersById())
     
      if(res){
        toast.success("Cập nhật thông tin thành công");

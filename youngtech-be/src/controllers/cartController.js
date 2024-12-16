@@ -85,14 +85,14 @@ const cartController = {
 
   viewCart: async (req, res) => {
     try {
-      // get cart id
-      // const user
+     
       const userId = req.user.id;
       const getCustomerId = await cartService.getCustomerId(userId);
+      console.log(userId,getCustomerId)
       if (!getCustomerId) {
         return res.status(404).json({ message: 'customer id not found!' });
       }
-      //after get cart id check customer exist in cart
+      // //after get cart id check customer exist in cart
       const checkCustomerExistInCart =
         await cartService.checkCustomerExistInCart(getCustomerId);
       if (!checkCustomerExistInCart) {

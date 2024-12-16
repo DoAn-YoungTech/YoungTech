@@ -17,7 +17,8 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onSelectedAllChange,dataCart}
   const router = useRouter();
   const dispatch = useDispatch();
   const [idCartItem,setIdCartItem] = useState([])
-
+  
+   
   const totalCartItem =  dataCart.reduce(
     (total, item) => total + (item.selected ?  item.selected : 0),
     0
@@ -42,19 +43,24 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onSelectedAllChange,dataCart}
   .filter(item => item.selected === true)
   .map(item => item.product_id);
 
-  
+  const cartCheckBox = dataCart.filter(item => item.selected === true);
 
-  const handlePurchase = () => {
-    const selectedItems = dataCart.filter((item) => item.selected); 
-    if (selectedItems.length === 0) {
-      toast.warning("Bạn chưa chọn sản phẩm nào!");
-     
-    }else{
-     
-      router.push("/pay");
+  const handleProceedToPay = () => {
+    if(cartCheckBox.length ===0 ){
+      toast.warning("Bạn chưa chọn sản phẩm nào")
+      return
     }
-    
+    const orderDetail = [{
+     item:cartCheckBox
+    }]
+  
+    // Encode JSON thành chuỗi URL-safe
+    const encodedOrderDetail = encodeURIComponent(JSON.stringify(orderDetail));
+  
+    // Sử dụng router.push với query param
+    router.push(`/pay?orderDetailCart=${encodedOrderDetail}`);
   };
+ 
 
 
   const handleClearItemCart = (arr) => {
@@ -70,25 +76,25 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onSelectedAllChange,dataCart}
   
   const allSelected = dataCart.every(item => item.selected);
   
-  const handleClickClearItemCart = async () => {
-      try {
-        if( dataCart.length !== totalCartItem){
-          toast.success(`Xoá ${totalCartItem} sản phẩm thành công`)
+  // const handleClickClearItemCart = async () => {
+  //     try {
+  //       if( dataCart.length !== totalCartItem){
+  //         toast.success(`Xoá ${totalCartItem} sản phẩm thành công`)
 
-          setIsAlertClear(false);
-          const data = {
-            productId :idCartItem
-          }
-          await dispatch(removeCartItemIn(data));
-        }else{
-          toast.success(`Xoá ${totalCartItem} sản phẩm thành công`)
-         await dispatch(removeAllCartItem())
-        }
+  //         setIsAlertClear(false);
+  //         const data = {
+  //           productId :idCartItem
+  //         }
+  //         await dispatch(removeCartItemIn(data));
+  //       }else{
+  //         toast.success(`Xoá ${totalCartItem} sản phẩm thành công`)
+  //        await dispatch(removeAllCartItem())
+  //       }
        
-      } catch (error) {
-        console.error("Lỗi khi xóa sản phẩm:", error);
-      }
-    };
+  //     } catch (error) {
+  //       console.error("Lỗi khi xóa sản phẩm:", error);
+  //     }
+  //   };
   
   return (
 
@@ -103,7 +109,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ onSelectedAllChange,dataCart}
       <span className="text-red-500 text-[18px] font-bold ml-2">{formatCurrency(totalAmount)}</span>
     </div>
     <ToastContainer/>
-    <button onClick={handlePurchase} className="bg-red-500 ml-[30%] lg:ml-0 mt-5 active:scale-95  transform duration-200  text-white px-6 py-2 rounded">Mua Hàng</button>
+    <button onClick={handleProceedToPay} className="bg-red-500 ml-[30%] lg:ml-0 mt-5 active:scale-95  transform duration-200  text-white px-6 py-2 rounded">Mua Hàng</button>
   </div> 
   
   )

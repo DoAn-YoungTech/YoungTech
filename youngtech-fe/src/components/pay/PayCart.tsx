@@ -1,41 +1,87 @@
-import Link from 'next/link'
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
 import { BsChatDots } from 'react-icons/bs'
-import { LuShoppingCart } from 'react-icons/lu'
 import Image from "next/image";
 import { formatCurrency } from '../formatCurrency/formatCurrency';
 import Payment from './Payment';
 import { useDispatch,useSelector } from 'react-redux';
 import { createOrder } from '@/redux/Order/orderThunks';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { fetchCustomersById } from '@/redux/Customers/customerThunks';
+import ItemPay from './ItemPay';
+import ItemCartPay from './ItemCartPay';
 
-const PayCart = ({userInfo, handleOpen,totalOrder, CartProduct }) => {
+
+const PayCart = ({userInfo, handleOpen,totalOrder, CartProduct,CartProductOrder,totalOrderCart }) => {
   const dispatch = useDispatch();
+  const { customers } = useSelector((state) => state.customers.customers);
   const handlePayMent = async()=>{
 
      if(userInfo.fullName === "" || userInfo.phoneNumber === ""){
       handleOpen();
       return
      }
+     
+     if(CartProduct && totalOrder > 0 ){
+      const orderDetails= CartProduct.map((item) => ({
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+        product_id: item.product_id, 
+      }));
+  
+      const order = {
+        totalAmount:Number(totalOrder) + Number(50000),
+        status:"Pending",
+        customer_id	:Number(customers.id)
+      }
+  
+       const req = await dispatch(createOrder({order, orderDetails}))
+       if (req?.meta) {
+        if (req.meta.requestStatus === 'fulfilled') {
+          toast.success("Thanh toán thành công");
+        } else {
+          toast.error("Lỗi vui lòng kiểm tra lại");
+        }
+      } else {
+        toast.error("Lỗi không xác định");
+      }    
+     }else{
+      const cartId = CartProductOrder[0]?.cartId;
+      const cartItems = CartProductOrder.map((cart)=> cart.item);
+      const orderDetails= CartProductOrder.map((item) => ({
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+        product_id: item.product_id, 
+      }));
+  
+      const order = {
+        totalAmount:Number(totalOrderCart) + Number(50000),
+        status:"pending",
+        customer_id	:Number(customers.id)
+      }
+  
+       const req = await dispatch(createOrder({order, orderDetails,cartId,cartItems}))
+       if (req?.meta) {
+        if (req.meta.requestStatus === 'fulfilled') {
+          toast.success("Thanh toán thành công");
+        } else {
+          toast.error("Lỗi vui lòng kiểm tra lại");
+        }
+      } else {
+        toast.error("Lỗi không xác định");
+      }     
+     }
+     
 
-     const orderDetails= CartProduct.map((item) => ({
-      unitPrice: item.unitPrice,
-      quantity: item.quantity,
-      product_id: item.product_id, 
-    }));
-
-    const order = {
-      totalAmount:Number(totalOrder) + Number(50000),
-      customer_id	:1
-    }
-
-     const req = await dispatch(createOrder({order, orderDetails}))
-
-   
-    
-    
   }
+
+     useEffect(() => {
+        dispatch(fetchCustomersById());
+      }, [dispatch]);
   return (
     <div className="cart-price p-5 flex justify-center  bg-white w-[45%]">
+      <ToastContainer/>
       <div className="total-price w-[90%]">
         <h3 className="title text-[20px] font-semibold">Sản phẩm</h3>
         <div className="productsList mt-[20px]">
@@ -55,43 +101,17 @@ const PayCart = ({userInfo, handleOpen,totalOrder, CartProduct }) => {
               Giá
             </div>
           </div>
-          <div className="mt-[20px]">
-            {CartProduct &&
-              CartProduct.map((cart) => {
-                // Tách chuỗi imageUrls thành mảng và lấy ảnh đầu tiên
-                const imageArray = cart.item?.imageUrls?.split(',') || [];
-                const firstImage = imageArray[0];
-                return (
-                  <div key={cart.item.id} className="mb-[20px] border-b pb-3 border-gray-300 flex justify-between items-start">
-                    <div className="chooseAll_product flex items-start">
-                      <Image
-                        width={100}
-                        height={100}
-                        src={`/designImage/imageProducts/${firstImage}`}  // Đảm bảo đường dẫn đúng
-                        className="mx-4 w-[40px]"
-                        alt="Product Image"
-                      />
-                      <span className="text-[14px] font-semibold text-gray-500">
-                        {cart.item.productName}
-                      </span>
-                    </div>
-                    <div className="mx-5 text-[14px] text-gray-500 quantity">
-                      {cart.quantity}
-                    </div>
-                    <div className="mx-5 text-[14px] text-gray-500 price">
-                      {formatCurrency(cart.unitPrice)}
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
+          {CartProduct && <ItemPay CartProduct={CartProduct}/> }    
+          {CartProductOrder && <ItemCartPay DataCartOrder={CartProductOrder} /> }    
+          
+           
           <div className="pay">
             <div className="total flex justify-between items-center">
               <span className="text-[14px] text-gray-500">
                 Tổng tiền hàng
               </span>
               <span className="text-[14px] text-gray-500">
-                {formatCurrency(totalOrder)}
+              {totalOrder ? formatCurrency(Number(totalOrder)) : formatCurrency(Number(totalOrderCart)) }
               </span>
             </div>
             <div className="delivery my-[20px] flex justify-between items-center">
@@ -107,7 +127,7 @@ const PayCart = ({userInfo, handleOpen,totalOrder, CartProduct }) => {
                 Tổng thanh toán
               </span>
               <span className="text-[18px] py-2 px-5 border border-red-500 hover:bg-red-700 hover:text-white duration-200 transition-all rounded-xl cursor-pointer text-red-500">
-               {formatCurrency(Number(totalOrder) + Number(50000) )}
+               {totalOrder ? formatCurrency(Number(totalOrder) + Number(50000) ) : formatCurrency(Number(totalOrderCart) + Number(50000) ) }
               </span>
             </div>
           </div>

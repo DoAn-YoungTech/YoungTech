@@ -59,6 +59,7 @@ const orderRepository = {
 
   createOrder: async (orderData) => {
     const query = `
+
       INSERT INTO \`Order\` (totalAmount, status, customer_id)
       VALUES (:totalAmount, :status, :customer_id)
     `;
