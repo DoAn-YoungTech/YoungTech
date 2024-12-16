@@ -12,15 +12,16 @@ const orderRouter = require('./orderRoutes')
 
 const revenueRouter = require('./revenueRoutes')
 // const inputInvoiceRoutes = require('./inputInvoiceRoutes');
-
+const outInvoice = require('./outinvoiceRoutes')
 const user = require('./user');
 const auth = require('./auth');
 const admin = require('./admin');
 const roles = require('./roles');
 const cart = require('./cart')
+const paymentRouter = require('./paymentRouter')
 const permission = require('./permission')
 const router = express.Router();
- 
+
 router.use('/suppliers', supplierRoutes);
 router.use('/invoices', invoiceRouters);
 router.use('/employees', employeeRouter);
@@ -32,14 +33,13 @@ router.use('/roles', roles);
 router.use('/cart', cart)
 router.use('/permission', permission)
 router.use('/product', productRoutes);
-
 router.use('/childcategories',childCategoriesRouters);
 router.use('/parencategories',parentCategoriesRouters);
 router.use('/inputinvoice', inputInvoiceRoutes);
-
-router.use('/order', orderRouter)
-
+router.use('/outInvoice' ,outInvoice )
+router.use('/order', orderRouter) 
 router.use('/revenue', revenueRouter)
+router.use('/payment', paymentRouter)
 // router.use('/inputinvoice', inputInvoiceRoutes);
 
 module.exports = router;
