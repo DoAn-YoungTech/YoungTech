@@ -4,9 +4,9 @@ const parentCategoriesService = {
   getAllParentCategories: async () => {
     return await parentCategoriesRepository.getAllParentCategories();
   },
-  createParentCategories: async (data) => {
-    return await parentCategoriesRepository.createParentCategories(data);
-  },
+  createParentCategories: async (name) => {
+    return await parentCategoriesRepository.createParentCategories({ name });
+  },  
   updateParentCategories: async (id, data) => {
     return await parentCategoriesRepository.updateParentCategories(id, data);
   },

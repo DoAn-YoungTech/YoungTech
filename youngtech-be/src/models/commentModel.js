@@ -15,6 +15,7 @@ const Comment = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
+
     createAt: {
       type: DataTypes.DATE,
       allowNull: false,

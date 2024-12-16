@@ -9,6 +9,7 @@ export interface WareHouseMannagementItem {
     brand: string;
     description: string;
     productName: string;
+    images: string[];
 }
 
 interface WareHouseMannagementState {
@@ -26,6 +27,12 @@ const wareHouseMannagementSlice = createSlice({
   name: 'wareHouseMannagement',
   initialState,
   reducers: {
+    resetWareHouseMannagementItems(state) {
+      state.wareHouseMannagementItems = [],
+      state.isLoading = false,
+      state.isError = false
+    },
+
     resetError(state) {
       state.isError = false 
     },
@@ -35,6 +42,7 @@ const wareHouseMannagementSlice = createSlice({
     },
     updateProduct(state, action) {
       const {data, id}  = action.payload
+      console.log('<< data >>', data);
       const isDuplicate = state.wareHouseMannagementItems.some((item, index) =>  item.productName === data.productName && index !== id
       )
       if (isDuplicate) {
@@ -51,5 +59,5 @@ const wareHouseMannagementSlice = createSlice({
   },
 });
 
-export const { addProductToTemp, removeItem , updateProduct, resetError} = wareHouseMannagementSlice.actions
+export const { addProductToTemp, removeItem , updateProduct, resetError, resetWareHouseMannagementItems} = wareHouseMannagementSlice.actions
 export default wareHouseMannagementSlice.reducer;

@@ -12,29 +12,29 @@ employeeRouter.post(
 
 employeeRouter.get(
   '/viewingListEmployee',
-  middlewareController.verifyToken,
-  middlewareController.verifyTokenAndRole(['admin']),
+  // middlewareController.verifyToken,
+  // middlewareController.verifyTokenAndRole(['admin']),
   employeeController.viewingListEmployee
 );
 
 employeeRouter.put(
-  '/updateInformationEmployee/:accountId',
-  middlewareController.verifyToken,
-  middlewareController.verifyTokenAndRole(['admin']),
+  '/updateInformationEmployee/:employeeId',
+  // middlewareController.verifyToken,
+  // middlewareController.verifyTokenAndRole(['admin']),
   employeeController.updateInformationEmployee
 );
 
 employeeRouter.get(
   '/viewOnlyEmployee/:id',
-  middlewareController.verifyToken,
-  middlewareController.verifyTokenAndRole(['admin']),
+  // middlewareController.verifyToken,
+  // middlewareController.verifyTokenAndRole(['admin']),
   employeeController.viewOnlyEmployee
 );
 
 employeeRouter.delete(
   '/deleteEmployeeById/:id',
-  middlewareController.verifyToken,
-  middlewareController.verifyTokenAndRole(['admin']),
+  // middlewareController.verifyToken,
+  // middlewareController.verifyTokenAndRole(['admin']),
   employeeController.deleteEmployeeById
 );
 

@@ -9,8 +9,9 @@ roles.post(
   rolesControllers.createRole
 );
 roles.get(
+ 
   '/getAllRole',
-  middlewareController.verifyToken,
+  middlewareController.verifyToken, 
   rolesControllers.getAllRole
 );
 

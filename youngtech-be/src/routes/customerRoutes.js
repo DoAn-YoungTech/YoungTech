@@ -5,10 +5,15 @@ const middlewareController = require('../controllers/middlewareController');
 // get all customer
 customerRoutes.get(
   '/viewListCustomer',
-  middlewareController.verifyToken,
+  // middlewareController.verifyToken,
   customerController.getAllCustomers
 );
 
+customerRoutes.get(
+  '/viewCustomerById',
+  middlewareController.verifyToken,
+  customerController.getCustomersById
+);
 // addInformationByAccount
 customerRoutes.put(
   '/updateCustomer',
