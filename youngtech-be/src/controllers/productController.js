@@ -5,10 +5,10 @@ const productController = {
   // gọi  imageService để lấy ra danh sách ảnh, rồi cho danh sách ảnh vào product  
   getAllProduct: async (req, res) => {
     try {
+
       // Lấy tham số phân trang từ query
       const page = req.query.page ? parseInt(req.query.page) : null;
       const limit = req.query.limit ? parseInt(req.query.limit) : null;
-       
   
       let offset = 0; // Mặc định offset là 0 nếu không có page
   
@@ -16,6 +16,7 @@ const productController = {
       if (page && limit) {
         offset = (page - 1) * limit;
       }
+  
       // Gọi service lấy sản phẩm
       const result = await productService.getAllProduct({ offset, limit });
   
@@ -25,14 +26,12 @@ const productController = {
       }
   
       // Trả về kết quả
-      console.log(page , limit)
       return res.status(200).json({
         data: result.data,
         totalItems: result.totalItems,
         currentPage: page || 1,
         totalPages: limit ? Math.ceil(result.totalItems / limit) : 1,
       });
-      
 
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -177,11 +176,10 @@ const productController = {
             error: err.message,
         });
     }
- 
-  },
- 
 },
- 
+
+  
+
   updateProduct: async (req, res) => {
     try {
       const id = req.params.id;
@@ -285,5 +283,6 @@ const productController = {
 
     res.status(200).json({ message: 'Product data is valid.' });
   },
+};
 
 module.exports = productController;
