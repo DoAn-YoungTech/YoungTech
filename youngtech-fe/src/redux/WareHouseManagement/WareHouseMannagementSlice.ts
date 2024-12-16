@@ -42,6 +42,7 @@ const wareHouseMannagementSlice = createSlice({
     },
     updateProduct(state, action) {
       const {data, id}  = action.payload
+      console.log('<< data >>', data);
       const isDuplicate = state.wareHouseMannagementItems.some((item, index) =>  item.productName === data.productName && index !== id
       )
       if (isDuplicate) {

@@ -5,7 +5,7 @@ const middlewareController = require('../controllers/middlewareController');
 // get all customer
 customerRoutes.get(
   '/viewListCustomer',
-  middlewareController.verifyToken,
+  // middlewareController.verifyToken,
   customerController.getAllCustomers
 );
 
