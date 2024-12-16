@@ -25,7 +25,9 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
       await updateCategory(category.id, { name: categoryName });
       console.log("Updated category successfully");
       onUpdateSuccess({ ...category, name: categoryName });
-      router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      setTimeout(() => {
+        router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      }, 6000);
     } catch (error) {
       console.error("Error updating category:", error.message);
     }
@@ -64,9 +66,7 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
           />
         </div>
         <div className="flex justify-center gap-4">
-          <button type="submit" className="px-4 py-2 text-white rounded-md">
-          <ShinyRotatingBorderButton>Lưu thay đổi</ShinyRotatingBorderButton>
-          </button>
+          <ShinyRotatingBorderButton type="submit">Lưu thay đổi</ShinyRotatingBorderButton>
         </div>
       </form>
     </div>

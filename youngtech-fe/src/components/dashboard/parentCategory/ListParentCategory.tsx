@@ -11,6 +11,8 @@ const ListParentCategories: React.FC = () => {
   const [categories, setCategories] = useState<Category_Paren[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingCategory, setEditingCategory] = useState<Category_Paren | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const router = useRouter();
 
   // Fetch categories on component mount
@@ -62,14 +64,20 @@ const ListParentCategories: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
+    setSelectedCategoryId(id);
+    setIsModalOpen(true); // Show confirmation modal
+  };
+
+  const confirmDelete = async () => {
     try {
-      await deleteCategory(id);
-      // Update the category list after deletion
-      setCategories((prevCategories) => prevCategories.filter((category) => category.id !== id));
+      await deleteCategory(selectedCategoryId!); // Perform delete
+      setCategories((prevCategories) => prevCategories.filter((category) => category.id !== selectedCategoryId));
       console.log("Deleted category successfully");
     } catch (error) {
       console.error("Error deleting category:", error.message);
     }
+    setIsModalOpen(false);
+    setSelectedCategoryId(null);
   };
 
   const handleAddClick = () => {
@@ -83,7 +91,7 @@ const ListParentCategories: React.FC = () => {
   };
 
   return (
-    <div className="w-full  p-4 mx-auto bg-[#282F36] rounded-lg p-6">
+    <div className="w-full p-4 mx-auto bg-[#282F36] rounded-lg p-6">
       {editingCategory ? (
         <UpdateParentCategory
           category={editingCategory}
@@ -94,7 +102,6 @@ const ListParentCategories: React.FC = () => {
         <>
           <h2 className="text-2xl text-white text-center font-bold mb-4">Danh sách danh mục cha</h2>
           <div className="flex justify-between items-center mb-4">
-            
             <input
               type="text"
               placeholder="Tìm kiếm danh mục..."
@@ -102,7 +109,7 @@ const ListParentCategories: React.FC = () => {
               onChange={handleSearch}
               className="mt-1 block px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-              <ShinyRotatingBorderButton onClick={handleAddClick}>Thêm danh mục</ShinyRotatingBorderButton>
+            <ShinyRotatingBorderButton onClick={handleAddClick}>Thêm danh mục</ShinyRotatingBorderButton>
           </div>
           {filteredCategories.length > 0 ? (
             <ParentCategoryTable
@@ -114,6 +121,18 @@ const ListParentCategories: React.FC = () => {
             <p className="text-gray-600">Loading...</p>
           )}
         </>
+      )}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-4 text-white">Xác nhận xóa</h2>
+            <p className="mb-6 text-white">Bạn có chắc chắn muốn xóa danh mục này?</p>
+            <div className="flex justify-end gap-4">
+              <ShinyRotatingBorderButton onClick={() => setIsModalOpen(false)}>Hủy</ShinyRotatingBorderButton>
+              <ShinyRotatingBorderButton onClick={confirmDelete}>Xóa</ShinyRotatingBorderButton>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

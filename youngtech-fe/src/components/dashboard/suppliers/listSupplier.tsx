@@ -11,6 +11,8 @@ const ListSuppliers: React.FC = () => {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(null);
   const router = useRouter();
 
   // Fetch suppliers on component mount
@@ -68,14 +70,20 @@ const ListSuppliers: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
+    setSelectedSupplierId(id);
+    setIsModalOpen(true); // Show confirmation modal
+  };
+
+  const confirmDelete = async () => {
     try {
-      await deleteSupplier(id);
-      // Update the supplier list after deletion
-      setSuppliers((prevSuppliers) => prevSuppliers.filter((supplier) => supplier.id !== id));
+      await deleteSupplier(selectedSupplierId!); // Perform delete
+      setSuppliers((prevSuppliers) => prevSuppliers.filter((supplier) => supplier.id !== selectedSupplierId));
       console.log("Deleted supplier successfully");
     } catch (error) {
       console.error("Error deleting supplier:", error.message);
     }
+    setIsModalOpen(false);
+    setSelectedSupplierId(null);
   };
 
   const handleAddClick = () => {
@@ -107,7 +115,7 @@ const ListSuppliers: React.FC = () => {
               onChange={handleSearch}
               className="mt-1 block px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-              <ShinyRotatingBorderButton onClick={handleAddClick}>Thêm nhà cung cấp</ShinyRotatingBorderButton>
+            <ShinyRotatingBorderButton onClick={handleAddClick}>Thêm nhà cung cấp</ShinyRotatingBorderButton>
           </div>
           {filteredSuppliers.length > 0 ? (
             <SupplierTable
@@ -119,6 +127,18 @@ const ListSuppliers: React.FC = () => {
             <p className="text-gray-600">Loading...</p>
           )}
         </>
+      )}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-4 text-white">Xác nhận xóa</h2>
+            <p className="mb-6 text-white">Bạn có chắc chắn muốn xóa nhà cung cấp này?</p>
+            <div className="flex justify-end gap-4">
+              <ShinyRotatingBorderButton onClick={() => setIsModalOpen(false)}>Hủy</ShinyRotatingBorderButton>
+              <ShinyRotatingBorderButton onClick={confirmDelete}>Xóa</ShinyRotatingBorderButton>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

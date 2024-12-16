@@ -11,33 +11,35 @@ const ListChildCategories: React.FC = () => {
   const [categorieschild, setCategoriesChild] = useState<Category_Child[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingCategory, setEditingCategory] = useState<Category_Child | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const router = useRouter();
 
   // Fetch child categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
-  try {
-    const response = await getAllChildCategories();
-    console.log(response.data); // Kiểm tra dữ liệu API trả về
-    if (response && response.data) {
-      setCategoriesChild(response.data);
-    } else {
-      console.log("No data from API");
-    }
-  } catch (error) {
-    console.error("Error fetching child categories:", error.message);
-  }
-};
+      try {
+        const response = await getAllChildCategories();
+        console.log(response.data); // Kiểm tra dữ liệu API trả về
+        if (response && response.data) {
+          setCategoriesChild(response.data);
+        } else {
+          console.log("No data from API");
+        }
+      } catch (error) {
+        console.error("Error fetching child categories:", error.message);
+      }
+    };
 
-  
     fetchCategories();
   }, []);
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
   const filteredCategories = categorieschild.filter((category) =>
-    category.childCateName ? category.childCateName.toLowerCase().includes(searchTerm.toLowerCase()) : false
+    category.childCateName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (category: Category_Child) => {
@@ -62,19 +64,21 @@ const ListChildCategories: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    try {
-      await deleteChildCategory(id);
-      // Update the category list after deletion
-      setCategoriesChild((prevCategories) => prevCategories.filter((category) => category.id !== id));
-      console.log("Deleted child category successfully");
-    } catch (error) {
-      console.error("Error deleting child category:", error.message);
-    }
+    setDeleteId(id);
+    setIsModalOpen(true); // Show modal
   };
 
-  const handleAddClick = () => {
-    if (router) {
-      router.push("/dashboard/quanly-danhmuc-sanpham/tao-danhmuc-con");
+  const confirmDelete = async () => {
+    if (deleteId !== null) {
+      try {
+        await deleteChildCategory(deleteId);
+        // Update the category list after deletion
+        setCategoriesChild((prevCategories) => prevCategories.filter((category) => category.id !== deleteId));
+        console.log("Deleted child category successfully");
+        setIsModalOpen(false); // Close modal after deletion
+      } catch (error) {
+        console.error("Error deleting child category:", error.message);
+      }
     }
   };
 
@@ -101,7 +105,7 @@ const ListChildCategories: React.FC = () => {
               onChange={handleSearch}
               className="mt-1 block px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <ShinyRotatingBorderButton onClick={handleAddClick}>
+            <ShinyRotatingBorderButton onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/tao-danhmuc-con")}>
               Thêm danh mục con
             </ShinyRotatingBorderButton>
           </div>
@@ -115,6 +119,19 @@ const ListChildCategories: React.FC = () => {
             <p className="text-gray-600"></p>
           )}
         </>
+      )}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+          <h2 className="text-xl font-semibold mb-4 text-white">Xác nhận xóa</h2>
+          <p className="mb-6 text-white">Bạn có chắc chắn muốn xóa danh mục này?</p>
+          <div className="flex justify-end gap-4">
+            <ShinyRotatingBorderButton onClick={() => setIsModalOpen(false)}>Hủy</ShinyRotatingBorderButton>
+            <ShinyRotatingBorderButton onClick={confirmDelete}>Xóa</ShinyRotatingBorderButton>
+          </div>
+        </div>
+      </div>
+      
       )}
     </div>
   );

@@ -22,7 +22,6 @@ const cartItemService = {
   },
 
   clearCartItemsAfterOrder: async (cartId) => {
-    // Cập nhật trạng thái hoặc xóa các mục trong giỏ hàng khi đã chuyển thành đơn hàng
     return await cartItemRepository.clearCartItemsAfterOrder(cartId);
   }
 };

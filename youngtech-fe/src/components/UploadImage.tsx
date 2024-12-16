@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+import { useState } from 'react';
+import Image from 'next/image';
 
 interface UploadImageProps {
   handleGetArrayImage: (urls: { url: string; public_id: string }[]) => void; // Define the callback type
@@ -66,6 +66,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
         )
       );
 
+      console.log(base64Files, base64Files)
       // Send base64 files to the API
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -78,15 +79,14 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
       const data = await response.json();
       if (response.ok) {
         const imageUrls = data.urls.map((item: { url: string }) => item.url);
-        
+
         // Append new uploaded images to the existing ones
         setUploadedImages((prevImages) => [...prevImages, ...imageUrls]);
         
-        console.log(imageUrls)
-        handleGetArrayImage(imageUrls.url); // Update parent component with uploaded image URLs
-
+        handleGetArrayImage(imageUrls); // Update parent component with uploaded image URLs
         setImagePreviews([]); // Clear the previews after upload
         setImages([]); // Clear selected images
+
       } else {
         console.error("Upload failed:", data.message);
       }
@@ -97,8 +97,6 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
     }
   };
 
-  console.log('123', urls)
-
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Upload Images</h1>
@@ -106,7 +104,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
         <input
           type="file"
           onChange={handleFileChange}
-          accept="image/*"
+          accept=".pdf,image/*"
           multiple
           className="block w-full text-sm text-gray-500 
             file:mr-4 file:py-2 file:px-4

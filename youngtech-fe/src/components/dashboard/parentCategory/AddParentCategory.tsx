@@ -1,27 +1,33 @@
 "use client";
-import { addCategory } from "@/services/category/CategoryParentService"; 
-import React, { useState, useEffect } from "react";
+import { addCategory } from "@/services/category/CategoryParentService";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter từ Next.js
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddParentCategory = () => {
-  const [categoryName, setCategoryName] = useState("");
-  const [navigate, setNavigate] = useState(false); // State để kiểm tra điều hướng
-
-  useEffect(() => {
-    if (navigate) {
-      window.location.href = "/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha";
-    }
-  }, [navigate]);
+  const [categoryName, setCategoryName] = useState(""); // Trạng thái tên danh mục
+  const router = useRouter(); // Sử dụng router để điều hướng
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!categoryName) {
+      toast.error("Vui lòng nhập tên danh mục!"); // Hiển thị toast nếu không nhập tên danh mục
+      return;
+    }
     try {
-      await addCategory({ name: categoryName });
+      await addCategory({ name: categoryName }); // Gửi API thêm danh mục
       console.log("Category added successfully");
-      setCategoryName("");
-      setNavigate(true); // Set navigate to true to trigger useEffect
+      setCategoryName(""); // Reset trạng thái form
+      toast.success("Danh mục đã được thêm thành công!"); // Hiển thị toast thành công
+      setTimeout(() => {
+        router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      }, 6000);
+      // Điều hướng về danh sách danh mục cha
     } catch (error) {
       console.error("Error adding category:", error.message);
+      toast.error("Lỗi khi thêm danh mục!"); // Hiển thị toast lỗi
     }
   };
 
@@ -31,7 +37,7 @@ const AddParentCategory = () => {
         <div className="flex items-center justify-between mb-6">
           <button
             type="button"
-            onClick={() => setNavigate(true)}
+            onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha")}
             className="text-blue-600 hover:text-blue-800"
           >
             <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
@@ -57,12 +63,9 @@ const AddParentCategory = () => {
           />
         </div>
         <div className="flex justify-center gap-4">
-          <button
-            type="submit"
-            className="px-4 py-2 text-white rounded-md "
-          >
-            <ShinyRotatingBorderButton>Thêm danh mục cha</ShinyRotatingBorderButton>
-          </button>
+        
+            <ShinyRotatingBorderButton type="submit" >Thêm danh mục cha</ShinyRotatingBorderButton>
+          
         </div>
       </form>
     </div>

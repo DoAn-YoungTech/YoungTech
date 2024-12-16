@@ -3,7 +3,7 @@ const sequelize = require('../configs/db');
 const childCategoriesRepository = {
     getAllChildCategories: async () => {
         // Truy vấn để lấy tất cả các danh mục con
-        const query = `SELECT * FROM childcategories WHERE flag=false`;
+        const query = `SELECT * FROM childcategories WHERE flag=true`;
         const [result] = await sequelize.query(query);
     
         // Truy vấn tổng số bản ghi
@@ -22,18 +22,21 @@ const childCategoriesRepository = {
     },
 
     createChildCategories: async (data) => {
-        console.log(`Repository ${JSON.stringify(data)}`);
-        
-        // Kiểm tra nếu flag không có trong data thì mặc định flag là false
-        const { childCateName, parentCategory_id } = data;
-        const flag = data.flag !== undefined ? data.flag : false; // Mặc định flag là false
-    
-        const query = `INSERT INTO childcategories (childCateName, flag, parentCategory_id)
-                       VALUES (:childCateName, :flag, :parentCategory_id)`;
-        const [result] = await sequelize.query(query, { replacements: { childCateName, flag, parentCategory_id } });
-        return result;
-    },
-    
+      console.log(`Repository ${JSON.stringify(data)}`);
+  
+      // Bỏ qua giá trị được truyền, luôn đặt flag là true
+      const { childCateName, parentCategory_id } = data;
+      const flag = true; // Luôn mặc định flag là true
+  
+      const query = `INSERT INTO childcategories (childCateName, flag, parentCategory_id)
+                     VALUES (:childCateName, :flag, :parentCategory_id)`;
+      const [result] = await sequelize.query(query, { 
+          replacements: { childCateName, flag, parentCategory_id } 
+      });
+      return result;
+  },
+  
+  
 
     deleteChildCategories: async (id) =>{
         const query = `UPDATE childcategories 

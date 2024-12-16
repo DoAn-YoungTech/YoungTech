@@ -48,14 +48,6 @@ const data = {
         {
           title: "Tạo nhân viên",
           url: "quanly-nhanvien/tao-nhanvien"
-        },
-        {
-          title: "Chỉnh sửa thông tin",
-          url: "quanly-nhanvien/chinhsua-nhanvien"
-        },
-        {
-          title: "Chi tiết nhân viên",
-          url: "quanly-nhanvien/chitiet-nhanvien"
         }
       ]
     },

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/Store';
 import { addProductToTemp, resetError, updateProduct } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
 import { useRouter } from 'next/navigation';
+import UploadImage from '@/components/UploadImage';
 
 interface EditProduct {
     selectedProduct: any
@@ -37,6 +38,7 @@ interface FormInputs {
     description: 'description',
     brand: 'brand',
     childCategory_id: 'childCategory_id',
+    images: 'images'
   };
 
   // Validation schema using Yup
@@ -56,7 +58,7 @@ interface FormInputs {
       .min(1, 'Số lượng phải ít nhất là 1'),
     supplier_id: yup.string().required('Nhà cung cấp là bắt buộc'),
     childCategory_id: yup.string().required('ChildCategory là bắt buộc'),
-    images: yup.array().min(1, 'Ít nhất phải có một ảnh').required('Ảnh là bắt buộc')
+    images: yup.array().required('Ảnh là bắt buộc')
     
   });
 
@@ -78,9 +80,22 @@ const EditProduct = (props: EditProduct) => {
       resolver: yupResolver(schema),
     });
 
+    const [urlsImage,setUrlsImage] = useState([])
+    const [urlsImageAvailable,setUrlsImageAvailable] = useState([])
+      
+    const handleGetArrayImage = (urlr : any)=>{
+        setUrlsImage(urlr)
+    }
+
     const handleClose = () => {
         dispatch(resetError())
         handleCloseModal()
+    }
+
+    const handleRemoveImage =  (index: number) => {
+      const newImages = urlsImageAvailable.filter((_,i) => i !== index )
+      setUrlsImageAvailable(newImages)
+      // setValue('images', newImages);
     }
   
     // Fetch suppliers using React Query
@@ -112,32 +127,8 @@ const EditProduct = (props: EditProduct) => {
       }
     }, [suppliers, childCategories, setValue]);
   
-    // Form submission handler
-    const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-
-        firstRender.current = false
-      try {
-        const response = await axios.get('http://localhost:3200/api/product/validate', {
-          params: data,
-        });
-  
-        if (response.data.errors) {
-          Object.entries(response.data.errors).forEach(([key, message]) => {
-            const formKey = errorMapping[key];
-            if (formKey) {
-              setError(formKey, { type: 'server', message: message as string });
-            }
-          });
-        } else {
-          dispatch(updateProduct({data: data, id: selectedProduct.id }))
-        }
-      } catch (error) {
-        console.error('Error validating product:', error);
-      }
-    };
     
     useEffect(() => {
-       
         if (selectedProduct) {
             Object.entries(selectedProduct).map(([key,value]) => {
                 const formKey = errorMapping[key];
@@ -145,11 +136,11 @@ const EditProduct = (props: EditProduct) => {
                   setValue(formKey, value as any);
                 }
             })
+            setUrlsImageAvailable(selectedProduct.images)
         }
     }, [selectedProduct])
 
     useEffect(() => {
-        console.log(firstRender.current, isErrorStore, 'hr')
         if (isErrorStore) {
             setError('productName',{ type: 'store', message: 'Sản phẩm đã tồn tại'})
         } else {
@@ -158,9 +149,47 @@ const EditProduct = (props: EditProduct) => {
             }
         }
     }, [isErrorStore, wareHouseMannagementItems])
+
+    // khi update tiếp ảnh
+      // useEffect(() => {
+      //   if (urlsImage?.length) {
+      //     setValue('images',urlsImage )
+      //   }
+      // },[urlsImage])
+
+        // Form submission handler
+        const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+          firstRender.current = false
+
+          const finalImages = [...urlsImage, ...urlsImageAvailable]
+          setValue('images',finalImages )
+          console.log('imag', finalImages)
+          if (!finalImages.length) {
+            setError('images', { type: 'custom', message: 'Ảnh là bắt buộc' });
+            return
+          }
+          try {
+            const response = await axios.get('http://localhost:3200/api/product/validate', {
+              params: data,
+            });
+      
+            if (response.data.errors) {
+              Object.entries(response.data.errors).forEach(([key, message]) => {
+                const formKey = errorMapping[key];
+                if (formKey) {
+                  setError(formKey, { type: 'server', message: message as string });
+                }
+              });
+            } else {
+              dispatch(updateProduct({data: data, id: selectedProduct.id }))
+            }
+          } catch (error) {
+            console.error('Error validating product:', error);
+          }
+        };
   
     return <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className=" inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded shadow-md w-[100%] max-w-md">
           <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="w-[600px] p-8 bg-white shadow-lg rounded border border-gray-300">
@@ -175,6 +204,26 @@ const EditProduct = (props: EditProduct) => {
             />
             {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
           </div>
+
+           {/* Album ảnh */}
+           <div>
+  <label className="block text-sm font-semibold text-white mb-2">Album ảnh</label>
+  <div className="grid grid-cols-2 gap-4">
+    {urlsImageAvailable && urlsImageAvailable.map((item: string, index: number) => (
+      <div key={index} className="relative">
+        <img
+          src={item}
+          alt="product"
+          className="w-full h-40 object-cover rounded"
+        />
+        <button type="button" onClick={() => handleRemoveImage(index)} className="absolute top-2 right-2 bg-red-500 text-white text-sm px-2 py-1 rounded">Xoá</button>
+      </div>
+    ))}
+  </div>
+  <UploadImage handleGetArrayImage={handleGetArrayImage} />
+  {errors.images && <p className="text-red-500 text-sm mt-1">{errors.images.message}</p>}
+</div>
+
 
           {/* Description */}
           <div>
