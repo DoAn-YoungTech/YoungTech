@@ -18,7 +18,7 @@ const { Product } = require('./productModel');
 const { RefreshToken } = require('./refreshToken');
 const { Permission } = require('./permissionModel');
 const { RolePermission } = require('./rolePermissionModel');
-
+const { Payment } = require('./paymentModel');
 const defineAssociations = () => {
   // Role - Permission Many -to -Many
   Role.belongsToMany(Permission, {
@@ -109,6 +109,9 @@ const defineAssociations = () => {
   // Role - RoleAccount: One-to-Many
   Role.hasMany(roleAccount, { foreignKey: 'role_id' });
   roleAccount.belongsTo(Role, { foreignKey: 'role_id' });
+  // Define the relationship
+  Order.hasMany(Payment, { foreignKey: 'order_id' });
+  Payment.belongsTo(Order, { foreignKey: 'order_id' });
 };
 
 module.exports = defineAssociations;

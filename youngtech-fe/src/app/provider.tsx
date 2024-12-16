@@ -8,7 +8,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { PersistGate } from 'redux-persist/integration/react';
+import { PersistGate } from 'redux-persist/integration/react'; 
 
 export function ReduxProvider({ pageProps, children }: { pageProps: any; children: React.ReactNode }) {
   const session = pageProps?.session || null; // Kiểm tra session có tồn tại không

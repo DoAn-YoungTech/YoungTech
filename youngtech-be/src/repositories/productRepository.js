@@ -3,7 +3,12 @@ const imageRepository = require('./imageRepository');
 
 const productRepository = {
     getAllProduct: async ({ offset, limit }) => {
+ 
+        let query = `SELECT * FROM product`; 
+        // Lấy tất cả sản phẩm
+ 
         let query = `SELECT * FROM product WHERE flag = true AND productRetailPrice IS NOT NULL`; // Lấy tất cả sản phẩm
+ 
         let replacements = {};
     
         // Kiểm tra nếu có limit
@@ -23,8 +28,6 @@ const productRepository = {
         const [result] = await sequelize.query(query, {
             replacements: replacements
         });
-    
-
         let totalItems = 0;
     
         // Nếu có limit, tính tổng số sản phẩm để tính tổng số trang

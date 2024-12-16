@@ -1,22 +1,22 @@
 // outinvoiceService.js
-const outinvoiceRepository = require('../repositories/outinvoiceRepository');
+const outInvoiceRepository = require('../repositories/outinvoiceRepository');
 
-const outinvoiceService = {
-    getAllOutInvoices: async () => {
-        return await outinvoiceRepository.getAllOutInvoices();
+const outInvoiceService = {
+    getAllOutInvoices: async ({ offset, limit }) => {
+        return await outInvoiceRepository.getAllOutInvoices({ offset, limit });
     },
 
     getOutInvoiceById: async (id) => {
-        return await outinvoiceRepository.getOutInvoiceById(id);
+        return await outInvoiceRepository.getOutInvoiceById(id);
     },
 
     createOutInvoice: async (invoiceData) => {
-        return await outinvoiceRepository.createOutInvoice(invoiceData);
+        return await outInvoiceRepository.createOutInvoice(invoiceData);
     },
 
     deleteOutInvoice: async (id) => {
-        return await outinvoiceRepository.deleteOutInvoice(id);
+        return await outInvoiceRepository.deleteOutInvoice(id);
     }
 };
 
-module.exports = outinvoiceService;
+module.exports = outInvoiceService;
