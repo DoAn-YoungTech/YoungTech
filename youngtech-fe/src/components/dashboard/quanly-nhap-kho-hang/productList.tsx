@@ -3,13 +3,15 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/Store";
-import { FaRegEye } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { FaEdit} from "react-icons/fa";
 import { removeItem, resetWareHouseMannagementItems } from "@/redux/WareHouseManagement/WareHouseMannagementSlice";
 import axios from "axios";
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from "next/navigation";
 import EditProduct from "./components/EditProduct";
+import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { MdDeleteOutline } from "react-icons/md";
+const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 
 type Product = {
@@ -41,10 +43,11 @@ const ListProduct = () => {
     dispatch(removeItem(index))
   }
 
-  const handleView = (product: Product, id: number) => {
+  const handleUpdate = (product: Product, id: number) => {
     setSelectedProduct({...product, id: id});
     setModalOpen(true);
   };
+  
 
   const handleCloseModal = () => {
     setSelectedProduct(null);
@@ -64,7 +67,7 @@ const ListProduct = () => {
     }));
   
     try {
-      const response = await axios.post("http://localhost:3200/api/inputinvoice/addProduct", formattedData, {
+      const response = await axios.post(`${Api_url}/inputinvoice/addProduct`, formattedData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -86,7 +89,7 @@ const ListProduct = () => {
   const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
     ['suppliers'],
     async () => {
-      const response = await axios.get('http://localhost:3200/api/suppliers?limit=100&offset=0');
+      const response = await axios.get(`${Api_url}/suppliers?limit=100&offset=0`);
       return response.data;
     },
 
@@ -99,90 +102,21 @@ const ListProduct = () => {
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
-    const response = await axios.get('http://localhost:3200/api/childcategories?limit=100&page=1');
+    const response = await axios.get(`${Api_url}/childcategories?limit=100&page=1`);
     return response.data;
   });
 
   return (
-
-    // <div className="min-h-screen p-8 bg-gray-50">
-    //   <h1 className="text-3xl font-bold mb-6">Danh Sách Sản Phẩm Đã Nhập</h1>
-    //   {wareHouseMannagementItems.length === 0 ? (
-    //     <p className="text-gray-500">Không có sản phẩm nào.</p>
-    //   ) : (
-    //     <table className="w-full bg-white shadow-md rounded border border-gray-300">
-    //       <thead>
-    //         <tr className="bg-gray-100">
-    //           <th className="p-4 border-b">Tên sản phẩm</th>
-    //           <th className="p-4 border-b">Hình ảnh</th>
-    //           <th className="p-4 border-b">Mô tả</th>
-    //           <th className="p-4 border-b">Thương hiệu</th>
-    //           <th className="p-4 border-b">Giá</th>
-    //           <th className="p-4 border-b">Số lượng</th>
-    //           <th className="p-4 border-b">Nhà cung cấp</th>
-    //           <th className="p-4 border-b">Danh mục con</th>
-    //           <th className="p-4 border-b">Hành động</th>
-    //         </tr>
-    //       </thead>
-    //       <tbody>
-    //         { !isLoadingCategories && !isLoadingSuppliers && wareHouseMannagementItems.map((product, index) =>
-    //         {
-    //           const supplier =  suppliers && suppliers.data.find((item: any) => item.id === +product.supplier_id)
-    //           const childCategory =  childCategories && childCategories.data.find((item: any) => item.id === +product.childCategory_id)
-    //           return (
-    //             <tr key={index}>
-    //               <td className="p-4 border-b">{product.productName}</td>
-    //               <td className="p-4 border-b"><img src={product?.images[0]} alt="album" /></td>
-    //               <td className="p-4 border-b">{product.description}</td>
-    //               <td className="p-4 border-b">{product.brand}</td>
-    //               <td className="p-4 border-b">{product.productPrice}</td>
-    //               <td className="p-4 border-b">{product.quantity}</td>
-    //               <td className="p-4 border-b">{supplier.supplierName}</td>
-    //               <td className="p-4 border-b">{childCategory.childCateName}</td>
-    //               <td className="p-4 border-b flex items-center justify-around ">
-    //                 <button onClick={() => handleView(product as Product, index)}>
-    //                   <FaRegEye className="text-[1.1rem] text-slate-500" />
-    //                 </button>
-    //                 <button onClick={() => handleDelete(index)}>
-    //                   <RiDeleteBin6Line className="text-[1.1rem] text-orange-600" />
-    //                 </button>
-
-    //               </td>
-    //             </tr>
-    //           )
-    //         }
-    //         )
-    //         }
-    //       </tbody>
-    //     </table>
-    //   )}
-    //     <div className="flex justify-between mt-4">
-    //         <button onClick={() => router.back()} type="submit" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-    //           Huỷ
-    //         </button>
-    //         <button
-    //           type="button"
-    //           onClick={handleAddProducts}
-    //           className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-    //           >
-    //         Thêm
-    //         </button>
-    //       </div>
-
-    //             {/* Modal */}
-    //   {isModalOpen && selectedProduct && (
-    //     <EditProduct handleCloseModal={handleCloseModal} selectedProduct={selectedProduct} />
-    //   )}
-    // </div>
-    <div className="min-h-screen p-8 bg-[#111827]">
-    <h1 className="text-3xl font-bold text-white mb-6">Danh Sách Sản Phẩm Đã Nhập</h1>
+    <div className="min-h-screen p-8 bg-[#282F36] rounded-lg border-md border-[#374151]">
+    <h2 className="text-3xl font-bold text-center text-white mb-6">Danh sách sản phẩm đã nhập</h2>
     {wareHouseMannagementItems.length === 0 ? (
-      <p className="text-gray-400">Không có sản phẩm nào.</p>
+      <p className="text-white/50">Không có sản phẩm nào.</p>
     ) : (
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto bg-[#1F2937] rounded-lg shadow-md">
+      <div className="overflow-x-auto bg-[#282F36] rounded-lg text-white/50">
+        <table className="w-full table-auto bg-[#282F36] rounded-lg text-white/50">
           <thead>
-            <tr className="bg-[#374151] text-white">
+            <tr className="bg-[#282F36] text-white/80">
+            <th className="p-4 border-b border-gray-600">STT</th>
               <th className="p-4 border-b border-gray-600">Tên sản phẩm</th>
               <th className="p-4 border-b border-gray-600">Hình ảnh</th>
               <th className="p-4 border-b border-gray-600">Mô tả</th>
@@ -209,6 +143,9 @@ const ListProduct = () => {
                     key={index}
                     className="border-b border-gray-600 hover:bg-[#22282E] transition-all duration-300"
                   >
+                     <td className="p-4 text-white/80 text-[0.9rem]">
+                      {index + 1} {/* Hiển thị số thứ tự */}
+                    </td>
                     <td className="p-4 text-white/80 text-[0.9rem]">
                       {product.productName}
                     </td>
@@ -238,12 +175,14 @@ const ListProduct = () => {
                       {childCategory?.childCateName || "N/A"}
                     </td>
                     <td className="p-4 text-white/80 text-[0.9rem] flex items-center gap-4 text-center">
-                    <button onClick={() => handleView(product as Product, index)}>
-                        <FaRegEye className="text-[1.1rem] text-slate-400 hover:text-slate-200" />
-                      </button>
-                      <button onClick={() => handleDelete(index)}>
-                        <RiDeleteBin6Line className="text-[1.1rem] text-orange-500 hover:text-orange-300" />
-                      </button>
+                    <button  className="hover:bg-blue-500 bg-[#1E293B] rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center" 
+                      onClick={() => handleUpdate(product as Product, index)}>
+                      <FaEdit className="text-[1.1rem] text-blue-400"/>
+                    </button>
+                    <button className="hover:bg-red-500 bg-[#1E293B] rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
+                      onClick={() => handleDelete(index)}>
+                      <MdDeleteOutline className="text-[1.1rem] text-red-400" />
+                    </button>
                     </td>
                   </tr>
                 );
@@ -252,21 +191,9 @@ const ListProduct = () => {
         </table>
       </div>
     )}
-    <div className="flex justify-between mt-4">
-      <button
-        onClick={() => router.back()}
-        type="button"
-        className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-      >
-        Huỷ
-      </button>
-      <button
-        type="button"
-        onClick={handleAddProducts}
-        className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-      >
-        Thêm
-      </button>
+    <div className="flex justify-end gap-4 p-4">
+        <ShinyRotatingBorderButton type="button" onClick={() => router.back()}>Hủy</ShinyRotatingBorderButton>
+      <ShinyRotatingBorderButton type="button" onClick={handleAddProducts}>Thêm</ShinyRotatingBorderButton>
     </div>
     {isModalOpen && selectedProduct && (
       <EditProduct

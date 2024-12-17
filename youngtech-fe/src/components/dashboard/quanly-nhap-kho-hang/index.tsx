@@ -4,15 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { toast } from "react-toastify";
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import View from "../Action/view";
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/redux/Store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/Store';
 import { addProductToTemp } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
 import { useRouter } from 'next/navigation';
 import UploadImage from '@/components/UploadImage';
-
+import { ShinyRotatingBorderButton } from '../ButtonSave/BtnSave';
+const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 // Validation schema using Yup
 const schema = yup.object({
@@ -79,7 +80,7 @@ export default function WarehouseManagement() {
   const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
     ['suppliers'],
     async () => {
-      const response = await axios.get('http://localhost:3200/api/suppliers?limit=100&offset=0');
+      const response = await axios.get(`${Api_url}/suppliers?limit=100&offset=0`);
       return response.data;
     }
   );
@@ -90,7 +91,7 @@ export default function WarehouseManagement() {
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
-    const response = await axios.get('http://localhost:3200/api/childcategories?limit=100&page=1');
+    const response = await axios.get(`${Api_url}/childcategories?limit=100&page=1`);
     return response.data;
   });
 
@@ -107,26 +108,34 @@ export default function WarehouseManagement() {
   // Form submission handler
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
-      const response = await axios.get('http://localhost:3200/api/product/validate', {
-        params: data,
-      });
-
-      if (response.data.errors) {
-        Object.entries(response.data.errors).forEach(([key, message]) => {
-          const formKey = errorMapping[key];
-          if (formKey) {
-            setError(formKey, { type: 'server', message: message as string });
-          }
+        // Gọi API để xác thực sản phẩm
+        const response = await axios.get(`${Api_url}/product/validate`, {
+            params: data,
         });
-      } else {
-        alert('Nhập kho thành công!');
-        reset();
-        dispatch(addProductToTemp(data))
-      }
+
+        if (response.data.errors) {
+            Object.entries(response.data.errors).forEach(([key, message]) => {
+                const formKey = errorMapping[key];
+                if (formKey) {
+                    setError(formKey, { type: 'server', message: message as string });
+                }
+            });
+        } else {
+            toast.success("Nhập kho thành công!");
+
+            // Đặt lại các trường nhập liệu về rỗng
+            reset();
+
+            // Thêm sản phẩm vào kho tạm
+            dispatch(addProductToTemp(data));
+        }
     } catch (error) {
-      console.error('Error validating product:', error);
+        console.error("Lỗi khi nhập kho sản phẩm:", error);
+        toast.error("Lỗi khi nhập kho sản phẩm!");
     }
-  };
+};
+
+
 
   const viewAllProduct  = () => {
     router.push('/dashboard/quanly-nhap-khohang/danh-sach')
@@ -148,143 +157,23 @@ export default function WarehouseManagement() {
 
 
   return (
-    // <div className="flex items-center justify-center min-h-screen bg-gray-50">
-    //   <div className="w-[600px] p-8 bg-white shadow-lg rounded border border-gray-300">
-    //     <h1 className="text-3xl font-bold text-center mb-6">NHẬP KHO</h1>
-    //     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-    //       {/* Product Name */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Tên hàng</label>
-    //         <input
-    //           {...register('productName')}
-    //           className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //         />
-    //         {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
-    //       </div>
-
-    //       {/* Album ảnh */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Album ảnh</label>
-    //         <UploadImage 
-    //         handleGetArrayImage={handleGetArrayImage}  />
-    //         {errors.images && <p className="text-red-500 text-sm mt-1">{errors.images.message}</p>}
-    //       </div>
-
-    //       {/* Description */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Mô tả</label>
-    //         <input
-    //           {...register('description')}
-    //           className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //         />
-    //         {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
-    //       </div>
-
-    //       {/* Brand */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Thương hiệu</label>
-    //         <input
-    //           {...register('brand')}
-    //           className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //         />
-    //         {errors.brand && <p className="text-red-500 text-sm mt-1">{errors.brand.message}</p>}
-    //       </div>
-
-    //       {/* Product Price */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Giá</label>
-    //         <input
-    //           {...register('productPrice')}
-    //           className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //         />
-    //         {errors.productPrice && <p className="text-red-500 text-sm mt-1">{errors.productPrice.message}</p>}
-    //       </div>
-
-    //       {/* Quantity */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Số lượng</label>
-    //         <input
-    //           type="number"
-    //           {...register('quantity')}
-    //           className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //         />
-    //         {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity.message}</p>}
-    //       </div>
-
-    //       {/* Supplier */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Nhà cung cấp</label>
-    //         <select
-    //           {...register('supplier_id')}
-    //           className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //         >
-    //           {isLoadingSuppliers && <option>Đang tải...</option>}
-    //           {isErrorSuppliers && <option>Không thể tải danh sách</option>}
-    //           {suppliers &&
-    //             suppliers.data.map((supplier: any) => (
-    //               <option key={supplier.id} value={supplier.id}>
-    //                 {supplier.supplierName}
-    //               </option>
-    //             ))}
-    //         </select>
-    //         {errors.supplier_id && <p className="text-red-500 text-sm mt-1">{errors.supplier_id.message}</p>}
-    //       </div>
-
-    //       {/* Child Categories */}
-    //       <div>
-    //         <label className="block text-sm font-semibold mb-2">Child Categories</label>
-    //         <select
-    //           {...register('childCategory_id')}
-    //           className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    //         >
-    //           {isLoadingCategories && <option>Đang tải...</option>}
-    //           {isErrorCategories && <option>Không thể tải danh sách</option>}
-    //           {childCategories &&
-    //             childCategories.data.map((category: any) => (
-    //               <option key={category.id} value={category.id}>
-    //                 {category.childCateName}
-    //               </option>
-    //             ))}
-    //         </select>
-    //         {errors.childCategory_id && <p className="text-red-500 text-sm mt-1">{errors.childCategory_id.message}</p>}
-    //       </div>
-
-    //       {/* Buttons */}
-    //       <div className="flex justify-between mt-4">
-    //         <button onClick={viewAllProduct} type="button" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-    //           Xem lại
-    //         </button>
-    //         <button type="submit" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-    //           Nhập thêm
-    //         </button>
-    //         <button
-    //           type="button"
-    //           onClick={() => reset()}
-    //           className="w-[33%] bg-gray-400 text-white py-2 rounded hover:bg-gray-500"
-    //         >
-    //           Hủy
-    //         </button>
-    //       </div>
-    //     </form>
-    //   </div>
-    // </div>
-    <div className="flex items-center justify-center min-h-screen bg-[#22282E]">
-    <div className="w-[600px] p-8 bg-[#1F2937] shadow-lg rounded border border-[#374151]">
-      <h1 className="text-3xl font-bold text-center text-white mb-6">NHẬP KHO</h1>
+    <div className="flex items-center justify-center min-h-screen bg-[#22282E] ">
+    <div className="w-[600px] p-8 bg-[#282F36] shadow-lg rounded-lg border-md ">
+      <h2 className="text-3xl font-bold text-center text-white mb-6">Nhập kho</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Product Name */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Tên hàng</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Tên hàng</label>
           <input
             {...register('productName')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
         </div>
 
         {/* Album ảnh */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Album ảnh</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Album ảnh</label>
           <UploadImage 
           handleGetArrayImage={handleGetArrayImage}  />
           {errors.images && <p className="text-red-500 text-sm mt-1">{errors.images.message}</p>}
@@ -292,51 +181,51 @@ export default function WarehouseManagement() {
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Mô tả</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Mô tả</label>
           <input
             {...register('description')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
         </div>
 
         {/* Brand */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Thương hiệu</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Thương hiệu</label>
           <input
             {...register('brand')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.brand && <p className="text-red-500 text-sm mt-1">{errors.brand.message}</p>}
         </div>
 
         {/* Product Price */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Giá</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Giá</label>
           <input
             {...register('productPrice')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.productPrice && <p className="text-red-500 text-sm mt-1">{errors.productPrice.message}</p>}
         </div>
 
         {/* Quantity */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Số lượng</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Số lượng</label>
           <input
             type="number"
             {...register('quantity')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity.message}</p>}
         </div>
 
         {/* Supplier */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Nhà cung cấp</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Nhà cung cấp</label>
           <select
             {...register('supplier_id')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {isLoadingSuppliers && <option>Đang tải...</option>}
             {isErrorSuppliers && <option>Không thể tải danh sách</option>}
@@ -352,10 +241,10 @@ export default function WarehouseManagement() {
 
         {/* Child Categories */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Child Categories</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Child Categories</label>
           <select
             {...register('childCategory_id')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {isLoadingCategories && <option>Đang tải...</option>}
             {isErrorCategories && <option>Không thể tải danh sách</option>}
@@ -371,19 +260,15 @@ export default function WarehouseManagement() {
 
         {/* Buttons */}
         <div className="flex justify-between mt-4">
-          <button onClick={viewAllProduct} type="button" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+          <ShinyRotatingBorderButton type="button" onClick={viewAllProduct}>
             Xem lại
-          </button>
-          <button type="submit" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+          </ShinyRotatingBorderButton>
+          <ShinyRotatingBorderButton type="submit">
             Nhập thêm
-          </button>
-          <button
-            type="button"
-            onClick={() => reset()}
-            className="w-[33%] bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
-          >
+          </ShinyRotatingBorderButton>
+          <ShinyRotatingBorderButton type="button" onClick={() => reset()}>
             Hủy
-          </button>
+          </ShinyRotatingBorderButton>
         </div>
       </form>
     </div>
