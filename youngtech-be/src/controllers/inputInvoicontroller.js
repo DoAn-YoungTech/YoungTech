@@ -37,7 +37,6 @@ const inputInvoiceController = {
       const invoiceData = {
         invoiceDate: formattedInvoiceDate,  
         totalAmount,        
-        
         linkPdf        
       };
 

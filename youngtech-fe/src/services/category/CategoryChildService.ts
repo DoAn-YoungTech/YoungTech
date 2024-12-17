@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { getSession } from 'next-auth/react';
 const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 // Hàm thêm dữ liệu childcategory

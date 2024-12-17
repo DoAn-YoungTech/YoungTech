@@ -22,7 +22,7 @@ const inputInvoiceRepository = {
   saveInputInvoice: async (invoiceData) => {
     try {
       const query = `
-        INSERT INTO InputInvoice (invoiceDate, totalAmount, linkPdf)
+        INSERT INTO InputInvoice (invoiceDate, totalAmount,  linkPdf)
         VALUES (:invoiceDate, :totalAmount, :linkPdf)
       `;
       

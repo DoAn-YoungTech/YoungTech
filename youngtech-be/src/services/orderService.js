@@ -61,6 +61,16 @@ const orderService = {
 
     return order;
   },
+  getOrderByAccountId: async (userId) => {
+
+    const order = await orderRepository.getOrderByAccountId(userId);
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    return order;
+  },
   updateStatusOrder: async (orderId, status) => {
     try {
       const result = await orderRepository.updateOrderStatus(orderId, status);

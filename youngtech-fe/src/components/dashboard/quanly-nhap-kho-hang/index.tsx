@@ -219,7 +219,7 @@ export default function WarehouseManagement() {
             {isErrorSuppliers && <option>Không thể tải danh sách</option>}
             {suppliers &&
               suppliers.data?.map((supplier: any) => (
-                <option key={supplier.id} value={supplier.id} className="text-white/50">
+                <option key={supplier.id} value={supplier.id} className="text-black">
                   {supplier.supplierName}
                 </option>
               ))}
@@ -237,7 +237,7 @@ export default function WarehouseManagement() {
             {isLoadingCategories && <option>Đang tải...</option>}
             {isErrorCategories && <option>Không thể tải danh sách</option>}
             {childCategories &&
-childCategories?.data?.map((category: any) => (
+              childCategories?.data?.map((category: any) => (
                 <option key={category.id} value={category.id} className="text-black">
                   {category.childCateName}
                 </option>

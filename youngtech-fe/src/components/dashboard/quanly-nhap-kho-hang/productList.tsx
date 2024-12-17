@@ -61,6 +61,7 @@ const ListProduct = () => {
     });
   };
 
+
   const handleAddProducts = async () => {
     const formattedData = wareHouseMannagementItems.map((item) => ({
       productName: item.productName,
@@ -164,7 +165,7 @@ const ListProduct = () => {
         },
         {
           headers: { "Content-Type": "application/json" },
-}
+        }
       );
   
       if (invoiceResponse.status === 200) {
@@ -179,11 +180,14 @@ const ListProduct = () => {
       alert("Đã xảy ra lỗi khi xử lý.");
     }
   };
+  
 
-  const { data: suppliers } = useQuery(['suppliers'], async () => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/suppliers?limit=100&offset=0`);
-    return response.data;
-  });
+  const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
+    ['suppliers'],
+    async () => {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/suppliers?limit=100&offset=0`);
+      return response.data;
+    });
 
   const { data: childCategories } = useQuery(['childCategories'], async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);

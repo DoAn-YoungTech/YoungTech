@@ -143,8 +143,6 @@ const productRepository = {
     const [result] = await sequelize.query(query, { replacements: { id } });
     const imagesByProductId = await imageRepository.getAllImagesByProductId(id)
 
-    console.log('<< imagesByProductId >>', imagesByProductId);
-    console.log('<< result[0]; >>', result[0]);
 
     return ({...result[0], images: imagesByProductId});  // Trả về sản phẩm với tất cả các hình ảnh gộp lại trong cột 'imageUrls'
   },
@@ -266,7 +264,7 @@ const productRepository = {
 
 
   deleteProduct: async (id) => {
-    const query = `UPDATE product SET flag = true WHERE id = :id`;
+    const query = `UPDATE product SET flag = false WHERE id = :id`;
     const [result] = await sequelize.query(query, { replacements: { id } });
     return result;
   },
@@ -291,6 +289,23 @@ const productRepository = {
     await sequelize.query(query, { replacements: { ...data, id } });
   },
 
+  editProduct: async (id, data) => {
+    console.log(id, data, '12321')
+      // Nếu có ID, thực hiện cập nhật sản phẩm
+      const updateQuery = `
+        UPDATE product 
+        SET 
+          productName = :productName, 
+          quantity = :quantity, 
+          description = :description, 
+          productPrice = :productPrice, 
+          brand = :brand, 
+          childCategory_id = :childCategory_id, 
+          supplier_id = :supplier_id
+        WHERE id = :id
+      `;
+      await sequelize.query(updateQuery, { replacements: { ...data, id } });
+  },
 
   createProduct: async (productData) => {
     const query = `

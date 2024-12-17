@@ -30,6 +30,10 @@ const customerService = {
     return await customerRepository.editCustomer(checkUserIdExist, updateData);
   },
 
+  updateInfoMe: async (data, checkAccountExist) => {
+    return await customerRepository.updateInfoMe(data, checkAccountExist);
+  },
+
   // deleteCustomer(checkUserIdExist)
   deleteCustomer: async (checkUserIdExist) => {
     return await customerRepository.deleteCustomer(checkUserIdExist);

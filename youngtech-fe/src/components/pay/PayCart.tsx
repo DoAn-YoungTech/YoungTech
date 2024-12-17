@@ -30,7 +30,10 @@ const PayCart = ({ userInfo, handleOpen, totalOrder, CartProduct, CartProductOrd
     setTimeout(() => {
       setIsLoading(false);
       setModalMessage('Đặt hàng thành công !');
-      setTimeout(() => setShowModal(false), 3000);
+      setTimeout(() => {
+        setShowModal(false)
+      router.push("/lich-su-mua-hang")
+      }, 3000);
     }, 2000);
   };
 
