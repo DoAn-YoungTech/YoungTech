@@ -131,7 +131,17 @@ const data = {
     {
       title: "Quản lý nhập kho hàng",
       url: "quanly-nhap-khohang",
-      icon: FaWarehouse
+      icon: FaBusinessTime,
+      items: [
+        {
+          title: "Nhập kho",
+          url: "quanly-nhap-khohang"
+        }, 
+        {
+          title: "Danh sách sản phẩm",
+          url: "quanly-nhap-khohang/danh-sach-san-pham"
+        },
+      ]
     },
     {
       title: "Danh sách hóa đơn",
@@ -168,7 +178,7 @@ export default function SiderbarAdmin() {
         <SidebarContent className="  text-slate-300">
           <SidebarGroup>
             <SidebarMenu>
-              {data.navMain.map((item) => (
+              {data.navMain.map((item: any) => (
                 <Collapsible
                   key={item.title}
                   asChild
@@ -205,7 +215,7 @@ export default function SiderbarAdmin() {
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <SidebarMenuSub>
-                            {item.items?.map((subItem) => (
+                            {item.items?.map((subItem : any) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton
                                   className="py-5 hover:bg-gray-900 hover:text-white"
