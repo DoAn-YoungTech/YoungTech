@@ -39,6 +39,30 @@ const customerController = {
       res.status(500).json({ error: error.message });
     }
   },
+
+ // addInformation
+ updateInfoMe: async (req, res) => {
+  try {
+    // get user need add information
+    const userId = req.user.id;
+    const data = req.body;
+    console.log(data);
+    const checkAccountExist = await customerService.checkAccountExist(userId);
+    console.log(checkAccountExist);
+    if (!checkAccountExist) {
+      return res.status(404).json({ message: 'Not found !' });
+    }
+    // ADD info by account user
+    const addInformationByAccount =
+      await customerService.addInformationByAccount(data, checkAccountExist);
+    if (!addInformationByAccount) {
+      return res.status(404).json({ message: 'fail' });
+    }
+    return res.status(200).json({ message: addInformationByAccount });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+},
   // addInformation
   addInformationCustomer: async (req, res) => {
     try {
@@ -60,6 +84,29 @@ const customerController = {
       // ADD info by account user
       const addInformationByAccount =
         await customerService.addInformationByAccount(data, checkAccountExist);
+      if (!addInformationByAccount) {
+        return res.status(404).json({ message: 'fail' });
+      }
+      return res.status(200).json({ message: addInformationByAccount });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  },
+
+  updateInfoMe: async (req, res) => {
+    try {
+      // get user need add information
+      const userId = req.user.id;
+      const data = req.body;
+      console.log(data);
+      const checkAccountExist = await customerService.checkAccountExist(userId);
+      console.log(checkAccountExist);
+      if (!checkAccountExist) {
+        return res.status(404).json({ message: 'Not found !' });
+      }
+      // ADD info by account user
+      const addInformationByAccount =
+        await customerService.updateInfoMe(data, checkAccountExist);
       if (!addInformationByAccount) {
         return res.status(404).json({ message: 'fail' });
       }

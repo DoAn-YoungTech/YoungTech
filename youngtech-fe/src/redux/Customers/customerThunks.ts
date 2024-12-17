@@ -57,6 +57,29 @@ export const updateCustomer = createAsyncThunk(
 );
 
 
+export const updateInfoMe = createAsyncThunk(
+  "customers/updateInfoMe",
+  async (data: Partial<Customer>, { rejectWithValue }) => {
+    try {
+      const session = await getSession();
+      const response = await axios.patch(
+        `${API_URL_Customers}/updateInfoMe`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      // Xử lý lỗi
+      return rejectWithValue(error.response?.data || "Có lỗi xảy ra");
+    }
+  }
+);
+
+
 // Thunk để xóa khách hàng
 export const removeCustomer = createAsyncThunk(
   'customers/removeCustomer',

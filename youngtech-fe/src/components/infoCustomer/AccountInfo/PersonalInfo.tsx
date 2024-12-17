@@ -1,19 +1,38 @@
-import React, { useState } from 'react';
+import { fetchCustomersById, updateInfoMe } from '@/redux/Customers/customerThunks';
+import React, { useEffect, useState } from 'react';
 import { FaEdit } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 const PersonalInfo = () => {
+  const { data: session } = useSession();
+  const dispatch = useDispatch();
+  const { customers } = useSelector((state) => state.customers);
+
   // State để quản lý việc hiển thị form chỉnh sửa
   const [isEditing, setIsEditing] = useState(false);
 
   // State quản lý dữ liệu thông tin cá nhân
   const [userInfo, setUserInfo] = useState({
-    name: 'ThanhNV',
-    phone: '0931247957',
-    id: '123456',
-    email: 'thanhnv2923@gmail.com'
+    name: "",
+    phone: "",
   });
 
-  // State để lưu dữ liệu tạm thời khi chỉnh sửa
-  const [tempInfo, setTempInfo] = useState({ ...userInfo });
+  useEffect(() => {
+    if (session) {
+      dispatch(fetchCustomersById());
+    }
+  }, [dispatch, session]);
+
+  useEffect(() => {
+    if (customers && customers.customers) {
+      setUserInfo({
+        name: customers.customers.fullName, // Cập nhật tên
+        phone: customers.customers.phoneNumber, // Cập nhật số điện thoại
+      });
+    }
+  }, [customers]);
 
   // Hàm xử lý khi người dùng nhấn "Sửa"
   const handleEditClick = () => {
@@ -23,29 +42,36 @@ const PersonalInfo = () => {
   // Hàm xử lý khi người dùng thay đổi giá trị trong form
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTempInfo((prev) => ({ ...prev, [name]: value }));
+    setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   // Hàm xử lý khi người dùng nhấn "Lưu"
-  const handleSaveClick = () => {
-    setUserInfo(tempInfo);
-    setIsEditing(false);
+  const handleSaveClick = async () => {
+    const data = {
+      fullName: userInfo.name,
+      phoneNumber: userInfo.phone,
+    };
+    const req = await dispatch(updateInfoMe(data)); 
+    if(req){
+      toast.success("Cập nhật thành công")
+    }
+    setIsEditing(false); 
   };
 
   // Hàm xử lý khi người dùng nhấn "Hủy"
   const handleCancelClick = () => {
-    setTempInfo({ ...userInfo });
-    setIsEditing(false);
+    setIsEditing(false); // Đóng form chỉnh sửa mà không thay đổi dữ liệu
   };
 
   return (
-    <div className="w-full  mb-5 bg-white shadow-md  overflow-auto rounded p-4" >
+    <div className="w-full mb-5 bg-white shadow-md overflow-auto rounded p-4">
+      <ToastContainer/>
       <h2 className="text-lg font-bold mb-4">THÔNG TIN CÁ NHÂN</h2>
-
+ 
       {!isEditing ? (
         <div>
           <p className='flex gap-3 items-center'>
-            {userInfo.name} - {userInfo.phone} - {userInfo.id} - {userInfo.email}
+            {userInfo.name} - {userInfo.phone}
             <button 
               onClick={handleEditClick} 
               className="text-blue-500 flex gap-1 items-center ml-2">
@@ -61,7 +87,7 @@ const PersonalInfo = () => {
             <input
               type="text"
               name="name"
-              value={tempInfo.name}
+              value={userInfo.name}
               onChange={handleChange}
               className="w-full border p-2 rounded"
             />
@@ -72,29 +98,7 @@ const PersonalInfo = () => {
             <input
               type="text"
               name="phone"
-              value={tempInfo.phone}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700">Mã số</label>
-            <input
-              type="text"
-              name="id"
-              value={tempInfo.id}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="text"
-              name="email"
-              value={tempInfo.email}
+              value={userInfo.phone}
               onChange={handleChange}
               className="w-full border p-2 rounded"
             />
