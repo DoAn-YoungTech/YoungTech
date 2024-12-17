@@ -1,7 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronRight, Command } from "lucide-react";
-import { useSession } from "next-auth/react"; // To fetch user info and roles
+import {  ChevronRight,  Command,} from "lucide-react";
 
 import {
   Collapsible,
@@ -22,6 +21,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from "@/components/ui/sidebar";
+// import { Separator } from "@/components/ui/separator";
 import { IoIosPeople } from "react-icons/io";
 import { GiJerusalemCross } from "react-icons/gi";
 import {
@@ -44,8 +44,7 @@ const data = {
       title: "Quản lý nhân viên",
       url: "quanly-nhanvien",
       icon: IoIosPeople,
-      roles: ['admin'], // Only admin has access
-      items: [
+      items: [ 
         {
           title: "Tạo nhân viên",
           url: "quanly-nhanvien/tao-nhanvien"
@@ -56,7 +55,6 @@ const data = {
       title: "Quản lý bán hàng",
       url: "quanly-banhang",
       icon: GiJerusalemCross,
-      roles: ['admin', 'storekeeper'], // admin and storekeeper have access
       items: [
         {
           title: "Bán hàng",
@@ -76,19 +74,18 @@ const data = {
       title: "Quản lý kinh doanh",
       url: "quanly-kinhdoanh",
       icon: FaBusinessTime,
-      roles: ['admin', 'businessEmployee'], // admin and businessEmployee have access
       items: [
         {
           title: "Giá bán lẻ",
           url: "quanly-kinhdoanh/giaban-le"
-        },
+        }, 
         {
           title: "Danh thu và lợi nhuận",
           url: "quanly-kinhdoanh/danhthu-loinhuan"
         },
         {
           title: "Thông tin khách hàng",
-          url: "quanly-kinhdoanh/thongtin-khachhang"
+          url: "quanly-kinhdoanh/thongtin-khachhang",
         }
       ]
     },
@@ -96,9 +93,8 @@ const data = {
       title: "Danh mục sản phẩm",
       url: "quanly-danhmuc-sanpham",
       icon: GrCatalog,
-      roles: ['admin'], // Only admin has access
       items: [
-        {
+         {
           title: "Danh mục cha",
           url: "quanly-danhmuc-sanpham/danhsach-danhmuc-cha"
         },
@@ -112,7 +108,6 @@ const data = {
       title: "Sản phẩm",
       url: "quanly-sanpham",
       icon: FcTwoSmartphones,
-      roles: ['admin'], // Only admin has access
       items: [
         {
           title: "Danh sách sản phẩm",
@@ -131,63 +126,49 @@ const data = {
     {
       title: "Quản lý nhà cung cấp",
       url: "quanly-nha-cungcap",
-      icon: FaClipboardList,
-      roles: ['admin'] // Only admin has access
+icon: FaClipboardList
     },
     {
       title: "Quản lý nhập kho hàng",
       url: "quanly-nhap-khohang",
-      icon: FaBusinessTime,
-      items: [
-        {
-          title: "Nhập kho",
-          url: "quanly-nhap-khohang"
-        }, 
-        {
-          title: "Danh sách sản phẩm",
-          url: "quanly-nhap-khohang/danh-sach-san-pham"
-        },
-      ]
+      icon: FaWarehouse
     },
     {
       title: "Danh sách hóa đơn",
       url: "quanly-hoadon",
-      icon: FaFileInvoice,
-      roles: ['admin'] // Only admin has access
+      icon: FaFileInvoice
     }
   ]
 };
 
-export default function SidebarAdmin() {
+export default function SiderbarAdmin() {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession(); // Fetch user session
-  
-  const userRole = session?.user?.role; // Get user role from session
-
   return (
     <Sidebar className="bg-[#22282E] p-2 text-slate-300" variant="inset">
       <div className="bg-[#282F36] h-[100vh] rounded-2xl">
-        <SidebarHeader className="text-slate-300">
+        <SidebarHeader className="  text-slate-300">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
                 <a href="#">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <div className="flex aspect-square  size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                     <Command className="size-4 text-black" />
                   </div>
-                  <div className="flex justify-between items-center text-left text-sm leading-tight">
-                    <span className="truncate text-xl text-white font-semibold">Dashboard</span>
+                  <div className=" flex justify-between items-center text-left text-sm leading-tight">
+                    <span className="truncate text-xl text-white font-semibold">
+                      Dashboard
+                    </span>
                   </div>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
-        <SidebarContent className="text-slate-300">
+        <SidebarContent className="  text-slate-300">
           <SidebarGroup>
             <SidebarMenu>
-              {data.navMain.map((item: any) => (
+              {data.navMain.map((item) => (
                 <Collapsible
                   key={item.title}
                   asChild
@@ -222,9 +203,9 @@ export default function SidebarAdmin() {
                             <span className="sr-only">Toggle</span>
                           </SidebarMenuAction>
                         </CollapsibleTrigger>
-                        <CollapsibleContent>
+<CollapsibleContent>
                           <SidebarMenuSub>
-                            {item.items?.map((subItem : any) => (
+                            {item.items?.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton
                                   className="py-5 hover:bg-gray-900 hover:text-white"
