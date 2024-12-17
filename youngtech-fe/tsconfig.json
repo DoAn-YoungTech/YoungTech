@@ -10,11 +10,11 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "moduleResolution": "node", // Đổi từ 'bundler' thành 'node'
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve", // Nếu bạn sử dụng React 17+ hoặc React 18
     "incremental": true,
     "plugins": [
       {
@@ -26,7 +26,7 @@
         "./src/*"
       ]
     },
-    "target": "ES2017"
+    "target": "ES6" // Thay 'ES2017' bằng 'ES6'
   },
   "include": [
     "next-env.d.ts",

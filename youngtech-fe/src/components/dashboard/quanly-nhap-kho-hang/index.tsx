@@ -14,6 +14,9 @@ import UploadImage from '@/components/UploadImage';
 import { ShinyRotatingBorderButton } from '../ButtonSave/BtnSave';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+ const Api_url = process.env.NEXT_PUBLIC_API_URL;
+
+const AddProduct = () => {
 
 // Validation schema using Yup
 const schema = yup.object({
@@ -80,7 +83,7 @@ export default function WarehouseManagement() {
   const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
     ['suppliers'],
     async () => {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/suppliers?limit=100&offset=0`);
+      const response = await axios.get(`${Api_url}/suppliers?limit=100&offset=0`);
       return response.data;
     }
   );
@@ -91,7 +94,7 @@ export default function WarehouseManagement() {
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);
+    const response = await axios.get(`${Api_url}/childcategories?limit=100&page=1`);
     return response.data;
   });
 
@@ -108,7 +111,7 @@ export default function WarehouseManagement() {
   // Form submission handler
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/validate`, {
+      const response = await axios.get(`${Api_url}/product/validate`, {
         params: data,
       });
   
@@ -152,9 +155,9 @@ export default function WarehouseManagement() {
   },[urlsImage])
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#22282E]">
-    <div className="w-[600px] p-8 bg-[#1F2937] shadow-lg rounded border border-[#374151]">
-      <h1 className="text-3xl font-bold text-center text-white mb-6">NHẬP KHO</h1>
+    <div className="flex items-center justify-center min-h-screen bg-[#22282E] ">
+    <div className="w-[600px] p-8 bg-[#282F36] shadow-lg rounded-lg border-md ">
+      <h2 className="text-3xl font-bold text-center text-white mb-6">Nhập kho</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Product Name */}
         <div>
@@ -270,5 +273,6 @@ export default function WarehouseManagement() {
   </div>
   );
 }
+};
 
-
+export default AddProduct;
