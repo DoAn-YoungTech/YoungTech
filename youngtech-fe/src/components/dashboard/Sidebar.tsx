@@ -137,8 +137,17 @@ const data = {
     {
       title: "Quản lý nhập kho hàng",
       url: "quanly-nhap-khohang",
-      icon: FaWarehouse,
-      roles: ['admin'] // Only admin has access
+      icon: FaBusinessTime,
+      items: [
+        {
+          title: "Nhập kho",
+          url: "quanly-nhap-khohang"
+        }, 
+        {
+          title: "Danh sách sản phẩm",
+          url: "quanly-nhap-khohang/danh-sach-san-pham"
+        },
+      ]
     },
     {
       title: "Danh sách hóa đơn",
@@ -178,72 +187,76 @@ export default function SidebarAdmin() {
         <SidebarContent className="text-slate-300">
           <SidebarGroup>
             <SidebarMenu>
-              {data.navMain.map((item) => {
-                // Check user role for access
-                if (!item.roles.includes(userRole)) return null; // Hide menu if user does not have access
-
-                return (
-                  <Collapsible key={item.title} asChild defaultOpen={false}>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        className="py-5 hover:bg-transparent!important hover:text-white"
-                        asChild
+              {data.navMain.map((item: any) => (
+                <Collapsible
+                  key={item.title}
+                  asChild
+                  defaultOpen={item.isActive}
+                >
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      className="py-5 hover:bg-transparent!important hover:text-white"
+                      asChild
+                      tooltip={item.title}
+                    >
+                      <button
+                        type="button"
+                        className={`${
+                          pathname.includes(item.url)
+                            ? "bg-black/50 hover:bg-slate-600 text-white "
+                            : ""
+                        }`}
+                        onClick={() => router.push(`/dashboard/${item.url}`)}
                       >
-                        <button
-                          type="button"
-                          className={`${
-                            pathname.includes(item.url)
-                              ? "bg-black/50 hover:bg-slate-600 text-white"
-                              : ""
-                          }`}
-                          onClick={() => router.push(`/dashboard/${item.url}`)}
-                        >
-                          <item.icon />
-                          <span className="text-[15px] font-[500]">{item.title}</span>
-                        </button>
-                      </SidebarMenuButton>
-                      {item.items?.length ? (
-                        <>
-                          <CollapsibleTrigger asChild>
-                            <SidebarMenuAction className="data-[state=open]:rotate-90">
-                              <ChevronRight />
-                              <span className="sr-only">Toggle</span>
-                            </SidebarMenuAction>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent>
-                            <SidebarMenuSub>
-                              {item.items?.map((subItem) => (
-                                <SidebarMenuSubItem key={subItem.title}>
-                                  <SidebarMenuSubButton
-                                    className="py-5 hover:bg-gray-900 hover:text-white"
-                                    asChild
+                        <item.icon />
+                        <span className="text-[15px] font-[500]">
+                          {item.title}
+                        </span>
+                      </button>
+                    </SidebarMenuButton>
+                    {item.items?.length ? (
+                      <>
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuAction className="data-[state=open]:rotate-90">
+                            <ChevronRight />
+                            <span className="sr-only">Toggle</span>
+                          </SidebarMenuAction>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            {item.items?.map((subItem : any) => (
+                              <SidebarMenuSubItem key={subItem.title}>
+                                <SidebarMenuSubButton
+                                  className="py-5 hover:bg-gray-900 hover:text-white"
+                                  asChild
+                                >
+                                  <button
+                                    type="button"
+                                    className={`${
+                                      pathname.includes(subItem.url)
+                                        ? "bg-gray-600 hover:bg-gray-600 text-black"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      router.push(`/dashboard/${subItem.url}`)
+                                    }
                                   >
-                                    <button
-                                      type="button"
-                                      className={`${
-                                        pathname.includes(subItem.url)
-                                          ? "bg-gray-600 hover:bg-gray-600 text-black"
-                                          : ""
-                                      }`}
-                                      onClick={() =>
-                                        router.push(`/dashboard/${subItem.url}`)
-                                      }
-                                    >
-                                      <span className="text-[16px] text-white/60 font-semibold">
-                                        {subItem.title}
-                                      </span>
-                                    </button>
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                              ))}
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        </>
-                      ) : null}
-                    </SidebarMenuItem>
-                  </Collapsible>
-                );
-              })}
+                                    <span className="text-[16px] text-white/60 font-semibold">
+                                      {subItem.title}
+                                    </span>
+                                  </button>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </>
+                    ) : null}
+                  </SidebarMenuItem>
+                  
+                </Collapsible>
+                
+              ))}
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>

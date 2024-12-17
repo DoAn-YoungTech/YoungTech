@@ -67,6 +67,110 @@ const ListProduct = () => {
   };
 
 
+  // const handleAddProducts = async () => {
+  //   const formattedData = wareHouseMannagementItems.map((item) => ({
+  //     productName: item.productName,
+  //     quantity: item.quantity,
+  //     description: item.description,
+  //     productPrice: item.productPrice,
+  //     brand: item.brand,
+  //     childCategory_id: item.childCategory_id,
+  //     supplier_id: item.supplier_id,
+  //     images: item.images || [],
+  //   }));
+
+  //   // Xuất dữ liệu ra PDF
+  //   const doc = new jsPDF();
+  //   doc.setFont('courier', 'italic');
+  //   doc.getFontList();
+  //   doc.text("Danh sách sản phẩm đã nhập", 14, 10);
+
+  //   // Cấu hình bảng
+  //   autoTable(doc, {
+  //     head: [["STT", "Tên sản phẩm", "Số lượng", "Mô tả", "Giá", "Thương hiệu", "Danh mục con", "Nhà cung cấp"]],
+  //     body: formattedData.map((product, index) => {
+
+  //       const supplier = suppliers?.data.find(
+  //         (item) => item.id === +product.supplier_id
+  //       );
+  //       const childCategory = childCategories?.data.find(
+  //         (item) => item.id === +product.childCategory_id
+  //       );
+  //       return [
+  //         index,
+  //         product.productName,
+  //         product.quantity,
+  //         product.description,
+  //         product.productPrice,
+  //         product.brand,
+  //         childCategory?.childCateName, // Có thể thay bằng tên danh mục nếu cần
+  //         supplier?.supplierName,      // Có thể thay bằng tên nhà cung cấp nếu cần
+  //       ]
+  //     }),
+  //     styles: {
+  //       fontSize: 10, font: 'Amiri',
+  //       fontStyle: 'normal',
+  //     }, // Tùy chỉnh kích thước font
+  //     startY: 20, // Vị trí bắt đầu bảng
+  //   });
+  //   // Xuất PDF dưới dạng Blob
+  //   const pdfBlob = doc.output('blob');
+  //   // chuyển blob thành base64
+  //   const base64 = await blobToBase64(pdfBlob);
+  //   console.log("Base64 từ Blob:", base64);
+
+  //   // Lưu URL để sử dụng hoặc hiển thị
+  //   // console.log("URL của file PDF: ", `${pdfUrl}`);
+  //   // Send base64 files to the API
+  //   const response = await fetch("/api/upload", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ files: [base64] }),
+  //   });
+  //   const data = await response.json();
+  //   if (response.ok) {
+  //     const imageUrls = data.urls.map((item: { url: string }) => item.url);
+
+  //     console.log('k', imageUrls[0].replace('pdf', 'jpg'))
+
+  //     // Append new uploaded images to the existing ones
+  //     // setUploadedImages((prevImages) => [...prevImages, ...imageUrls]);
+
+  //     // handleGetArrayImage(imageUrls); // Update parent component with uploaded image URLs
+  //     // setImagePreviews([]); // Clear the previews after upload
+  //     // setImages([]); // Clear selected images
+
+  //   } else {
+  //     console.error("Upload failed:", data.message);
+  //   }
+
+  //   try {
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/inputinvoice/addProduct`, formattedData, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+
+  //     if (response.status === 200) {
+  //       alert("Thêm sản phẩm thành công!");
+  //       // tải file pdf
+  //       doc.save("DanhSachSanPham.pdf");
+  //       dispatch(resetWareHouseMannagementItems())
+  //     } else {
+  //       alert(`Thêm sản phẩm thất bại: ${response.statusText}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding products:", error);
+  //     alert("Đã xảy ra lỗi khi thêm sản phẩm.");
+  //   }
+  // };
+
+
+  
+  // Fetch suppliers using React Query
+  
   const handleAddProducts = async () => {
     const formattedData = wareHouseMannagementItems.map((item) => ({
       productName: item.productName,
@@ -78,18 +182,32 @@ const ListProduct = () => {
       supplier_id: item.supplier_id,
       images: item.images || [],
     }));
-
+  
+    const totalAmount = formattedData.reduce(
+      (total, product) => total + product.productPrice * product.quantity,
+      0
+    );
+  
     // Xuất dữ liệu ra PDF
     const doc = new jsPDF();
-    doc.setFont('courier', 'italic');
-    doc.getFontList();
+    doc.setFont("courier", "italic");
     doc.text("Danh sách sản phẩm đã nhập", 14, 10);
-
+  
     // Cấu hình bảng
     autoTable(doc, {
-      head: [["STT", "Tên sản phẩm", "Số lượng", "Mô tả", "Giá", "Thương hiệu", "Danh mục con", "Nhà cung cấp"]],
+      head: [
+        [
+          "STT",
+          "Tên sản phẩm",
+          "Số lượng",
+          "Mô tả",
+          "Giá",
+          "Thương hiệu",
+          "Danh mục con",
+          "Nhà cung cấp",
+        ],
+      ],
       body: formattedData.map((product, index) => {
-
         const supplier = suppliers?.data.find(
           (item) => item.id === +product.supplier_id
         );
@@ -97,77 +215,82 @@ const ListProduct = () => {
           (item) => item.id === +product.childCategory_id
         );
         return [
-          index,
+          index + 1,
           product.productName,
           product.quantity,
           product.description,
           product.productPrice,
           product.brand,
-          childCategory?.childCateName, // Có thể thay bằng tên danh mục nếu cần
-          supplier?.supplierName,      // Có thể thay bằng tên nhà cung cấp nếu cần
-        ]
+          childCategory?.childCateName || "N/A",
+          supplier?.supplierName || "N/A",
+        ];
       }),
-      styles: {
-        fontSize: 10, font: 'Amiri',
-        fontStyle: 'normal',
-      }, // Tùy chỉnh kích thước font
-      startY: 20, // Vị trí bắt đầu bảng
+      startY: 20,
     });
-    // Xuất PDF dưới dạng Blob
-    const pdfBlob = doc.output('blob');
-    // chuyển blob thành base64
+  
+    const pdfBlob = doc.output("blob");
     const base64 = await blobToBase64(pdfBlob);
-    console.log("Base64 từ Blob:", base64);
-
-    // Lưu URL để sử dụng hoặc hiển thị
-    // console.log("URL của file PDF: ", `${pdfUrl}`);
-    // Send base64 files to the API
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ files: [base64] }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      const imageUrls = data.urls.map((item: { url: string }) => item.url);
-
-      console.log('k', imageUrls[0].replace('pdf', 'jpg'))
-
-      // Append new uploaded images to the existing ones
-      // setUploadedImages((prevImages) => [...prevImages, ...imageUrls]);
-
-      // handleGetArrayImage(imageUrls); // Update parent component with uploaded image URLs
-      // setImagePreviews([]); // Clear the previews after upload
-      // setImages([]); // Clear selected images
-
-    } else {
-      console.error("Upload failed:", data.message);
-    }
-
+  
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/inputinvoice/addProduct`, formattedData, {
+      // Upload PDF lên Cloudinary
+      const uploadResponse = await fetch("/api/upload", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ files: [base64] }),
       });
-
-      if (response.status === 200) {
-        alert("Thêm sản phẩm thành công!");
-        // tải file pdf
-        doc.save("DanhSachSanPham.pdf");
-        dispatch(resetWareHouseMannagementItems())
-      } else {
+  
+      const uploadData = await uploadResponse.json();
+  
+      if (!uploadResponse.ok) {
+        console.error("Failed to upload PDF:", uploadData.message);
+        alert("Lỗi khi tải lên file PDF.");
+        return;
+      }
+  
+      const linkPdf = uploadData.urls[0].url.replace('pdf','png')
+  
+      // Gửi dữ liệu sản phẩm và PDF
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/inputinvoice/addProduct`,
+        formattedData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+  
+      if (response.status !== 200) {
         alert(`Thêm sản phẩm thất bại: ${response.statusText}`);
+        return;
+      }
+  
+      // Gửi API lưu invoice
+      const invoiceResponse = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/inputinvoice/saveinputinvoice`,
+        {
+          totalAmount,
+          linkPdf,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+  
+      if (invoiceResponse.status === 200) {
+        alert("Thêm sản phẩm và lưu hóa đơn thành công!");
+        doc.save("DanhSachSanPham.pdf");
+        dispatch(resetWareHouseMannagementItems());
+      } else {
+        alert(`Lưu hóa đơn thất bại: ${invoiceResponse.statusText}`);
       }
     } catch (error) {
-      console.error("Error adding products:", error);
-      alert("Đã xảy ra lỗi khi thêm sản phẩm.");
+      console.error("Error in handleAddProducts:", error);
+      alert("Đã xảy ra lỗi khi xử lý.");
     }
   };
+  
 
-  // Fetch suppliers using React Query
   const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
     ['suppliers'],
     async () => {
