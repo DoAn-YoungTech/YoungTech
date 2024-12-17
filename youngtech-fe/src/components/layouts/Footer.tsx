@@ -23,7 +23,7 @@ const Footer = () => {
                 placeholder="Địa chỉ Email"
                 className="p-2 rounded-l-md w-full max-w-xs"
               />
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md w-1/2">
                 Đăng ký
               </button>
             </div>

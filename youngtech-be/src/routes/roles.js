@@ -5,7 +5,7 @@ const roles = express.Router();
 
 roles.post(
   '/createRole',
-  // middlewareController.verifyToken,
+  middlewareController.verifyToken,
   rolesControllers.createRole
 );
 roles.get(

@@ -9,6 +9,7 @@ import { createEmployee } from "@/services/employee/EmployeeService";
 import { getRoles } from "@/services/role/RoleService";
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const schema = yup.object({
   userName: yup.string().required("Tên tài khoản là bắt buộc"),
@@ -26,7 +27,6 @@ const schema = yup.object({
 const AddEmployeeForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<{ id: number; roleName: string }[]>([]); // State lưu danh sách chức vụ
-  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -36,6 +36,7 @@ const AddEmployeeForm: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
+  const router = useRouter();
   // Lấy danh sách chức vụ từ API
   useEffect(() => {
     const fetchRoles = async () => {
@@ -79,13 +80,11 @@ const AddEmployeeForm: React.FC = () => {
   return (
     <div className="p-4 bg-[#282F36] text-white rounded-md">
       <div className="p-4 relative flex items-center mb-6">
-        <ShinyRotatingBorderButton
-          onClick={() => router.push("/dashboard/quanly-nhanvien")}
-          className="absolute left-0 text-center text-blue-600 hover:text-blue-800"
-        >
-          Quay lại
-        </ShinyRotatingBorderButton>
-
+        <Link href="/dashboard/quanly-nhanvien">
+          <ShinyRotatingBorderButton className="absolute left-0 text-center text-blue-600 hover:text-blue-800">
+            Quay lại
+          </ShinyRotatingBorderButton>
+        </Link>
         <h2 className="absolute inset-x-0 text-center text-2xl font-semibold">
           Thêm nhân viên
         </h2>
