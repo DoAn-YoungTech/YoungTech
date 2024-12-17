@@ -70,7 +70,6 @@ const orderController = {
   
       // Thêm order và order details
       const result = await orderService.addOrderWithDetails(order, orderDetails);
-  
       return res.status(201).json({
         message: 'Order and order details created successfully',
         data: result,

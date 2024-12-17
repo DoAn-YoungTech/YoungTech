@@ -11,6 +11,8 @@ import wareHouseMannagementReducer from "./WareHouseManagement/WareHouseMannagem
 import storage from './configStore';
 import { persistReducer ,persistStore } from 'redux-persist';
 import customerReducer from './Customers/customerSlice';
+import paymentReducer from './Payment/paymentSlice';
+import orderReducer from './Order/orderSlice';
 
 const rootPersistConfig = {
   key: "root",
@@ -28,6 +30,8 @@ const rootReducer = combineReducers({
   supplier: supplierReducer,
   wareHouseMannagement: wareHouseMannagementReducer,
   customers: customerReducer, 
+  payment : paymentReducer,
+  orders : orderReducer
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

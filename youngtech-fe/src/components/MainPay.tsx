@@ -36,8 +36,6 @@ const MainPay = () => {
         item: item
       }))
     );
-    console.log(result)
-    
     const totalOrder =  CartProduct.reduce(
       (total, item) => total + Number(item.unitPrice * item.quantity ),
       0

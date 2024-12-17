@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "../components/layouts/Header";
 import Footer from "../components/layouts/Footer";
-import { ReduxProvider } from "./provider";
+import ReduxProvider  from "./provider";
 import { Roboto } from "next/font/google"; 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

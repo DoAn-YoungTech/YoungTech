@@ -2,12 +2,8 @@ import React, { useState } from 'react'
 import Image from "next/image";
 import { TbTruckDelivery } from 'react-icons/tb';
 
-const Payment = () => {
-  const [selectedPayment, setSelectedPayment] = useState<string>("");
+const Payment = ({selectedPayment,handleChange}) => {
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedPayment(e.target.value);
-  };
 
   return (
     <>
@@ -42,7 +38,7 @@ const Payment = () => {
               onChange={handleChange}
               className={`w-6 h-6 rounded-full border-2 ${selectedPayment === "ZaloPay" ? "bg-red-500" : "bg-white"} border-gray-400 focus:outline-none`}
             />
-            <Image width={50} height={50} src="/designImage/imageLogo/logoPay/logo-zalopay.svg" className="mx-5 w-[40px] h-[40px]" />
+            <Image width={50} alt="ZaloPay" height={50} src="/designImage/imageLogo/logoPay/logo-zalopay.svg" className="mx-5 w-[40px] h-[40px]" />
             <div className="grid">
               <span className="text-[14px] text-black">Ví điện tử ZaloPay</span>
               <span className="text-[14px] text-black">
