@@ -7,49 +7,49 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
    
   // // Nếu đã đăng nhập và cố gắng truy cập login/register
-  if (token && (pathname === '/login' || pathname === '/register'  )) {
-    return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
-  }
+  // if (token && (pathname === '/login' || pathname === '/register'  )) {
+  //   return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ
+  // }
 
-  // // Nếu đã đăng nhập và cố gắng truy cập login/register
-  const url = req.url;
-  if (url.includes('/dashboard/quanly-banhang')) {
-    if (token.role !== 'admin' && token.role !== 'storekeeper') {
-      return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
-    }
-  }
+  // // // Nếu đã đăng nhập và cố gắng truy cập login/register
+  // const url = req.url;
+  // if (url.includes('/dashboard/quanly-banhang')) {
+  //   if (token.role !== 'admin' && token.role !== 'storekeeper') {
+  //     return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
+  //   }
+  // }
 
-  if (url.includes('/dashboard/quanly-danhmuc-sanpham')) {
-    if (token.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
-    }
-  }
+  // if (url.includes('/dashboard/quanly-danhmuc-sanpham')) {
+  //   if (token.role !== 'admin') {
+  //     return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
+  //   }
+  // }
 
   
-  if (url.includes('/dashboard/quanly-hoadon') || url.includes('/dashboard/quanly-nhanvien')) {
-    if (token.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
-    }
-  }
+  // if (url.includes('/dashboard/quanly-hoadon') || url.includes('/dashboard/quanly-nhanvien')) {
+  //   if (token.role !== 'admin') {
+  //     return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
+  //   }
+  // }
 
    
-  if (url.includes('/dashboard/quanly-kinhdoanh') ) {
-    if (token.role !== 'businessEmployee') {
-      return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
-    }
-  }
+  // if (url.includes('/dashboard/quanly-kinhdoanh') ) {
+  //   if (token.role !== 'businessEmployee') {
+  //     return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
+  //   }
+  // }
 
-  if (url.includes('/dashboard/quanly-nha-cungcap') ) {
-    if (token.role !== 'businessEmployee') {
-      return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
-    }
-  }
+  // if (url.includes('/dashboard/quanly-nha-cungcap') ) {
+  //   if (token.role !== 'businessEmployee') {
+  //     return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
+  //   }
+  // }
 
-  if (url.includes('/dashboard/quanly-nhap-khohang') ) {
-    if (token.role !== 'businessEmployee') {
-      return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
-    }
-  }
+  // if (url.includes('/dashboard/quanly-nhap-khohang') ) {
+  //   if (token.role !== 'businessEmployee') {
+  //     return NextResponse.redirect(new URL('/', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
+  //   }
+  // }
 
   
 

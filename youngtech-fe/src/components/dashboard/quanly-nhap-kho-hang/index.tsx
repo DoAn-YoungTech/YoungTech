@@ -6,17 +6,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/redux/Store';
+import View from "../Action/view";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/Store';
 import { addProductToTemp } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
 import { useRouter } from 'next/navigation';
 import UploadImage from '@/components/UploadImage';
 import { ShinyRotatingBorderButton } from '../ButtonSave/BtnSave';
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
- const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
-const AddProduct = () => {
 
 // Validation schema using Yup
 const schema = yup.object({
@@ -83,7 +80,7 @@ export default function WarehouseManagement() {
   const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
     ['suppliers'],
     async () => {
-      const response = await axios.get(`${Api_url}/suppliers?limit=100&offset=0`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/suppliers?limit=100&offset=0`);
       return response.data;
     }
   );
@@ -94,16 +91,15 @@ export default function WarehouseManagement() {
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
-    const response = await axios.get(`${Api_url}/childcategories?limit=100&page=1`);
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);
     return response.data;
   });
-
-  // Set default values for supplier and child category fields when data is loaded
+// Set default values for supplier and child category fields when data is loaded
   useEffect(() => {
-    if (suppliers && suppliers.data.length > 0) {
+    if (suppliers && suppliers?.data?.length > 0) {
       setValue('supplier_id', suppliers.data[0].id);
     }
-    if (childCategories && childCategories.data.length > 0) {
+    if (childCategories && childCategories?.data?.length > 0) {
       setValue('childCategory_id', childCategories.data[0].id);
     }
   }, [suppliers, childCategories, setValue]);
@@ -111,10 +107,10 @@ export default function WarehouseManagement() {
   // Form submission handler
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
-      const response = await axios.get(`${Api_url}/product/validate`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/product/validate`, {
         params: data,
       });
-  
+
       if (response.data.errors) {
         Object.entries(response.data.errors).forEach(([key, message]) => {
           const formKey = errorMapping[key];
@@ -122,21 +118,15 @@ export default function WarehouseManagement() {
             setError(formKey, { type: 'server', message: message as string });
           }
         });
-        // Triggering toast for validation errors
-        toast.error("Có lỗi trong việc nhập thông tin sản phẩm, vui lòng kiểm tra lại!");
       } else {
-        // Success message when product is validated successfully
-        toast.success("Sản phẩm đã được nhập kho thành công!");
-  
+        alert('Nhập kho thành công!');
         reset();
-        dispatch(addProductToTemp(data));
+        dispatch(addProductToTemp(data))
       }
     } catch (error) {
       console.error('Error validating product:', error);
-      toast.error("Lỗi khi nhập sản phẩm!");
     }
   };
-  
 
   const viewAllProduct  = () => {
     router.push('/dashboard/quanly-nhap-khohang/danh-sach')
@@ -184,7 +174,7 @@ export default function WarehouseManagement() {
             {...register('description')}
             className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
+{errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
         </div>
 
         {/* Brand */}
@@ -228,8 +218,8 @@ export default function WarehouseManagement() {
             {isLoadingSuppliers && <option>Đang tải...</option>}
             {isErrorSuppliers && <option>Không thể tải danh sách</option>}
             {suppliers &&
-              suppliers.data.map((supplier: any) => (
-                <option key={supplier.id} value={supplier.id} className="text-black">
+              suppliers.data?.map((supplier: any) => (
+                <option key={supplier.id} value={supplier.id} className="text-white/50">
                   {supplier.supplierName}
                 </option>
               ))}
@@ -247,7 +237,7 @@ export default function WarehouseManagement() {
             {isLoadingCategories && <option>Đang tải...</option>}
             {isErrorCategories && <option>Không thể tải danh sách</option>}
             {childCategories &&
-              childCategories.data.map((category: any) => (
+childCategories?.data?.map((category: any) => (
                 <option key={category.id} value={category.id} className="text-black">
                   {category.childCateName}
                 </option>
@@ -273,6 +263,4 @@ export default function WarehouseManagement() {
   </div>
   );
 }
-};
 
-export default AddProduct;

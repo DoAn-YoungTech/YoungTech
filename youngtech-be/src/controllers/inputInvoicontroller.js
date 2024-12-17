@@ -22,7 +22,7 @@ const inputInvoiceController = {
   },
 
   saveInputInvoice: async (req, res) => {
-    const { totalAmount, linkPdf, employee_id } = req.body; 
+    const { totalAmount, linkPdf } = req.body; 
 
     if (!linkPdf) {
       return res.status(400).json({
@@ -37,7 +37,7 @@ const inputInvoiceController = {
       const invoiceData = {
         invoiceDate: formattedInvoiceDate,  
         totalAmount,        
-        employee_id,
+        
         linkPdf        
       };
 
