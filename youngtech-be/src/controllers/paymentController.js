@@ -6,16 +6,11 @@ const createPayment = async (req, res) => {
     // Here ! check valid booking id exist
     const booking = await paymentService.booking(orderId);
     console.log(booking.status);
+
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found !' });
     }
-    // check HERE ! booking status
-    if (booking.status === 'Pending') {
-      return res.status(400).json({
-        message:
-          'Booking status is pending ! Please wait for the admin to confirm',
-      });
-    }
+
 
     console.log(booking.totalAmount);
     const transaction = await paymentService.createTransaction(

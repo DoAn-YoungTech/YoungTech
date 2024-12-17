@@ -19,14 +19,16 @@ export default function ReduxProvider({ pageProps, children }: ReduxProviderProp
   const queryClient = useMemo(() => new QueryClient(), []);
 
   return (
-    <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            {children}
-          </PersistGate>
-        </Provider>
-      </QueryClientProvider>
-    </SessionProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor} >
+        <SessionProvider session={session}>
+          <QueryClientProvider client={queryClient}>
+              {children}
+          </QueryClientProvider>
+        </SessionProvider>
+      </PersistGate>
+    </Provider>
   );
 }
+
+
