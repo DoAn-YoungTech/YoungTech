@@ -30,8 +30,14 @@ customerRoutes.put(
 // edit information
 customerRoutes.patch(
   '/editCustomer/:id',
-  // middlewareController.verifyToken,
+  middlewareController.verifyToken,
   customerController.editCustomer
+);
+
+customerRoutes.patch(
+  '/updateInfoMe',
+  middlewareController.verifyToken,
+  customerController.updateInfoMe
 );
 
 // delete soft
@@ -48,6 +54,8 @@ customerRoutes.get(
   //  middlewareController.verifyTokenAndRole(['salesperson','admin']),
   customerController.getOrderHistoryHandler
 );
+
+
 customerRoutes.post(
   '/addCustomerOffline',
   middlewareController.verifyToken,

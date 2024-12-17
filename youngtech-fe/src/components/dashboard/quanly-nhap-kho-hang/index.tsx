@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from '@/redux/Store';
 import { addProductToTemp } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
 import { useRouter } from 'next/navigation';
 import UploadImage from '@/components/UploadImage';
+import { ShinyRotatingBorderButton } from '../ButtonSave/BtnSave';
 
 
 // Validation schema using Yup
@@ -93,13 +94,12 @@ export default function WarehouseManagement() {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);
     return response.data;
   });
-
-  // Set default values for supplier and child category fields when data is loaded
+// Set default values for supplier and child category fields when data is loaded
   useEffect(() => {
-    if (suppliers && suppliers.data.length > 0) {
+    if (suppliers && suppliers?.data?.length > 0) {
       setValue('supplier_id', suppliers.data[0].id);
     }
-    if (childCategories && childCategories.data.length > 0) {
+    if (childCategories && childCategories?.data?.length > 0) {
       setValue('childCategory_id', childCategories.data[0].id);
     }
   }, [suppliers, childCategories, setValue]);
@@ -145,23 +145,23 @@ export default function WarehouseManagement() {
   },[urlsImage])
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#22282E]">
-    <div className="w-[600px] p-8 bg-[#1F2937] shadow-lg rounded border border-[#374151]">
-      <h1 className="text-3xl font-bold text-center text-white mb-6">NHẬP KHO</h1>
+    <div className="flex items-center justify-center min-h-screen bg-[#22282E] ">
+    <div className="w-[600px] p-8 bg-[#282F36] shadow-lg rounded-lg border-md ">
+      <h2 className="text-3xl font-bold text-center text-white mb-6">Nhập kho</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Product Name */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Tên hàng</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Tên hàng</label>
           <input
             {...register('productName')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
         </div>
 
         {/* Album ảnh */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Album ảnh</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Album ảnh</label>
           <UploadImage 
           handleGetArrayImage={handleGetArrayImage}  />
           {errors.images && <p className="text-red-500 text-sm mt-1">{errors.images.message}</p>}
@@ -169,56 +169,56 @@ export default function WarehouseManagement() {
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Mô tả</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Mô tả</label>
           <input
             {...register('description')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
+{errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
         </div>
 
         {/* Brand */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Thương hiệu</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Thương hiệu</label>
           <input
             {...register('brand')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.brand && <p className="text-red-500 text-sm mt-1">{errors.brand.message}</p>}
         </div>
 
         {/* Product Price */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Giá</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Giá</label>
           <input
             {...register('productPrice')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.productPrice && <p className="text-red-500 text-sm mt-1">{errors.productPrice.message}</p>}
         </div>
 
         {/* Quantity */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Số lượng</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Số lượng</label>
           <input
             type="number"
             {...register('quantity')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity.message}</p>}
         </div>
 
         {/* Supplier */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Nhà cung cấp</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Nhà cung cấp</label>
           <select
             {...register('supplier_id')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {isLoadingSuppliers && <option>Đang tải...</option>}
             {isErrorSuppliers && <option>Không thể tải danh sách</option>}
             {suppliers &&
-              suppliers.data.map((supplier: any) => (
+              suppliers.data?.map((supplier: any) => (
                 <option key={supplier.id} value={supplier.id} className="text-black">
                   {supplier.supplierName}
                 </option>
@@ -229,15 +229,15 @@ export default function WarehouseManagement() {
 
         {/* Child Categories */}
         <div>
-          <label className="block text-sm font-semibold text-white mb-2">Child Categories</label>
+          <label className="block text-sm font-medium text-white/50 mb-2">Child Categories</label>
           <select
             {...register('childCategory_id')}
-            className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {isLoadingCategories && <option>Đang tải...</option>}
             {isErrorCategories && <option>Không thể tải danh sách</option>}
             {childCategories &&
-              childCategories.data.map((category: any) => (
+              childCategories?.data?.map((category: any) => (
                 <option key={category.id} value={category.id} className="text-black">
                   {category.childCateName}
                 </option>
@@ -248,24 +248,19 @@ export default function WarehouseManagement() {
 
         {/* Buttons */}
         <div className="flex justify-between mt-4">
-          <button onClick={viewAllProduct} type="button" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+          <ShinyRotatingBorderButton type="button" onClick={viewAllProduct}>
             Xem lại
-          </button>
-          <button type="submit" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+          </ShinyRotatingBorderButton>
+          <ShinyRotatingBorderButton type="submit">
             Nhập thêm
-          </button>
-          <button
-            type="button"
-            onClick={() => reset()}
-            className="w-[33%] bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
-          >
+          </ShinyRotatingBorderButton>
+          <ShinyRotatingBorderButton type="button" onClick={() => reset()}>
             Hủy
-          </button>
+          </ShinyRotatingBorderButton>
         </div>
       </form>
     </div>
   </div>
   );
 }
-
 

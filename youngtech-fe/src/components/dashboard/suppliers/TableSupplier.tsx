@@ -1,137 +1,134 @@
 "use client";
-import { Table } from "@/components/ui/table"; // Kiểm tra đường dẫn chính xác
-import { Button } from "@/components/ui/button"; // Kiểm tra đường dẫn chính xác
+
+import { Table } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import { Supplier } from "@/types/SupplierTypes"; // Sử dụng kiểu dữ liệu cho nhà cung cấp
-import { useState } from "react"; // Import useState
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi"; // Import icon
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { Supplier } from '@/types/SupplierTypes';
+import { useState } from "react";
 
-interface SupplierTableProps {
+const ITEMS_PER_PAGE = 5; // Số lượng mục hiển thị mỗi trang
+
+interface SuppliersTableProps {
   suppliers: Supplier[];
   onEdit: (supplier: Supplier) => void;
   onDelete: (id: number) => void;
 }
 
-const SupplierTable: React.FC<SupplierTableProps> = ({
-  suppliers,
+const SuppliersTable: React.FC<SuppliersTableProps> = ({
+  suppliers = [],
   onEdit,
   onDelete,
 }) => {
-  // State để quản lý trang hiện tại và số mục trên mỗi trang
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Số nhà cung cấp trên mỗi trang (có thể tùy chỉnh)
 
-  // Tính toán số trang và dữ liệu nhà cung cấp trên mỗi trang
-  const totalPages = Math.ceil(suppliers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentSuppliers = suppliers.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const totalPages = Math.ceil(suppliers.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentItems = suppliers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Xử lý khi nhấn nút "Trang trước"
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
-  };
-
-  // Xử lý khi nhấn nút "Trang sau"
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  // Xử lý khi nhấn số trang cụ thể
-  const handlePageClick = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
   };
 
   return (
     <>
-      <Table>
-        <thead className="text-left bg-[#282F36] text-white/80 w-[calc(100%-95%)]">
+      <Table className="min-w-full divide-y">
+        <thead className="text-left bg-[#282F36] text-white/80">
           <tr>
-            <th className="py-3 px-4">STT</th>
-            <th className="py-3 px-4">Mã nhà cung cấp</th>
-            <th className="py-3 px-4">Tên nhà cung cấp</th>
-            <th className="py-3 px-4">Tên liên lạc</th>
-            <th className="py-3 px-4">Số điện thoại</th>
-            <th className="py-3 px-4">Email</th>
-            <th className="py-3 px-4">Địa chỉ</th>
-            <th className="py-3 px-4">Thao tác</th>
+            <th className="py-3 px-4 text-center">STT</th>
+            <th className="py-3 px-4 text-center">Tên Nhà Cung Cấp</th>
+            <th className="py-3 px-4 text-center">Tên Người Liên Hệ</th>
+            <th className="py-3 px-4 text-center">Số Điện Thoại</th>
+            <th className="py-3 px-4 text-center">Email</th>
+            <th className="py-3 px-4 text-center">Địa Chỉ</th>
+            <th className="py-3 px-4 text-center">Thao Tác</th>
           </tr>
         </thead>
-        <tbody className="text-gray-800 ">
-          {currentSuppliers.map((supplier, index) => (
-            <tr
-              key={supplier.id}
-              className="product-item text-white/80 border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]"
-            >
-              <td className="py-2 px-4 text-center">
-                {startIndex + index + 1}
-              </td>
-              <td className="py-2 px-4">MNCC{supplier.id}</td>
-              <td className="py-2 px-4">{supplier.supplierName}</td>
-              <td className="py-2 px-4">{supplier.contactName}</td>
-              <td className="py-2 px-4">{supplier.phoneNumber}</td>
-              <td className="py-2 px-4">{supplier.email}</td>
-              <td className="py-2 px-4">{supplier.address}</td>
-              <td className="py-2 px-4 flex justify-center space-x-2">
-                <Button
-                  className="hover:bg-blue-300 rounded-md bg-black/50 transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
-                  onClick={() => onEdit(supplier)}
-                >
-                  <FaEdit className="text-[1.1rem] text-blue-600" />
-                </Button>
-                <Button
-                  className="hover:bg-red-300 bg-black/50 rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
-                  onClick={() => onDelete(supplier.id)}
-                >
-                  <MdDeleteOutline className="text-[1.1rem] text-red-600" />
-                </Button>
+        <tbody className="text-gray-800">
+          {currentItems.length > 0 ? (
+            currentItems.map((supplier, index) => (
+              <tr
+                key={supplier.id}
+                className="supplier-item text-white/80 border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]"
+              >
+                <td className="py-3 px-4 text-sm text-gray-400 text-center">
+                  {startIndex + index + 1}
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-200">
+                  {supplier.supplierName}
+                </td>
+                <td className="py-3 px-4 text-sm  text-gray-200">
+                  {supplier.contactName}
+                </td>
+                <td className="py-3 px-4 text-sm  text-gray-200">
+                  {supplier.phoneNumber}
+                </td>
+                <td className="py-3 px-4 text-sm  text-gray-200">
+                  {supplier.email}
+                </td>
+                <td className="py-3 px-4 text-sm  text-gray-200">
+                  {supplier.address}
+                </td>
+                <td className="py-3 px-4 flex justify-center gap-4">
+                  <Button
+                    className="hover:bg-blue-500 bg-[#1E293B] rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
+                    onClick={() => onEdit(supplier)}
+                  >
+                    <FaEdit className="text-[1.1rem] text-blue-400" />
+                  </Button>
+                  <Button
+                    className="hover:bg-red-500 bg-[#1E293B] rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
+                    onClick={() => onDelete(supplier.id)}
+                  >
+                    <MdDeleteOutline className="text-[1.1rem] text-red-400" />
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={7}
+                className="py-4 text-center text-gray-400 text-sm"
+              >
+                Không có nhà cung cấp nào để hiển thị.
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
 
-      {/* Nút phân trang */}
-      <div className="flex justify-center items-center mt-4 space-x-2">
+      {/* Phân trang */}
+      <div className="flex justify-center mt-4 gap-2">
         <Button
-          onClick={handlePreviousPage}
+          className={`px-3 py-2 text-sm rounded ${currentPage === 1 ? "bg-gray-600 cursor-not-allowed" : "bg-[#1E293B] hover:bg-gray-700 text-white"}`}
           disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50 flex items-center justify-center"
+          onClick={() => goToPage(currentPage - 1)}
         >
-          <HiChevronLeft className="text-xl" /> {/* Dấu << */}
+          <HiChevronLeft className="text-xl" />
         </Button>
-
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
-            key={index}
-            onClick={() => handlePageClick(index + 1)}
-            className={`px-4 py-2 rounded ${
-              currentPage === index + 1
-                ? "bg-slate-600 text-white"
-                : "bg-gray-800 text-white"
-            }`}
+            key={index + 1}
+            className={`px-3 py-2 text-sm rounded ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-[#1E293B] hover:bg-gray-700 text-gray-300"}`}
+            onClick={() => goToPage(index + 1)}
           >
             {index + 1}
           </Button>
         ))}
-
         <Button
-          onClick={handleNextPage}
+          className={`px-3 py-2 text-sm rounded ${currentPage === totalPages ? "bg-gray-600 cursor-not-allowed" : "bg-[#1E293B] hover:bg-gray-700 text-white"}`}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50 flex items-center justify-center"
+          onClick={() => goToPage(currentPage + 1)}
         >
-          <HiChevronRight className="text-xl" /> {/* Dấu >> */}
+          <HiChevronRight className="text-xl" />
         </Button>
       </div>
     </>
   );
 };
 
-export default SupplierTable;
+export default SuppliersTable;

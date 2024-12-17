@@ -20,6 +20,7 @@ const imageService = {
 
   updateImages: async (newImages, productId) => {
     try {
+      console.log('<< newImages >>', newImages);
       const existingImages = await imageRepository.getAllImagesByProductId(productId);
 
       const existingUrls = existingImages.map((img) => img.imageUrl);

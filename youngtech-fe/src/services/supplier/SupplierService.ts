@@ -1,12 +1,17 @@
 import axios from 'axios';
-
+import { getAuthHeaders } from '@/utils/session';
 const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 // Hàm lấy tất cả nhà cung cấp
 export const getAllSupplier = async () => {
+    const headers = await getAuthHeaders();
     try {
-        const response = await axios.get(`${Api_url}/suppliers`);
-        return response.data; // Trả về dữ liệu nhà cung cấp từ API
+      const response = await axios.get(`${Api_url}/suppliers`,
+        {
+            headers
+        }
+      );
+      return response.data; // Trả về dữ liệu nhà cungcap từ API
     } catch (error) {
         // Xử lý lỗi, đảm bảo không bị lỗi khi không có response
         console.error("Error fetching data:", error?.response?.data || error.message);

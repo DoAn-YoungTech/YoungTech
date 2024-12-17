@@ -30,7 +30,7 @@ const imageRepository = {
   },
 
   deleteImage: async (id) => {
-    const query = `UPDATE Image SET flag = false WHERE id = :id`;
+    const query = `DELETE FROM Image WHERE id = :id`;
     const [result] = await sequelize.query(query, {
       replacements: { id },
     });

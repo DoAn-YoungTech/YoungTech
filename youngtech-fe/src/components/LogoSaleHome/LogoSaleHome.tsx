@@ -12,7 +12,7 @@ export const LogoSaleHome = () => {
   return (
     <>
      <div className="w-full ">
-            <ul className="flex items-center">
+            <div className="flex items-center">
               {listSale.map((item,index) => {
                 return (
                   <>
@@ -29,7 +29,7 @@ export const LogoSaleHome = () => {
                   </>
                 );
               })}
-            </ul>
+            </div>
           </div>
     </>
   )
