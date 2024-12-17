@@ -4,7 +4,11 @@ import { SearchBar } from "@/components/dashboard/SearchBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Quản lý bán hàng || Youngtech",
+};
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
