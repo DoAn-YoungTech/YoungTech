@@ -1,91 +1,116 @@
 "use client";
 
-// src/components/Avatar.tsx
-
-import React, { useState } from 'react';
-import EditProfilePopup from './EditProfilePopup';
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import EditProfilePopup from "./EditProfilePopup";
+import { useSession, signOut } from "next-auth/react";
 
 const Avatar: React.FC = () => {
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const { data: session, status, update } = useSession();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // State lưu thông tin cá nhân
-    const [profileData, setProfileData] = useState({
-        image: "http://2.bp.blogspot.com/-g1udFSmrxfQ/VXGmJByTSqI/AAAAAAAAGtQ/o8EiCBKcyfA/s1600/hinh-anh-nen-hd-sieu-ro-net-cuc-dep-cho-may-tinh-img025.jpg",
-        name: "Nguyễn Văn A",
-        gender: "male",
-        birthDate: "2000-01-01",
-        email: "nguyenvana@example.com",
-    });
+  const [profileData, setProfileData] = useState({
+    image: "https://res.cloudinary.com/dsiwefmmd/image/upload/v1734401914/uploads/ovkvvopjaroz0rwcxt1o.jpg",
+    name: "Chưa cập nhật",
+    gender: "Chưa cập nhật",
+    birthDate: "Chưa cập nhật",
+    email: "Chưa cập nhật",
+    role: "guest",
+    id: null,
+  });
 
-    const handleEditProfile = () => {
-        setIsPopupVisible(true); // Hiển thị popup
-    };
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      setProfileData({
+        image: session.user.image || "https://res.cloudinary.com/dsiwefmmd/image/upload/v1734401914/uploads/ovkvvopjaroz0rwcxt1o.jpg",
+        name: session.user.name || session.user.email,
+        email: session.user.email,
+        gender: session.user.gender || "Chưa cập nhật",
+        birthDate: session.user.birthDate || "Chưa cập nhật",
+        role: session.user.role || "guest",
+        id: session.user.id,
+      });
+    }
+  }, [session, status]);
 
-    const closePopup = () => {
-        setIsPopupVisible(false); // Đóng popup
-    };
+  const handleSaveProfile = async (updatedProfile: typeof profileData) => {
+    try {
+      const response = await fetch("/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedProfile),
+      });
+      if (!response.ok) throw new Error("Cập nhật thất bại!");
 
-    const handleSaveProfile = (
-        newImage: string,
-        newName: string,
-        newGender: string,
-        newBirthDate: string,
-        newEmail: string
-    ) => {
-        setProfileData({
-            image: newImage,
-            name: newName,
-            gender: newGender,
-            birthDate: newBirthDate,
-            email: newEmail,
-        });
-        setIsPopupVisible(false); // Đóng popup sau khi lưu
-    };
+      setProfileData(updatedProfile);
+      await update(updatedProfile); // Cập nhật session
+      setIsPopupVisible(false);
+    } catch (error) {
+      console.error("Lỗi khi lưu thông tin:", error);
+    }
+  };
 
-    return (
-        <div
-            className="relative cursor-pointer"
-            onMouseEnter={() => setIsMenuVisible(true)}
-            onMouseLeave={() => setIsMenuVisible(false)}
-        >
-            <img
-                src={profileData.image}
-                className="w-10 h-10 rounded-full"
-                alt="Avatar"
-            />
-            {isMenuVisible && (
-                <div className="absolute right-0 mt-0.5 w-50 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
-                    <ul className="py-2 text-sm text-gray-200">
-                        <li
-                            className="px-4 py-2 hover:bg-gray-700 cursor-pointer whitespace-nowrap"
-                            onClick={handleEditProfile}
-                        >
-                            Chỉnh sửa thông tin cá nhân
-                        </li>
-                        <li
-                            className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
-                            onClick={() => alert('Đăng xuất')}
-                        >
-                            Đăng xuất
-                        </li>
-                    </ul>
-                </div>
-            )}
+  // Hàm hiển thị menu
+  const handleMenuShow = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current); // Hủy bỏ timeout cũ
+    }
+    setIsMenuVisible(true);
+  };
 
-            {/* Truyền dữ liệu vào EditProfilePopup */}
-            <EditProfilePopup
-                isVisible={isPopupVisible}
-                onClose={closePopup}
-                onSave={handleSaveProfile}
-                currentImage={profileData.image}
-                currentName={profileData.name}
-                currentGender={profileData.gender}
-                currentBirthDate={profileData.birthDate}
-                currentEmail={profileData.email}
-            />
+  // Hàm ẩn menu
+  const handleMenuHide = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsMenuVisible(false);
+    }, 300); // Delay 300ms
+  };
+
+  return (
+    <div
+      className="relative cursor-pointer"
+      onMouseEnter={handleMenuShow}
+      onMouseLeave={handleMenuHide}
+    >
+      {/* Avatar */}
+      <Image
+        src={profileData.image}
+        alt="Avatar"
+        width={40}
+        height={40}
+        className="rounded-full border-2 border-gray-300 shadow-lg hover:shadow-2xl transition-all duration-200"
+      />
+
+      {/* Menu */}
+      {isMenuVisible && (
+        <div className="absolute right-0 mt-2 w-52 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+          <ul className="py-2 text-sm text-gray-200">
+            <li
+              className="px-4 py-2 hover:bg-gray-700 cursor-pointer transition-all duration-200"
+              onClick={() => setIsPopupVisible(true)}
+            >
+              Chỉnh sửa thông tin cá nhân
+            </li>
+            <li
+              className="px-4 py-2 hover:bg-gray-700 cursor-pointer transition-all duration-200"
+              onClick={() => signOut({ callbackUrl: "/" })}
+            >
+              Đăng xuất
+            </li>
+          </ul>
         </div>
-    );
+      )}
+
+      {/* Popup chỉnh sửa */}
+      <EditProfilePopup
+        isVisible={isPopupVisible}
+        onClose={() => setIsPopupVisible(false)}
+        onSave={handleSaveProfile}
+        initialProfile={profileData}
+      />
+    </div>
+  );
 };
 
 export default Avatar;

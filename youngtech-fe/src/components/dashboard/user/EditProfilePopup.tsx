@@ -1,124 +1,147 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface EditProfilePopupProps {
-    isVisible: boolean;
-    onClose: () => void;
-    onSave: (newImage: string, newName: string, newGender: string, newBirthDate: string, newEmail: string) => void;
-    currentImage: string;
-    currentName: string;
-    currentGender: string;
-    currentBirthDate: string;
-    currentEmail: string;
+  isVisible: boolean;
+  onClose: () => void;
+  onSave: (updatedProfile: ProfileData) => void;
+  initialProfile: ProfileData;
 }
 
-const EditProfilePopup: React.FC<EditProfilePopupProps> = ({ isVisible, onClose, onSave, currentImage, currentName, currentGender, currentBirthDate, currentEmail }) => {
-    const [newImage, setNewImage] = useState<string | null>(currentImage);
-    const [name, setName] = useState(currentName);
-    const [gender, setGender] = useState(currentGender);
-    const [birthDate, setBirthDate] = useState(currentBirthDate);
-    const [email, setEmail] = useState(currentEmail);
+interface ProfileData {
+  image: string;
+  name: string;
+  gender: string;
+  birthDate: string;
+  email: string;
+}
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const previewUrl = URL.createObjectURL(file);
-            setNewImage(previewUrl);
-        }
-    };
+const EditProfilePopup: React.FC<EditProfilePopupProps> = ({
+  isVisible,
+  onClose,
+  onSave,
+  initialProfile,
+}) => {
+  const [profile, setProfile] = useState<ProfileData>(initialProfile);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-    const handleSave = () => {
-        if (newImage) {
-            onSave(newImage, name, gender, birthDate, email);
-        }
-    };
+  useEffect(() => {
+    setProfile(initialProfile);
+    setPreviewImage(null); // Reset preview
+  }, [initialProfile]);
 
-    useEffect(() => {
-        setName(currentName);
-        setGender(currentGender);
-        setBirthDate(currentBirthDate);
-        setEmail(currentEmail);
-    }, [currentName, currentGender, currentBirthDate, currentEmail]);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewImage(url);
+      setProfile({ ...profile, image: url });
+    }
+  };
 
-    if (!isVisible) return null;
+  const handleInputChange = (field: string, value: string) => {
+    setProfile({ ...profile, [field]: value });
+  };
 
-    return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-            <div className="bg-[#1f2937] rounded-lg shadow-lg p-6 w-1/3 text-white">
-                <h2 className="text-xl font-semibold mb-4 text-gray-100">Chỉnh sửa thông tin cá nhân</h2>
-                <form>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-400">Hình ảnh</label>
-                        <div className="flex items-center mt-2">
-                            <img 
-                                src={newImage || "https://via.placeholder.com/100"} 
-                                alt="Avatar Preview" 
-                                className="w-20 h-20 rounded-full mr-4 border border-gray-500"
-                            />
-                            <input 
-                                type="file" 
-                                className="block text-sm text-gray-400 bg-transparent border border-gray-500 rounded-md p-2 hover:border-gray-300 focus:outline-none focus:border-indigo-500"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                            />
-                        </div>
-                    </div>
+  const handleSave = () => {
+    onSave(profile);
+  };
 
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-400">Họ và tên</label>
-                        <input 
-                            type="text" 
-                            className="mt-2 block w-full rounded-md border border-gray-500 bg-[#1f2937] text-white p-2 focus:border-indigo-500 focus:ring-indigo-500"
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            placeholder="Nhập họ và tên"
-                        />
-                    </div>
+  if (!isVisible) return null;
 
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-400">Giới tính</label>
-                        <select 
-                            className="mt-2 block w-full rounded-md border border-gray-500 bg-[#1f2937] text-white p-2 focus:border-indigo-500 focus:ring-indigo-500"
-                            value={gender}
-                            onChange={e => setGender(e.target.value)}
-                        >
-                            <option value="male">Nam</option>
-                            <option value="female">Nữ</option>
-                            <option value="other">Khác</option>
-                        </select>
-                    </div>
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+      <div className="bg-[#1f2937] rounded-lg shadow-xl p-6 w-96 text-white transition-all duration-300">
+        <h2 className="text-xl font-semibold mb-4 text-gray-100">Chỉnh sửa thông tin</h2>
 
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-400">Ngày sinh</label>
-                        <input 
-                            type="date" 
-                            className="mt-2 block w-full rounded-md border border-gray-500 bg-[#1f2937] text-white p-2 focus:border-indigo-500 focus:ring-indigo-500"
-                            value={birthDate}
-                            onChange={e => setBirthDate(e.target.value)}
-                        />
-                    </div>
-
-
-                    <div className="flex justify-end">
-                        <button 
-                            type="button" 
-                            className="mr-2 px-4 py-2 bg-gray-600 text-gray-200 rounded-md hover:bg-gray-500"
-                            onClick={onClose}
-                        >
-                            Hủy
-                        </button>
-                        <button 
-                            type="button" 
-                            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                            onClick={handleSave}
-                        >
-                            Lưu
-                        </button>
-                    </div>
-                </form>
-            </div>
+        {/* Avatar */}
+        <div className="flex items-center mb-6">
+          <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-gray-500 mr-4">
+            <Image
+              src={previewImage || profile.image}
+              alt="Avatar"
+              layout="fill"
+              objectFit="cover"
+              priority
+            />
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="text-sm text-gray-400 bg-transparent border border-gray-500 rounded-md p-2 hover:border-gray-300 focus:outline-none focus:border-indigo-500"
+          />
         </div>
-    );
+
+        {/* Các trường chỉnh sửa */}
+        {[{ label: "Họ và tên", field: "name" }].map((input) => (
+          <div className="mb-4" key={input.field}>
+            <label className="block text-sm mb-2">{input.label}</label>
+            <input
+              type="text"
+              value={profile[input.field as keyof ProfileData]}
+              onChange={(e) => handleInputChange(input.field, e.target.value)}
+              className="w-full p-3 rounded-md border-2 border-gray-600 bg-[#2d3748] text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-200"
+            />
+          </div>
+        ))}
+
+         {/* Email */}
+         <div className="mb-4">
+          <label className="block text-sm mb-2">Email</label>
+          <input
+            type="text"
+            value={profile.email}
+            onChange={(e) => handleInputChange("email", e.target.value)}
+            className="w-full p-3 rounded-md border-2 border-gray-600 bg-[#2d3748] text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-200"
+          />
+        </div>
+
+        {/* Giới tính */}
+        <div className="mb-4">
+          <label className="block text-sm mb-2">Giới tính</label>
+          <select
+            value={profile.gender}
+            onChange={(e) => handleInputChange("gender", e.target.value)}
+            className="w-full p-3 rounded-md border-2 border-gray-600 bg-[#2d3748] text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-200"
+          >
+            <option value="male">Nam</option>
+            <option value="female">Nữ</option>
+            <option value="other">Khác</option>
+          </select>
+        </div>
+
+        {/* Ngày sinh */}
+        <div className="mb-4">
+          <label className="block text-sm mb-2">Ngày sinh</label>
+          <input
+            type="date"
+            value={profile.birthDate}
+            onChange={(e) => handleInputChange("birthDate", e.target.value)}
+            className="w-full p-3 rounded-md border-2 border-gray-600 bg-[#2d3748] text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all duration-200"
+          />
+        </div>
+
+        {/* Buttons */}
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-600 rounded-md text-white hover:bg-gray-500 transition-all duration-200"
+          >
+            Hủy
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-indigo-600 rounded-md text-white hover:bg-indigo-700 transition-all duration-200"
+          >
+            Lưu
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default EditProfilePopup;
