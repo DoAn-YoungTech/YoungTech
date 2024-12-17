@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react"; // To fetch user info and roles
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger
+  CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
 import {
@@ -20,7 +20,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
-  SidebarMenuSubItem
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { IoIosPeople } from "react-icons/io";
 import { GiJerusalemCross } from "react-icons/gi";
@@ -28,7 +28,7 @@ import {
   FaBusinessTime,
   FaClipboardList,
   FaWarehouse,
-  FaFileInvoice
+  FaFileInvoice,
 } from "react-icons/fa";
 import { GrCatalog } from "react-icons/gr";
 import { FcTwoSmartphones } from "react-icons/fc";
@@ -37,102 +37,82 @@ const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg"
+    avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
       title: "Quản lý nhân viên",
       url: "quanly-nhanvien",
       icon: IoIosPeople,
-      roles: ['admin'], // Only admin has access
+      roles: ["admin"], // Only admin has access
       items: [
         {
           title: "Tạo nhân viên",
-          url: "quanly-nhanvien/tao-nhanvien"
-        }
-      ]
+          url: "quanly-nhanvien/tao-nhanvien",
+        },
+      ],
     },
     {
       title: "Quản lý bán hàng",
-      url: "quanly-banhang",
+      url: "quanly-banhang/ban-hang",
       icon: GiJerusalemCross,
-      roles: ['admin', 'storekeeper'], // admin and storekeeper have access
+      roles: ["admin", "storekeeper"], // admin and storekeeper have access
       items: [
         {
           title: "Bán hàng",
-          url: "quanly-banhang/ban-hang"
+          url: "quanly-banhang/ban-hang",
         },
         {
           title: "Đơn hàng chưa xử lý",
-          url: "quanly-banhang/donhang-chua-xuly"
+          url: "quanly-banhang/donhang-chua-xuly",
         },
         {
           title: "danh sách hóa đơn",
-          url: "quanly-banhang/danhsach-hoadon"
-        }
-      ]
+          url: "quanly-banhang/danhsach-hoadon",
+        },
+      ],
     },
     {
       title: "Quản lý kinh doanh",
-      url: "quanly-kinhdoanh",
+      url: "quanly-kinhdoanh/danhthu-loinhuan",
       icon: FaBusinessTime,
-      roles: ['admin', 'businessEmployee'], // admin and businessEmployee have access
+      roles: ["admin", "businessEmployee"], // admin and businessEmployee have access
       items: [
         {
           title: "Giá bán lẻ",
-          url: "quanly-kinhdoanh/giaban-le"
+          url: "quanly-kinhdoanh/giaban-le",
         },
         {
           title: "Danh thu và lợi nhuận",
-          url: "quanly-kinhdoanh/danhthu-loinhuan"
+          url: "quanly-kinhdoanh/danhthu-loinhuan",
         },
         {
           title: "Thông tin khách hàng",
-          url: "quanly-kinhdoanh/thongtin-khachhang"
-        }
-      ]
+          url: "quanly-kinhdoanh/thongtin-khachhang",
+        },
+      ],
     },
     {
       title: "Danh mục sản phẩm",
       url: "quanly-danhmuc-sanpham",
       icon: GrCatalog,
-      roles: ['admin'], // Only admin has access
+      roles: ["admin"], // Only admin has access
       items: [
         {
           title: "Danh mục cha",
-          url: "quanly-danhmuc-sanpham/danhsach-danhmuc-cha"
+          url: "quanly-danhmuc-sanpham/danhsach-danhmuc-cha",
         },
         {
           title: "Danh mục con",
-          url: "quanly-danhmuc-sanpham/danhsach-danhmuc-con"
-        }
-      ]
-    },
-    {
-      title: "Sản phẩm",
-      url: "quanly-sanpham",
-      icon: FcTwoSmartphones,
-      roles: ['admin'], // Only admin has access
-      items: [
-        {
-          title: "Danh sách sản phẩm",
-          url: "quanly-sanpham/danhsach-sanpham"
+          url: "quanly-danhmuc-sanpham/danhsach-danhmuc-con",
         },
-        {
-          title: "Chỉnh sửa sản phẩm",
-          url: "quanly-sanpham/chinhsua-sanpham"
-        },
-        {
-          title: "Tạo sản phẩm",
-          url: "quanly-sanpham/tao-sanpham"
-        }
-      ]
+      ],
     },
     {
       title: "Quản lý nhà cung cấp",
       url: "quanly-nha-cungcap",
       icon: FaClipboardList,
-      roles: ['admin'] // Only admin has access
+      roles: ["admin"], // Only admin has access
     },
     {
       title: "Quản lý nhập kho hàng",
@@ -141,28 +121,28 @@ const data = {
       items: [
         {
           title: "Nhập kho",
-          url: "quanly-nhap-khohang"
-        }, 
+          url: "quanly-nhap-khohang",
+        },
         {
           title: "Danh sách sản phẩm",
-          url: "quanly-nhap-khohang/danh-sach-san-pham"
+          url: "quanly-nhap-khohang/danh-sach-san-pham",
         },
-      ]
+      ],
     },
     {
       title: "Danh sách hóa đơn",
       url: "quanly-hoadon",
       icon: FaFileInvoice,
-      roles: ['admin'] // Only admin has access
-    }
-  ]
+      roles: ["admin"], // Only admin has access
+    },
+  ],
 };
 
 export default function SidebarAdmin() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession(); // Fetch user session
-  
+
   const userRole = session?.user?.role; // Get user role from session
 
   return (
@@ -177,7 +157,9 @@ export default function SidebarAdmin() {
                     <Command className="size-4 text-black" />
                   </div>
                   <div className="flex justify-between items-center text-left text-sm leading-tight">
-                    <span className="truncate text-xl text-white font-semibold">Dashboard</span>
+                    <span className="truncate text-xl text-white font-semibold">
+                      Dashboard
+                    </span>
                   </div>
                 </a>
               </SidebarMenuButton>
@@ -224,7 +206,7 @@ export default function SidebarAdmin() {
                         </CollapsibleTrigger>
                         <CollapsibleContent>
                           <SidebarMenuSub>
-                            {item.items?.map((subItem : any) => (
+                            {item.items?.map((subItem: any) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton
                                   className="py-5 hover:bg-gray-900 hover:text-white"
@@ -253,9 +235,7 @@ export default function SidebarAdmin() {
                       </>
                     ) : null}
                   </SidebarMenuItem>
-                  
                 </Collapsible>
-                
               ))}
             </SidebarMenu>
           </SidebarGroup>
