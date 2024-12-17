@@ -14,6 +14,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const files = body.files; // Nhận danh sách ảnh (dạng base64)
 
+console.log('v', files)
+
     if (!files || !Array.isArray(files) || files.length === 0) {
       return NextResponse.json({ message: 'No files provided' }, { status: 400 });
     }
@@ -42,3 +44,7 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+
+ 
+ 

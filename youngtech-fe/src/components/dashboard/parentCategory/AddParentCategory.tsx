@@ -21,7 +21,10 @@ const AddParentCategory = () => {
       console.log("Category added successfully");
       setCategoryName(""); // Reset trạng thái form
       toast.success("Danh mục đã được thêm thành công!"); // Hiển thị toast thành công
-      router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha"); // Điều hướng về danh sách danh mục cha
+      setTimeout(() => {
+        router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      }, 2000);
+      // Điều hướng về danh sách danh mục cha
     } catch (error) {
       console.error("Error adding category:", error.message);
       toast.error("Lỗi khi thêm danh mục!"); // Hiển thị toast lỗi
@@ -32,13 +35,8 @@ const AddParentCategory = () => {
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex items-center justify-between mb-6">
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha")}
-            className="text-blue-600 hover:text-blue-800"
-          >
-            <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
-          </button>
+            <ShinyRotatingBorderButton type="button"
+            onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha")}>Quay lại</ShinyRotatingBorderButton>
           <h2 className="text-2xl font-bold text-white text-center flex-1">
             Thêm danh mục cha
           </h2>
@@ -60,12 +58,9 @@ const AddParentCategory = () => {
           />
         </div>
         <div className="flex justify-center gap-4">
-          <button
-            type="submit"
-            className="px-4 py-2 text-white rounded-md"
-          >
-            <ShinyRotatingBorderButton>Thêm danh mục cha</ShinyRotatingBorderButton>
-          </button>
+        
+            <ShinyRotatingBorderButton type="submit" >Thêm danh mục cha</ShinyRotatingBorderButton>
+          
         </div>
       </form>
     </div>

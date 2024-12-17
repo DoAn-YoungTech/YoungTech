@@ -25,7 +25,9 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
       await updateCategory(category.id, { name: categoryName });
       console.log("Updated category successfully");
       onUpdateSuccess({ ...category, name: categoryName });
-      router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      setTimeout(() => {
+        router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      }, 6000);
     } catch (error) {
       console.error("Error updating category:", error.message);
     }
@@ -35,14 +37,9 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
       <form onSubmit={handleEditSubmit} className="space-y-6">
         <div className="flex items-center justify-between mb-6">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="text-blue-600 hover:text-blue-800"
-          >
-            <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
-
-          </button>
+            <ShinyRotatingBorderButton type="button" onClick={onCancel}>
+              Quay lại
+            </ShinyRotatingBorderButton>
           <h2 className="text-2xl font-bold text-white text-center flex-1">
             Sửa danh mục cha
           </h2>
@@ -64,9 +61,7 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
           />
         </div>
         <div className="flex justify-center gap-4">
-          <button type="submit" className="px-4 py-2 text-white rounded-md">
-          <ShinyRotatingBorderButton>Lưu thay đổi</ShinyRotatingBorderButton>
-          </button>
+          <ShinyRotatingBorderButton type="submit">Lưu thay đổi</ShinyRotatingBorderButton>
         </div>
       </form>
     </div>

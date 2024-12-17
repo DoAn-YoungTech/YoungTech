@@ -54,7 +54,7 @@ const middlewareController = {
         const getRoleUser = req.user.role;
         const roleId = await RoleService.checkRole(getRoleUser);
         console.log(roleId);
-
+       
         // check moduleName exist
         const checkModuleExist = await RolePermissionService.checkModuleExist(
           moduleName

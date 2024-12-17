@@ -1,3 +1,4 @@
+
 const customerRepository = require('../repositories/customerRepository');
 const customerRoutes = require('../routes/customerRoutes');
 
@@ -5,6 +6,11 @@ const customerService = {
   getAllCustomers: async () => {
     return await customerRepository.getAllCustomers();
   },
+
+    getCustomersById: async (id) => {
+      return await customerRepository.getCustomersById(id);
+    },
+  
 
   // addInformationByAccount
 

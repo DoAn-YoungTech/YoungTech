@@ -1,72 +1,126 @@
-import React from "react";
-import Action from "../Action/Action";
+'use client';
+import React, { useEffect, useState } from "react";
 import View from "../Action/view";
 import Update from "../Action/update";
 import Delete from "../Action/delete";
+import ReactPaginate from "react-paginate";  // Import thư viện phân trang
 
-type TableRowProps = {
-  customer: {
-    id: number;
-    name: string;
-    email: string;
-    phoneNumber: string;
-    shippingAddress: string;
-    status: "Completed" | "Pending" | "Cancel";
-    purchaseHistory: string;
-  };
+type Customer = {
+  id: number;
+  fullName: string;
+  email: string | null;
+  phoneNumber: string;
+  address: string;
 };
-const ListCustomer = ({ customer }: TableRowProps) => {
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case "Completed":
-        return "bg-green-300 text-green-600";
-      case "Pending":
-        return "bg-yellow-300 text-yellow-600";
-      case "Cancel":
-        return "bg-red-300 text-red-600";
-      default:
-        return "";
-    }
+
+const ListCustomer = () => {
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [currentPage, setCurrentPage] = useState<number>(0);  // Trang hiện tại (index bắt đầu từ 0)
+  const [customersPerPage] = useState<number>(5);  // Số khách hàng trên mỗi trang
+
+  // Fetch data from API
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await fetch("http://localhost:3200/api/customers/viewListCustomer");
+        const data = await response.json();
+        if (data.message) {
+          setCustomers(data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
+
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected);
   };
+
+  const handleViewHistory = (id: number) => {
+    console.log("View history for customer ID:", id);
+    // Redirect or handle history logic
+  };
+
+  // Xác định các khách hàng cần hiển thị cho trang hiện tại
+  const indexOfLastCustomer = (currentPage + 1) * customersPerPage;
+  const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
+  const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
+
+  if (loading) {
+    return <div className="text-white">Đang tải dữ liệu khách hàng...</div>;
+  }
+
   return (
-    <div className="product-item border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]">
-      <div className="content-product-header p-4">
-        <div className="flex items-center justify-between">
-          <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-95%)]">
-            {customer.id}
-          </div>
-          <div className="font-bold  text-white/80 w-[calc(100%-90%)]">
-            <span className=" text-[0.8rem]">{customer.name}</span>
-          </div>
-          <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-85%)]">
-            <span className=" text-[0.8rem]">{customer.email}</span>
-          </div>
-          <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-90%)]">
-            <span className=" text-[0.8rem]">{customer.phoneNumber}</span>
-          </div>
-          <div className="font-bold  text-white/80 w-[calc(100%-80%)]">
-            <span className=" text-[0.8rem]">{customer.shippingAddress}</span>
-          </div>
-          <div className="font-bold text-white/80 w-[calc(100%-90%)]">
-            <span
-              className={`text-[0.8rem] px-2 py-1 rounded-2xl text-sm font-medium ${getStatusClass(
-                customer.status
-              )}`}
+    <div className="list-customer">
+      {currentCustomers.map((customer) => (
+        <div
+          key={customer.id}
+          className="product-item border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]"
+        >
+          <div className="content-product-header p-4 flex items-center justify-between">
+            {/* Tên khách hàng */}
+            <div className="font-bold text-white/80 w-[20%]">
+              <span className="text-[0.9rem]">{customer.fullName}</span>
+            </div>
+
+            {/* Email */}
+            <div className="font-bold text-white/80 w-[20%]">
+              <span className="text-[0.9rem]">{customer.email || "N/A"}</span>
+            </div>
+
+            {/* Số điện thoại */}
+            <div className="font-bold text-white/80 w-[15%]">
+              <span className="text-[0.9rem]">{customer.phoneNumber}</span>
+            </div>
+
+            {/* Địa chỉ giao hàng */}
+            <div className="font-bold text-white/80 w-[25%]">
+              <span className="text-[0.9rem]">{customer.address}</span>
+            </div>
+
+            {/* Lịch sử mua hàng */}
+            <div
+              className="font-bold text-blue-500 underline cursor-pointer w-[10%]"
+              onClick={() => handleViewHistory(customer.id)}
             >
-              {customer.status}
-            </span>
-          </div>
-          <div className="font-bold text-white/80 w-[calc(100%-90%)]">
-            <span className=" text-[0.8rem]">{customer.purchaseHistory} </span>
-          </div>
-          <div className="font-bold  flex items-center gap-2  w-[calc(100%-80%)]">
-            <View
-              url={``}
-            />
-            <Delete url={''} />
-            <Update url={`/dashboard/quanly-kinhdoanh/thongtin-khachhang/suathongtin-khachhang/${customer.id}`} />
+              Xem lịch sử
+            </div>
+
+            {/* Hành động */}
+            <div className="font-bold flex items-center gap-2 w-[10%]">
+              <View url={`/customer/${customer.id}/view`} />
+              <Update url={`/customer/${customer.id}/update`} />
+              <Delete url={`/customer/${customer.id}/delete`} />
+            </div>
           </div>
         </div>
+      ))}
+      
+      {/* Pagination with react-paginate */}
+      <div className="pagination mt-4 flex justify-center gap-4">
+        <ReactPaginate
+          pageCount={Math.ceil(customers.length / customersPerPage)}  // Tính tổng số trang
+          pageRangeDisplayed={3}  // Hiển thị 3 trang xung quanh trang hiện tại
+          marginPagesDisplayed={2}  // Hiển thị 2 trang đầu và cuối
+          onPageChange={handlePageChange}
+          containerClassName="pagination-container flex gap-2"
+          pageClassName="page-item"
+          pageLinkClassName="page-link px-4 py-2 bg-gray-200 text-white rounded"
+          activeClassName="active"
+          activeLinkClassName="bg-blue-500 text-white"
+          disabledClassName="disabled"
+          previousClassName="previous"
+          previousLinkClassName="px-4 py-2 bg-gray-500 text-white rounded"
+          nextClassName="next"
+          nextLinkClassName="px-4 py-2 bg-gray-500 text-white rounded"
+        />
       </div>
     </div>
   );
