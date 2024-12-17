@@ -1,3 +1,4 @@
+const imageRepository = require('../repositories/imageRepository');
 const imageService = require('../services/imageService');
 
 const imageController = {
@@ -50,6 +51,7 @@ const imageController = {
   },
 
   getAllByProductId: async (req, res) => {
+    console
     const { productId } = req.params;
 
     if (!productId) {
@@ -59,7 +61,7 @@ const imageController = {
     }
 
     try {
-      const images = await imageService.getAllImagesByProductId(productId);
+      const images = await imageRepository.getAllImagesByProductId(productId);
       return res.status(200).json({
         message: 'Images retrieved successfully',
         data: images,

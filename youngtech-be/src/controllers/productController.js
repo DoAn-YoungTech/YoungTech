@@ -80,7 +80,6 @@ const productController = {
   
 
   getProductById: async (req, res) => {
-    console.log('pnam ne');
     try {
       const id = req.params.id;
       const result = await productService.getProductById(id);
