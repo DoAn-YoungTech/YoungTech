@@ -30,8 +30,7 @@ const productService = {
     },
 
     deleteProduct: async (id) => {
-        const data = { flag: true }; // Dữ liệu xóa mềm
-        return await productRepository.deleteProduct(id, data); // Xóa mềm
+        return await productRepository.deleteProduct(id); // Xóa mềm
     },
       
     restoreProduct: async (id) => {
@@ -39,6 +38,10 @@ const productService = {
     },
     updateProduct: async (id, data) => {
         return await productRepository.updateProduct(id, data);
+      },
+
+    editProduct: async (id, data) => {
+        return await productRepository.editProduct(id, data);
       },
  };
 

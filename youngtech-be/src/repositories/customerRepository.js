@@ -1,6 +1,5 @@
 const sequelize = require('../configs/db');
 const customerController = require('../controllers/customerController');
-
 const customerRepository = {
   // all customer , only admin can viewing them
 
@@ -34,8 +33,6 @@ const customerRepository = {
     }
   },
   
-
-
   // addInformationByAccount
   addInformationByAccount: async (data, accountId) => {
     try {
@@ -50,6 +47,24 @@ const customerRepository = {
       result.status(500).json({ message: err });
     }
   },
+
+  updateInfoMe: async (data, checkAccountExist  ) => {
+    console.log("data",data)
+    try {
+      const query = `UPDATE customer SET fullName = :fullName ,  phoneNumber = :phoneNumber  WHERE id = :id`;
+
+      const [result] = await sequelize.query(query, {
+        replacements: { ...data, id: checkAccountExist },
+      });
+
+      return result;
+    } catch (err) {
+      result.status(500).json({ message: err });
+    }
+  },
+
+  
+
 
   //checkAccountExist(userId)
   checkAccountExist: async (userId) => {

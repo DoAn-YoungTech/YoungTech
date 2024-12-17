@@ -43,7 +43,6 @@ const orderController = {
   //   }
   // },
   addOrderWithDetails: async (req, res) => {
-
     const { order, orderDetails,cartId, cartItems } = req.body;
     if (!order || !orderDetails || orderDetails.length === 0) {
       return res.status(400).json({ message: 'Order and order details are required' });
@@ -89,6 +88,25 @@ const orderController = {
 
     try {
       const order = await orderService.getOrderById(orderId);
+      return res.status(200).json({
+        message: 'Order retrieved successfully',
+        data: order,
+      });
+    } catch (error) {
+      console.error('Error fetching order:', error);
+      return res.status(404).json({
+        message: 'Error fetching order',
+        error: error.message,
+      });
+    }
+  },
+
+  getOrderByAccountId: async (req, res) => {
+    const userId = req.params.id;
+    console.log(userId);
+
+    try {
+      const order = await orderService.getOrderByAccountId(userId);
       return res.status(200).json({
         message: 'Order retrieved successfully',
         data: order,

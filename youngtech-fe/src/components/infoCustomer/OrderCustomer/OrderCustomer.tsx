@@ -1,7 +1,13 @@
 "use client"
-import React, { useState } from 'react';
+import { getOrderByIdCustomer } from '@/services/category/order/orderServices';
+import React, { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { BsCartCheck } from "react-icons/bs";
+import TableOrder from './TableOrder';
 const OrderCustomer = () => {
+  const {data:session} = useSession();
+  const [dataOrder,setDataOrder] = useState([])
+  console.log(dataOrder)
   const [selectedTab, setSelectedTab] = useState('Tất cả');
   const tabs = [
     'Tất cả',
@@ -12,6 +18,20 @@ const OrderCustomer = () => {
     'Đã hủy',
     'Thành công',
   ];
+ 
+  const data = async ()=>{
+    const req = await getOrderByIdCustomer(7);
+    setDataOrder(req.data)
+  }
+ 
+  useEffect(()=>{
+    if(session){
+     const id =session.user.id;
+    if(id){
+      data(id)
+    }
+    }
+  },[session])
 
   return (
  
@@ -39,24 +59,32 @@ const OrderCustomer = () => {
        </button>
      ))}
    </div>
+    {dataOrder && dataOrder.length > 0 ?
+  <div className="flex flex-col  bg-white items-center py-10">
+  <TableOrder orders={dataOrder}/>
+  </div>
+  :  
+  <div className="flex flex-col  bg-white items-center py-10">
+   
+  <BsCartCheck  className='text-[50px] text-red-500'/>
+    <h3 className="mt-4 text-lg font-bold">Rất tiếc, không tìm thấy đơn hàng nào phù hợp</h3>
+    <p className="mt-2 text-gray-500">Vẫn còn rất nhiều sản phẩm đang chờ bạn</p>
 
-   {/* No Orders */}
-   <div className="flex flex-col  bg-white items-center py-10">
-   <BsCartCheck  className='text-[50px] text-red-500'/>
-     <h3 className="mt-4 text-lg font-bold">Rất tiếc, không tìm thấy đơn hàng nào phù hợp</h3>
-     <p className="mt-2 text-gray-500">Vẫn còn rất nhiều sản phẩm đang chờ bạn</p>
+    {/* Suggestion Buttons */}
+    <div className="mt-6 space-x-2">
+      <button className="px-4 py-2 border rounded-lg">Tivi</button>
+      <button className="px-4 py-2 border rounded-lg">Tủ lạnh</button>
+      <button className="px-4 py-2 border rounded-lg">Máy lạnh</button>
+      <button className="px-4 py-2 border rounded-lg">Máy giặt</button>
+      <button className="px-4 py-2 border rounded-lg">Gia dụng</button>
+    </div>
 
-     {/* Suggestion Buttons */}
-     <div className="mt-6 space-x-2">
-       <button className="px-4 py-2 border rounded-lg">Tivi</button>
-       <button className="px-4 py-2 border rounded-lg">Tủ lạnh</button>
-       <button className="px-4 py-2 border rounded-lg">Máy lạnh</button>
-       <button className="px-4 py-2 border rounded-lg">Máy giặt</button>
-       <button className="px-4 py-2 border rounded-lg">Gia dụng</button>
-     </div>
-
-     <button className="mt-8 text-blue-500 text-sm">Về trang chủ</button>
-   </div>
+    <button className="mt-8 text-blue-500 text-sm">Về trang chủ</button>
+  </div>
+  }
+   
+ 
+  
  </div>
   );
 };

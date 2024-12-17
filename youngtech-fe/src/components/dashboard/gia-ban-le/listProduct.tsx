@@ -45,6 +45,13 @@ const ListProducts = () => {
   };
   return (
     <div>
+      <header className="mb-5">
+        <h2 className="text-white/90 font-bold text-[1.2rem]">
+          DANH SÁCH SẢN PHẨM
+        </h2>
+      </header>
+      <main>
+      <div>
       <div className="products-container">
         {products.map((product : any, index: number) => (
           <div
@@ -81,9 +88,8 @@ const ListProducts = () => {
                 <div className="text-white/80 w-[calc(100%-90%)]">
                   <span className="text-[0.8rem]">{new Date(product.createAt).toLocaleDateString()}</span>
                 </div>
-                <div className=" flex items-center gap-2  w-[calc(100%-80%)]">
-                  <Update  url={`/dashboard/quanly-kinhdoanh/giaban-le/${product.id}`} />
-                  <Delete url={""} />
+                <div className="font-bold  flex items-center gap-2  w-[calc(100%-80%)]">
+                  <Update url={`/dashboard/quanly-kinhdoanh/giaban-le/${product.id}`} />
                 </div>
               </div>
             </div>
@@ -119,6 +125,9 @@ const ListProducts = () => {
   </Button>
 </div>
     </div>
+    </main>
+    </div>
+    
   );
 };
 

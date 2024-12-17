@@ -236,7 +236,7 @@ export default function WarehouseManagement() {
             {isLoadingCategories && <option>Đang tải...</option>}
             {isErrorCategories && <option>Không thể tải danh sách</option>}
             {childCategories &&
-childCategories?.data?.map((category: any) => (
+              childCategories?.data?.map((category: any) => (
                 <option key={category.id} value={category.id} className="text-black">
                   {category.childCateName}
                 </option>

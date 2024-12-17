@@ -1,3 +1,5 @@
+const imageRepository = require('../repositories/imageRepository');
+const imageService = require('../services/imageService');
 const productService = require('../services/productService');
 const validateProductAttributes = require('../validate/productValidator');
 
@@ -239,6 +241,28 @@ const productController = {
         .json({ message: 'Internal Server Error', error: err.message });
     }
   },
+
+  editProduct: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const {data} = req.body;
+      const {images} = req.body;
+
+
+      await imageService.updateImages(images, id)
+      const result = await productService.editProduct(id, data);
+      
+      return res
+        .status(200)
+        .json({ message: 'Update successful', data: result });
+    } catch (err) {
+      console.error(err); // Log lỗi để dễ dàng debug
+      return res
+        .status(500)
+        .json({ message: 'Internal Server Error', error: err.message });
+    }
+  },
+
 
   createProduct: async (req, res) => {
     try {

@@ -103,6 +103,41 @@ const orderRepository = {
       throw error;
     }
   },
+   getOrderByAccountId : async (userId) => {
+    const query = `
+      SELECT 
+        o.id AS orderId,
+        o.orderDate,
+        o.totalAmount,
+        o.status,
+        o.paymentMethod,
+        c.id AS customerId,
+        c.fullName,
+        c.phoneNumber,
+        c.address
+      FROM 
+        \`Order\` o
+      INNER JOIN 
+        Customer c ON o.customer_id = c.id
+      INNER JOIN 
+        Account a ON c.account_id = a.id
+      WHERE 
+        a.id = :userId AND o.flag = true
+    `;
+  
+    try {
+      const orders = await sequelize.query(query, {
+        replacements: { userId },
+        type: sequelize.QueryTypes.SELECT, // Trả về mảng nhiều bản ghi
+      });
+  
+      return orders; // Luôn trả về một mảng các đơn hàng
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách đơn hàng:', error);
+      throw error;
+    }
+  },
+  
 };
 
 module.exports = orderRepository;

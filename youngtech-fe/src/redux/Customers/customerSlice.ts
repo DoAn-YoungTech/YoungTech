@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchCustomersById, addCustomer, updateCustomer, removeCustomer } from './customerThunks';
+import { fetchCustomersById, addCustomer, updateCustomer, removeCustomer, updateInfoMe } from './customerThunks';
 
 interface Customer {
   id: number;
@@ -65,6 +65,21 @@ const customerSlice = createSlice({
       state.loading = false;
       state.error = action.error.message || 'Error updating customer';
     });
+
+
+      // Update customer
+      builder.addCase(updateInfoMe.pending, (state) => {
+        state.loading = true;
+      });
+      builder.addCase(updateInfoMe.fulfilled, (state, action: PayloadAction<Customer>) => {
+        state.loading = false;
+        state.customers = action.payload; 
+      });
+      
+      builder.addCase(updateInfoMe.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error updating customer';
+      });
 
     // Remove customer
     builder.addCase(removeCustomer.pending, (state) => {

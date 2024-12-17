@@ -1,0 +1,7 @@
+.truncate-address {
+    max-width: 150px; /* Giới hạn độ rộng */
+    overflow: hidden; /* Ẩn phần vượt quá */
+    white-space: nowrap; /* Không xuống dòng */
+    text-overflow: ellipsis; /* Hiển thị dấu 3 chấm (...) */
+  }
+  
