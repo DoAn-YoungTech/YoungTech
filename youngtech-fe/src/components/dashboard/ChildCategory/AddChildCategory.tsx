@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 const AddChildCategory = () => {
   const [parentCategories, setParentCategories] = useState([]);
@@ -17,7 +18,7 @@ const AddChildCategory = () => {
   useEffect(() => {
     const fetchParentCategories = async () => {
       try {
-        const response = await axios.get(`http://localhost:3400/api/parencategories`);
+        const response = await axios.get(`${Api_url}/parencategories`);
         setParentCategories(response.data.data);
       } catch (error) {
         console.error("Error fetching parent categories:", error.message);
@@ -52,7 +53,7 @@ const AddChildCategory = () => {
         // Điều hướng sau 2 giây
         setTimeout(() => {
           router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con");
-        }, 6000);
+        }, 2000);
       } else {
         toast.error("Không tìm thấy danh mục cha đã chọn.");
       }
@@ -66,15 +67,9 @@ const AddChildCategory = () => {
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex items-center justify-between mb-6">
-          <button
-            type="button"
-            onClick={() =>
+            <ShinyRotatingBorderButton onClick={() =>
               router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con")
-            }
-            className="text-blue-600 hover:text-blue-800"
-          >
-            <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
-          </button>
+            }>Quay lại</ShinyRotatingBorderButton>
           <h2 className="text-2xl font-bold text-white text-center flex-1">
             Thêm danh mục con
           </h2>
