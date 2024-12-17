@@ -98,8 +98,8 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-[#282F36] rounded-lg border border-gray-600">
-      <h1 className="text-2xl font-bold text-white/50 mb-4">Upload Images</h1>
+    <div className="p-6 max-w-4xl mx-auto bg-[#282F36] rounded-lg  border border-gray-600">
+      <h2 className="text-2xl font-bold text-white/50 mb-4">Upload Images</h2>
       <div className="mb-4">
         <input
           type="file"

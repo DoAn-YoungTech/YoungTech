@@ -3,15 +3,19 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/Store";
-import { removeItem } from "@/redux/WareHouseManagement/WareHouseMannagementSlice";
+import { FaEdit, FaRegEye } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { removeItem, resetWareHouseMannagementItems } from "@/redux/WareHouseManagement/WareHouseMannagementSlice";
 import axios from "axios";
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from "next/navigation";
 import EditProduct from "./components/EditProduct";
-// import jsPDF from "jspdf";
-// import autoTable from "jspdf-autotable";
-
-
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { MdDeleteOutline } from "react-icons/md";
+import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { toast, ToastContainer } from "react-toastify";
+const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 type Product = {
   id: number;
@@ -36,17 +40,16 @@ const ListProduct = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter()
 
-
   const { wareHouseMannagementItems } = useSelector((state: RootState) => state.wareHouseMannagement);
+
   const handleDelete = (index: number) => {
     dispatch(removeItem(index))
   }
 
-  const handleView = (product: Product, id: number) => {
+  const handleUpdate = (product: Product, id: number) => {
     setSelectedProduct({ ...product, id: id });
     setModalOpen(true);
   };
-  
 
   const handleCloseModal = () => {
     setSelectedProduct(null);
@@ -57,14 +60,12 @@ const ListProduct = () => {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // reader.result sẽ chứa dữ liệu Base64
         resolve(reader.result as string);
       };
       reader.onerror = reject;
       reader.readAsDataURL(blob);  // Đọc Blob và chuyển thành Base64
     });
   };
-
 
   const handleAddProducts = async () => {
     const formattedData = wareHouseMannagementItems.map((item) => ({
@@ -88,9 +89,8 @@ const ListProduct = () => {
     autoTable(doc, {
       head: [["STT", "Tên sản phẩm", "Số lượng", "Mô tả", "Giá", "Thương hiệu", "Danh mục con", "Nhà cung cấp"]],
       body: formattedData.map((product, index) => {
-
         const supplier = suppliers?.data.find(
-          (item) => item.id === +product.supplier_id
+(item) => item.id === +product.supplier_id
         );
         const childCategory = childCategories?.data.find(
           (item) => item.id === +product.childCategory_id
@@ -131,7 +131,6 @@ const ListProduct = () => {
     const data = await response.json();
     if (response.ok) {
       const imageUrls = data.urls.map((item: { url: string }) => item.url);
-
       console.log('k', imageUrls[0].replace('pdf', 'jpg'))
 
       // Append new uploaded images to the existing ones
@@ -153,16 +152,15 @@ const ListProduct = () => {
       });
 
       if (response.status === 200) {
-        alert("Thêm sản phẩm thành công!");
-        // tải file pdf
-        // doc.save("DanhSachSanPham.pdf");
-        // dispatch(resetWareHouseMannagementItems())
+        toast.success("Thêm sản phẩm thành công!"); // Hiển thị thông báo toast thành công
+        doc.save("DanhSachSanPham.pdf");
+        dispatch(resetWareHouseMannagementItems())
       } else {
-        alert(`Thêm sản phẩm thất bại: ${response.statusText}`);
+        toast.error(`Thêm sản phẩm thất bại: ${response.statusText}`); // Hiển thị thông báo toast lỗi
       }
     } catch (error) {
       console.error("Error adding products:", error);
-      alert("Đã xảy ra lỗi khi thêm sản phẩm.");
+      toast.error("Đã xảy ra lỗi khi thêm sản phẩm."); // Hiển thị thông báo toast lỗi
     }
   };
 
@@ -176,10 +174,9 @@ const ListProduct = () => {
 
   );
 
-
   // Fetch child categories using React Query
   const {
-    data: childCategories,
+data: childCategories,
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
@@ -188,10 +185,10 @@ const ListProduct = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#111827]">
-      <h1 className="text-3xl font-bold text-white p-4 border-b border-gray-600">
-        Danh Sách Sản Phẩm Đã Nhập
-      </h1>
+    <div className="min-h-screen p-8 bg-[#282F36] rounded-lg border-md border-[#374151]">
+      <h2 className="text-3xl font-bold text-center text-white mb-6">
+        Danh sách sản phẩm đã nhập
+      </h2>
       {wareHouseMannagementItems.length === 0 ? (
         <p className="text-gray-400 p-4">Không có sản phẩm nào.</p>
       ) : (
@@ -211,41 +208,42 @@ const ListProduct = () => {
               >
                 <div className="content-product-header p-4">
                   <div className="flex items-center justify-between">
-                    <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-95%)]">
+                    <div className=" text-[0.9rem] text-white/80 w-[calc(100%-95%)]">
                       {product.productName}
                     </div>
-                    <div className="font-bold text-white/80 w-[calc(100%-90%)]">
+                    <div className=" text-white/80 w-[calc(100%-90%)]">
                       <img
                         src={product?.images[0]}
                         alt="product"
                         className="w-10 h-10 object-cover rounded"
                       />
-
                     </div>
-                    <div className="font-bold text-white/80 w-[calc(100%-85%)]">
+                    <div className="text-white/80 w-[calc(100%-85%)]">
                       <span className="text-[0.8rem]">{product.description}</span>
                     </div>
-                    <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
+                    <div className="text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
                       <span className="text-[0.8rem]">{product.brand}</span>
                     </div>
-                    <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-90%)]">
+                    <div className="text-[0.9rem] text-white/80 w-[calc(100%-90%)]">
                       <span className="text-[0.8rem]">{product.productPrice}</span>
                     </div>
-                    <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-85%)]">
+                    <div className="text-[0.9rem] text-white/80 w-[calc(100%-85%)]">
                       <span className="text-[0.8rem]">{product.quantity}</span>
                     </div>
-                    <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
+                    <div className="text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
                       <span className="text-[0.8rem]">{supplier?.supplierName || "N/A"}</span>
                     </div>
-                    <div className="font-bold text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
+                    <div className="text-[0.9rem] text-white/80 w-[calc(100%-80%)]">
                       <span className="text-[0.8rem]">{childCategory?.childCateName || "N/A"}</span>
-                    </div>
-                    <div className="font-bold flex items-center gap-2 w-[calc(100%-80%)]">
-                      <button onClick={() => handleView(product, index)}>
-                        <FaRegEye className="text-[1.1rem] text-slate-400 hover:text-slate-200" />
+</div>
+                    <div className="flex items-center gap-2 w-[calc(100%-80%)]">
+                      <button className="hover:bg-blue-500 bg-[#1E293B] rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
+                        onClick={() => handleUpdate(product as Product, index)}>
+                        <FaEdit className="text-[1.1rem] text-blue-400" />
                       </button>
-                      <button onClick={() => handleDelete(index)}>
-                        <RiDeleteBin6Line className="text-[1.1rem] text-orange-500 hover:text-orange-300" />
+                      <button className="hover:bg-red-500 bg-[#1E293B] rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
+                        onClick={() => handleDelete(index)}>
+                        <MdDeleteOutline className="text-[1.1rem] text-red-400" />
                       </button>
                     </div>
                   </div>
@@ -255,21 +253,9 @@ const ListProduct = () => {
           })}
         </div>
       )}
-      <div className="flex justify-between mt-4 px-4">
-        <button
-          onClick={() => router.back()}
-          type="button"
-          className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-        >
-          Huỷ
-        </button>
-        <button
-          type="button"
-          onClick={handleAddProducts}
-          className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-        >
-          Thêm
-        </button>
+      <div className="flex justify-end gap-4 p-4">
+        <ShinyRotatingBorderButton type="button" onClick={() => router.back()}>Hủy</ShinyRotatingBorderButton>
+        <ShinyRotatingBorderButton type="button" onClick={handleAddProducts}>Thêm</ShinyRotatingBorderButton>
       </div>
       {isModalOpen && selectedProduct && (
         <EditProduct
@@ -277,9 +263,9 @@ const ListProduct = () => {
           selectedProduct={selectedProduct}
         />
       )}
+      <ToastContainer /> {/* Đưa ToastContainer vào cuối component để hiển thị toast */}
     </div>
   );
-
 };
 
 export default ListProduct;
