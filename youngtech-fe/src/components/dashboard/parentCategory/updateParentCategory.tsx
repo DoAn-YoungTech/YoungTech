@@ -37,14 +37,9 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
       <form onSubmit={handleEditSubmit} className="space-y-6">
         <div className="flex items-center justify-between mb-6">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="text-blue-600 hover:text-blue-800"
-          >
-            <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
-
-          </button>
+            <ShinyRotatingBorderButton type="button" onClick={onCancel}>
+              Quay lại
+            </ShinyRotatingBorderButton>
           <h2 className="text-2xl font-bold text-white text-center flex-1">
             Sửa danh mục cha
           </h2>
