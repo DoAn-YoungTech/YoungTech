@@ -17,9 +17,16 @@ orderRoutes.put(
 );
 orderRoutes.get(
   '/getPendingOrders',
-  middlewareController.verifyToken,
-  middlewareController.verifyTokenAndRole(['salesperson', 'admin']),
+  // middlewareController.verifyToken,
+  // middlewareController.verifyTokenAndRole(['salesperson', 'admin']),
   orderController.getPendingOrders
+);
+
+
+orderRoutes.get(
+  '/getOrderByIdMe/:id',
+  // middlewareController.verifyToken,
+  orderController.getOrderByAccountId
 );
 orderRoutes.get('/:orderId', orderController.getOrderById);
 module.exports = orderRoutes;
