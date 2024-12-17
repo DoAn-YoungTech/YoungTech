@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 const listImage = [
-  { id: 1, imageBanner: "/designImage/imageBanner/Banner/1.png", alt: "banner1" },
-  { id: 2, imageBanner: "/designImage/imageBanner/Banner/2.png", alt: "banner2" },
-  { id: 3, imageBanner: "/designImage/imageBanner/Banner/3.png", alt: "banner3" },
-  { id: 4, imageBanner: "/designImage/imageBanner/Banner/4.png", alt: "banner4" },
+  { id: 1, imageBanner: "/banner/1.png", alt: "banner1" },
+  { id: 2, imageBanner: "/banner/2.png", alt: "banner2" },
+  { id: 3, imageBanner: "/banner/3.png", alt: "banner3" },
+  { id: 4, imageBanner: "/banner/4.png", alt: "banner4" },
 ];
 
 const Carousels = () => {
@@ -22,8 +22,9 @@ const Carousels = () => {
 
   return (
     <section className="category hidden lg:block w-full">
-      <div className="w-full">
-        <div className="relative h-[500px]" style={{ zIndex: 0 }}>
+      <div className="w-full mt-5">
+      <div className="w-[90%] m-auto">
+      <div className="relative h-[200px]" style={{ zIndex: 0 }}>
           {listImage.map((item, index) => (
             <div
               key={item.id}
@@ -42,6 +43,7 @@ const Carousels = () => {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );
