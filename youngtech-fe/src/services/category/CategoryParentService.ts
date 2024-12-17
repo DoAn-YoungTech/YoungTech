@@ -1,11 +1,14 @@
 import axios from 'axios';
+import { getAuthHeaders } from '@/utils/session';
 
 const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 // Hàm thêm dữ liệu category
 export const addCategory = async (name) => {
+    const headers = await getAuthHeaders();
+
     try {
-        const response = await axios.post(`${Api_url}/parencategories`, name);
+        const response = await axios.post(`${Api_url}/parencategories`, name, {headers});
         console.log('Data added:', response.data);
     } catch (error) {
         console.error('Error adding data:', error.response ? error.response.data : error.message);
@@ -13,8 +16,10 @@ export const addCategory = async (name) => {
 }
 
 export const getAllCategory = async () => {
+    const headers = await getAuthHeaders();
+
     try {
-      const response = await axios.get(`${Api_url}/parencategories`);
+      const response = await axios.get(`${Api_url}/parencategories`,{headers});
       return response.data; // Trả về dữ liệu danh mục từ API
     } catch (error) {
       console.error("Error fetching data:", error.response ? error.response.data : error.message);
@@ -23,8 +28,10 @@ export const getAllCategory = async () => {
 }
 // Hàm lấy danh mục theo ID
 export const getCategoryById = async (id) => {
+    const headers = await getAuthHeaders();
+
     try {
-        const response = await axios.get(`${Api_url}/parencategories/${id}`);
+        const response = await axios.get(`${Api_url}/parencategories/${id}`,{headers});
         return response.data; // Trả về danh mục cụ thể
     } catch (error) {
         console.error('Error fetching data by ID:', error.response ? error.response.data : error.message);
@@ -33,8 +40,10 @@ export const getCategoryById = async (id) => {
 }
 // Hàm cập nhật dữ liệu category
 export const updateCategory = async (id, updatedCategory) => {
+    const headers = await getAuthHeaders();
+
     try {
-        const response = await axios.put(`${Api_url}/parencategories/${id}`, updatedCategory);
+        const response = await axios.put(`${Api_url}/parencategories/${id}`, updatedCategory,{headers});
         console.log('Data updated:', response.data);
     } catch (error) {
         console.error('Error updating data:', error.response ? error.response.data : error.message);
@@ -43,8 +52,10 @@ export const updateCategory = async (id, updatedCategory) => {
 
 // Hàm xóa dữ liệu
 export const deleteCategory = async (id) => {
+    const headers = await getAuthHeaders();
+
     try {
-        const response = await axios.delete(`${Api_url}/parencategories/${id}`);
+        const response = await axios.delete(`${Api_url}/parencategories/${id}`,{headers});
         console.log('Data deleted:', response.data);
     } catch (error) {
         console.error('Error deleting data:', error.response ? error.response.data : error.message);

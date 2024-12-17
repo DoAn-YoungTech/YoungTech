@@ -34,9 +34,12 @@ const middlewareController = {
     });
   },
   verifyTokenAndRole: (roles) => {
+
     return (req, res, next) => {
       // let userType
+      console.log(roles)
       const userRoles = req.user.role; //role is saved in the token payload
+      console.log(userRoles)
       if (roles.includes(userRoles)) {
         next();
       } else {

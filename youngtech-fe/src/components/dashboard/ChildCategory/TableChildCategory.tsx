@@ -7,6 +7,7 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { Category_Child } from '@/types/CategoryTypes';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react"
 const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 const ITEMS_PER_PAGE = 5; // Số lượng mục hiển thị mỗi trang
@@ -24,7 +25,8 @@ const ChildCategoriesTable: React.FC<ChildCategoriesTableProps> = ({
 }) => {
   const [parentCategories, setParentCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const { data: session } = useSession()
+  console.log(session);
   useEffect(() => {
     const fetchParentCategories = async () => {
       try {

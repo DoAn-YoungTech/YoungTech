@@ -93,13 +93,12 @@ export default function WarehouseManagement() {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);
     return response.data;
   });
-
-  // Set default values for supplier and child category fields when data is loaded
+// Set default values for supplier and child category fields when data is loaded
   useEffect(() => {
-    if (suppliers && suppliers.data.length > 0) {
+    if (suppliers && suppliers?.data?.length > 0) {
       setValue('supplier_id', suppliers.data[0].id);
     }
-    if (childCategories && childCategories.data.length > 0) {
+    if (childCategories && childCategories?.data?.length > 0) {
       setValue('childCategory_id', childCategories.data[0].id);
     }
   }, [suppliers, childCategories, setValue]);
@@ -174,7 +173,7 @@ export default function WarehouseManagement() {
             {...register('description')}
             className="w-full p-3 border border-[#4B5563] rounded bg-[#1F2937] text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
+{errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
         </div>
 
         {/* Brand */}
@@ -218,7 +217,7 @@ export default function WarehouseManagement() {
             {isLoadingSuppliers && <option>Đang tải...</option>}
             {isErrorSuppliers && <option>Không thể tải danh sách</option>}
             {suppliers &&
-              suppliers.data.map((supplier: any) => (
+              suppliers.data?.map((supplier: any) => (
                 <option key={supplier.id} value={supplier.id} className="text-black">
                   {supplier.supplierName}
                 </option>
@@ -237,7 +236,7 @@ export default function WarehouseManagement() {
             {isLoadingCategories && <option>Đang tải...</option>}
             {isErrorCategories && <option>Không thể tải danh sách</option>}
             {childCategories &&
-              childCategories.data.map((category: any) => (
+childCategories?.data?.map((category: any) => (
                 <option key={category.id} value={category.id} className="text-black">
                   {category.childCateName}
                 </option>
@@ -267,5 +266,3 @@ export default function WarehouseManagement() {
   </div>
   );
 }
-
-

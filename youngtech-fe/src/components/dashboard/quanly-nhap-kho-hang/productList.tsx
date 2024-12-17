@@ -96,7 +96,7 @@ const ListProduct = () => {
         const childCategory = childCategories?.data.find(
           (item) => item.id === +product.childCategory_id
         );
-        return [
+return [
           index,
           product.productName,
           product.quantity,
@@ -134,13 +134,6 @@ const ListProduct = () => {
       const imageUrls = data.urls.map((item: { url: string }) => item.url);
 
       console.log('k', imageUrls[0].replace('pdf', 'jpg'))
-
-      // Append new uploaded images to the existing ones
-      // setUploadedImages((prevImages) => [...prevImages, ...imageUrls]);
-
-      // handleGetArrayImage(imageUrls); // Update parent component with uploaded image URLs
-      // setImagePreviews([]); // Clear the previews after upload
-      // setImages([]); // Clear selected images
 
     } else {
       console.error("Upload failed:", data.message);
@@ -185,7 +178,7 @@ const ListProduct = () => {
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);
-    return response.data;
+return response.data;
   });
 
   return (
@@ -242,7 +235,7 @@ const ListProduct = () => {
                     </div>
                     <div className="font-bold flex items-center gap-2 w-[calc(100%-80%)]">
                       <button onClick={() => handleView(product, index)}>
-                        <FaRegEye className="text-[1.1rem] text-slate-400 hover:text-slate-200" />
+<FaRegEye className="text-[1.1rem] text-slate-400 hover:text-slate-200" />
                       </button>
                       <button onClick={() => handleDelete(index)}>
                         <RiDeleteBin6Line className="text-[1.1rem] text-orange-500 hover:text-orange-300" />

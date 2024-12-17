@@ -40,12 +40,12 @@ const childCategoriesRepository = {
 
     deleteChildCategories: async (id) =>{
         const query = `UPDATE childcategories 
-        SET flag = true WHERE id = :id`; // Đánh dấu xóa mềm
+        SET flag = false WHERE id = :id`; // Đánh dấu xóa mềm
         const [result] = await sequelize.query(query, {replacements : {id}});
         return result;
     },
     restoreChildCategories: async (id) => {
-        const query = `UPDATE childcategories SET flag = false WHERE id = :id`; // Khôi phục xóa mềm
+        const query = `UPDATE childcategories SET flag = true WHERE id = :id`; // Khôi phục xóa mềm
         const [result] = await sequelize.query(query, { replacements: { id } });
         return result;
       },
