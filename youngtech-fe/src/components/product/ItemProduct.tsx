@@ -58,26 +58,9 @@ import { fetchNameParentCategoriesByChildId } from "@/redux/Category/categoryChi
 
 <div className='star flex items-center py-1 text-slate-500'>
             <IoIosStar className="text-yellow-400 text-[12px]" />
-            <span className=''>{item.rating}</span> ({item.reviewCount})
+            <span className=''>{4.5}</span>
           </div>
          
-          <div data-tooltip={`-10%`} className="mt-3 button">
-            <div className="button-wrapper">
-              <div className="text text-[.9rem]">Mua ngay</div>
-              <span className="icon">
-                <svg
-                  viewBox="0 0 16 16"
-                  className="bi bi-cart2"
-                  fill="currentColor"
-                  height="16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"></path>
-                </svg>
-              </span>
-            </div>
-          </div>
           <LuHeart className="text-[1.6rem] text-gray-500 absolute top-1 hover:text-red-600 cursor-pointer right-1" />
         </div>
       

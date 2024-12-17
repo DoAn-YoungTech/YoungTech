@@ -17,7 +17,7 @@ const ItemPay = ({CartProduct}) => {
                            height={100}
                            src={`/designImage/imageProducts/${firstImage}`}  // Đảm bảo đường dẫn đúng
                            className="mx-4 w-[40px]"
-                           alt="Product Image"
+                           alt={cart.item.productName}
                          />
                          <span className="text-[14px] font-semibold text-gray-500">
                            {cart.item.productName}

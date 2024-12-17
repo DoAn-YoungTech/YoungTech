@@ -13,10 +13,10 @@ export const LogoSaleHome = () => {
     <>
      <div className="w-full ">
             <ul className="flex items-center">
-              {listSale.map((item) => {
+              {listSale.map((item,index) => {
                 return (
                   <>
-                    <li key={item.id} className="pr-8">
+                    <li key={index} className="pr-8">
                       <Link href="/" className="">
                         <Image
                         width={200} height={200}

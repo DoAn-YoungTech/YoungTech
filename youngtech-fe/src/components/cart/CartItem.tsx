@@ -21,7 +21,6 @@ type CartItemProps = {
 };
 
 const CartItem: React.FC<CartItemProps> = ({item,onSelectChange }) => {
-  console.log(item)
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isAlertClear, setIsAlertClear] = useState(false);
