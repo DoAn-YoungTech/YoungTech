@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { updateCategory } from "@/services/category/CategoryParentService";
 import { Category_Paren } from '@/types/CategoryTypes';
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface UpdateParentCategoryProps {
   category: Category_Paren;
@@ -21,14 +23,19 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
 
   const handleEditSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!categoryName) {
+      toast.error("Vui lòng nhập tên danh mục!"); // Hiển thị thông báo lỗi nếu không nhập tên
+      return;
+    }
     try {
       await updateCategory(category.id, { name: categoryName });
-      console.log("Updated category successfully");
+      toast.success("Cập nhật danh mục thành công"); // Thông báo thành công
       onUpdateSuccess({ ...category, name: categoryName });
       setTimeout(() => {
         router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
-      }, 6000);
+      }, 300000); // Redirect sau 3 giây
     } catch (error) {
+      toast.error("Cập nhật danh mục thất bại"); // Hiển thị thông báo lỗi
       console.error("Error updating category:", error.message);
     }
   };
@@ -37,9 +44,9 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
       <form onSubmit={handleEditSubmit} className="space-y-6">
         <div className="flex items-center justify-between mb-6">
-            <ShinyRotatingBorderButton type="button" onClick={onCancel}>
-              Quay lại
-            </ShinyRotatingBorderButton>
+          <ShinyRotatingBorderButton type="button" onClick={onCancel}>
+            Quay lại
+          </ShinyRotatingBorderButton>
           <h2 className="text-2xl font-bold text-white text-center flex-1">
             Sửa danh mục cha
           </h2>
