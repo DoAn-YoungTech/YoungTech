@@ -54,7 +54,6 @@ const EditCustomerPage = () => {
     });
 
     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-        console.log(data)
 
         try {
             const response = await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/customers/editCustomer/${id}`, data, {
@@ -186,7 +185,7 @@ const EditCustomerPage = () => {
                                                 <div className="flex gap-4 items-center">
                                                     <ShinyRotatingBorderButton onClick={() => reset()}>Hủy</ShinyRotatingBorderButton>
                                                     <button type="submit">
-                                                    <ShinyRotatingBorderButton>Sửa</ShinyRotatingBorderButton>
+                                                    Sửa
                                                     </button>
                                                 </div>
                                             </div>

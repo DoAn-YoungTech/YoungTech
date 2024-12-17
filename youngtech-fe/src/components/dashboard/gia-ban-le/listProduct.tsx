@@ -80,7 +80,7 @@ const ListProducts = () => {
                 </div>
                 <div className="font-bold  flex items-center gap-2  w-[calc(100%-80%)]">
                   <Delete url={""} />
-                  <Update url={`/dashboard/quanly-kinhdoanh/chinhsua-sanpham/${product.id}`} />
+                  <Update url={`/dashboard/quanly-kinhdoanh/giaban-le/${product.id}`} />
                 </div>
               </div>
             </div>
