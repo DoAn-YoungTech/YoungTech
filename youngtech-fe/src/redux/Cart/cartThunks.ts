@@ -13,7 +13,7 @@ export const fetchCartItems = createAsyncThunk(
     const session = await getSession();
     const response = await axios.get(`${API_URL_Cart}/viewCart`, {
       headers: {
-        Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+        Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
       },
     });
     return response.data.data; // Dữ liệu giỏ hàng trả về từ API
@@ -28,7 +28,7 @@ export const addToCartThunk = createAsyncThunk(
     const session = await getSession();
     const response = await axios.post(`${API_URL_Cart}/addProductToCart`, cartItem, {
         headers: {
-          Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+          Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
         },
       });
     return cartItem; // Dữ liệu sản phẩm sau khi được thêm vào giỏ hàng
@@ -42,7 +42,7 @@ export const updateCartItemQuantity = createAsyncThunk(
     const session = await getSession();
     const response = await axios.put(`${API_URL_Cart}/editCart`, updatedItem,{
       headers: {
-        Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+        Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
       },
     });
     return {
@@ -59,7 +59,7 @@ export const removeCartItem = createAsyncThunk(
     const session = await getSession();
     await axios.delete(`${API_URL_Cart}/removeProductId/${id}`,{
        headers: {
-      Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+      Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
     }
   }
   
@@ -75,7 +75,7 @@ export const removeCartItemIn = createAsyncThunk(
       const session = await getSession();
       const req = await axios.delete(`${API_URL_Cart}/removeIn`, {
         headers: {
-          Authorization: `${session?.accessToken}`, // Gửi token trong header
+          Authorization: `Bearer${session?.accessToken}`, // Gửi token trong header
         },
         data, // Gửi dữ liệu trong phần config
       });
@@ -94,7 +94,7 @@ export const removeAllCartItem = createAsyncThunk(
       const session = await getSession();
       const res = await axios.delete(`${API_URL_Cart}/removeAll`, {
         headers: {
-          Authorization: `${session.accessToken}`, // Đảm bảo không có dấu cách thừa
+          Authorization: `Bearer${session.accessToken}`, // Đảm bảo không có dấu cách thừa
         },
       });
 

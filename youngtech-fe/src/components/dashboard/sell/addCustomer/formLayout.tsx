@@ -6,12 +6,17 @@ import { ModernSimpleInput } from "../../editProduct/InputType";
 import { ToastContainer, toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { useContext } from "react";
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
+import { UserContext } from "@/app/dashboard/quanly-banhang/ban-hang/page";
+import "react-toastify/dist/ReactToastify.css";
 const FormLayout = () => {
+  const { customerId, setCustomerId } = useContext(UserContext);
   const { data: session, status } = useSession();
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({
     fullName: "",
     phoneNumber: "",
@@ -42,48 +47,53 @@ const FormLayout = () => {
     setErrors(newErrors);
     return isValid;
   };
-  const handleSubmit = (e) => {
+  if (!session || !session.accessToken) {
+    toast.error("Bạn chưa đăng nhập. Vui lòng đăng nhập trước.");
+    return;
+  }
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // Ngăn gọi lại khi đang xử lý
+    setIsSubmitting(true); // Khóa nút submit
+
     if (validateForm()) {
-      const formData = {
-        fullName,
-        phoneNumber,
-        address
-      };
-      console.log(session);
+      const formData = { fullName, phoneNumber, address };
       try {
-        const submit = async () => {
-          const response = await axios.post(
-            `${baseURL}/customers/addCustomerOffline`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${session.accessToken}`
-              }
+        const response = await axios.post(
+          `${baseURL}/customers/addCustomerOffline`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${session.accessToken}`
             }
-          );
-          if (!response.ok) {
-            alert(`Response status: ${response.status}`);
           }
-          alert("Tạo customer thành công 🎉");
-          console.log(response.data);
-        };
-        submit();
-      } catch (err) {
-        console.log(err.message);
+        );
+        if (response.data.data) {
+          setCustomerId(response.data.data);
+          alert("Tạo customer thành công");
+        } else {
+          toast.error("Lỗi khi tạo khách hàng, vui lòng kiểm tra lại.");
+        }
+      } catch (error) {
+        console.error("Lỗi API:", error);
+        const errorMessage =
+          error.response?.data?.message || "Có lỗi xảy ra khi gửi yêu cầu.";
+        toast.error(errorMessage);
+      } finally {
+        setIsSubmitting(false); // Mở khóa nút submit
       }
-      console.log("Form Data:", formData);
     }
   };
   const handleReset = () => {
     setFullName("");
     setPhoneNumber("");
     setAddress("");
+    setIsSubmitting(false);
     setErrors({ fullName: "", phoneNumber: "", address: "" });
   };
   return (
     <>
-       
+      <ToastContainer />
       <h2 className="text-white/70 text-[1.1rem] mb-3">
         Nhập thông tin khách hàng{" "}
       </h2>
@@ -146,8 +156,12 @@ const FormLayout = () => {
           )}
         </div>
         <div className="flex gap-3 items-center ">
-          <ShinyRotatingBorderButton type="submit" className="w-full">
-            Submit
+          <ShinyRotatingBorderButton
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Đang xử lý..." : "Submit"}
           </ShinyRotatingBorderButton>
           <ShinyRotatingBorderButton
             type="button"

@@ -1,14 +1,14 @@
 const sequelize = require('../configs/db');
 
 const orderRepository = {
-
   getPendingOrders: async () => {
     const query = `
       SELECT 
         c.fullName AS customerName,
         o.orderDate,
         o.totalAmount,
-        o.paymentMethod
+        o.paymentMethod,
+        o.id
       FROM 
         Customer c
       INNER JOIN 
@@ -44,40 +44,38 @@ const orderRepository = {
       WHERE 
         o.id = :orderId AND o.flag = true
     `;
-    
+
     try {
       const [order] = await sequelize.query(query, {
         replacements: { orderId },
-        type: sequelize.QueryTypes.SELECT
+        type: sequelize.QueryTypes.SELECT,
       });
       return order;
     } catch (error) {
-      console.error("Error fetching order:", error);
+      console.error('Error fetching order:', error);
       throw error;
     }
   },
 
   createOrder: async (orderData) => {
     const query = `
+
       INSERT INTO \`Order\` (totalAmount, status, customer_id)
       VALUES (:totalAmount, :status, :customer_id)
     `;
-
-
     const [result] = await sequelize.query(query, {
-      replacements: {
+ 
+      replacements: { 
         totalAmount: orderData.totalAmount,
         status: orderData.status,
-        customer_id: orderData.customer_id,
-      },
-    });
-
-
+        customer_id: orderData.customer_id, 
+  }});
     // Dùng query để lấy ID vừa thêm
-    const [orderIdResult] = await sequelize.query('SELECT LAST_INSERT_ID() AS id');
+    const [orderIdResult] = await sequelize.query(
+      'SELECT LAST_INSERT_ID() AS id'
+    );
     return orderIdResult[0]?.id; // Trả về ID vừa tạo
   },
-
 
   updateOrderStatus: async (orderId, newStatus) => {
     const query = `
@@ -85,25 +83,25 @@ const orderRepository = {
       SET status = :newStatus
       WHERE id = :orderId AND flag = true
     `;
-    
+
     try {
       const [updatedRows] = await sequelize.query(query, {
-        replacements: { orderId, newStatus }, 
-        type: sequelize.QueryTypes.UPDATE
+        replacements: { orderId, newStatus },
+        type: sequelize.QueryTypes.UPDATE,
       });
-  
+
       if (updatedRows === 0) {
-        throw new Error("Không tìm thấy đơn hàng hoặc cập nhật trạng thái thất bại.");
+        throw new Error(
+          'Không tìm thấy đơn hàng hoặc cập nhật trạng thái thất bại.'
+        );
       }
-  
+
       return { message: 'Cập nhật trạng thái đơn hàng thành công' };
     } catch (error) {
-      console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+      console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
       throw error;
     }
   },
- 
 };
-
 
 module.exports = orderRepository;

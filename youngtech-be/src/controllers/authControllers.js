@@ -225,15 +225,16 @@ const authController = {
   generateOtp: async (req, res, next) => {
     try {
       const { email } = req.body;
+      console.log(email)
       if (!email) {
         return res.status(404).json({
-          message: 'Email not found ! Please enter your email address.',
+          message: 'Email không tồn tại.',
         });
       }
       const account = await authService.checkEmailExist(email);
 
       if (!account) {
-        return res.status(404).json({ message: 'Email not found.' });
+        return res.status(404).json({ message: 'Email không tồn tại.' });
       }
 
       // const OTP = Math.floor(1000 + Math.random() * 9000) this a way manual generate OTP
@@ -292,16 +293,16 @@ const authController = {
       const checkOTPExist = await authService.checkOTPExist(email, otp);
 
       if (!checkOTPExist) {
-        return res.status(404).json({ message: `OTP incorrect !` });
+        return res.status(404).json({ message: `OTP không đúng ! Vui lòng kiểm tra lại gamil. !` });
       }
 
       if (Date.now() > new Date(checkOTPExist.otpExpires)) {
         return res
           .status(404)
-          .json({ message: `OTP expired ! Please enter email again . ` });
+          .json({ message: `OTP không đúng ! Vui lòng kiểm tra lại gamil . ` });
       }
 
-      res.status(200).json({ message: 'OPT is correct .' });
+      res.status(200).json({ message: 'Xác nhận OTP thành công .' });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -309,12 +310,14 @@ const authController = {
   resetPassword: async (req, res) => {
     try {
       const { email, newPassword } = req.body;
+      console.log(email, newPassword)
       const hashPassword = await bcrypt.hash(newPassword, 10);
-
+        
       const resetPassword = await authService.resetPassword(
         email,
         hashPassword
       );
+      
       if (!resetPassword) {
         return res.status(403).json({ message: 'Can not reset password !' });
       }

@@ -1,4 +1,4 @@
-import PayMethods from "./thanhtoan";
+
 
 const OrderInfoUser = ({userInfo}) => {
   

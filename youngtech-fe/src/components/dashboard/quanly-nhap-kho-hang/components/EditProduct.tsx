@@ -276,7 +276,7 @@ const EditProduct = (props: EditProduct) => {
                   {isLoadingSuppliers && <option>Đang tải...</option>}
                   {isErrorSuppliers && <option>Không thể tải danh sách</option>}
                   {suppliers &&
-                    suppliers.data.map((supplier: any) => (
+                    suppliers.data?.map((supplier: any) => (
                       <option key={supplier.id} value={supplier.id}>
                         {supplier.supplierName}
                       </option>

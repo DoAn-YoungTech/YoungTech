@@ -4,7 +4,7 @@ import { useState,useCallback } from "react";
 import NameProduct from "./NameProduct";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCartThunk } from "@/redux/Cart/cartThunks";
+import { addToCartThunk, fetchCartItems } from "@/redux/Cart/cartThunks";
 import Promotions from "./descriptionSmall";
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -32,6 +32,7 @@ export default function InfoDetailProduct({ dataProduct }) {
       if (result ) {
         // Nếu API trả về trạng thái thành công
         toast.success("Thêm vào giỏ hàng thành công");
+              await dispatch(fetchCartItems());
       } else {
         // Nếu API trả về thất bại hoặc không đúng định dạng
         toast.error("Không thể thêm vào giỏ hàng");
@@ -77,6 +78,7 @@ export default function InfoDetailProduct({ dataProduct }) {
       unitPrice: priceRetailSale,
       quantity: quantity,
       product_id :id,
+      totalItem:Number(priceRetailSale) * Number(quantity),
       item: dataProduct,
     }]
   
