@@ -295,7 +295,7 @@ const EditProduct = (props: EditProduct) => {
                   {isLoadingCategories && <option>Đang tải...</option>}
                   {isErrorCategories && <option>Không thể tải danh sách</option>}
                   {childCategories &&
-                    childCategories.data.map((category: any) => (
+                    childCategories?.data?.map((category: any) => (
                       <option key={category.id} value={category.id}>
                         {category.childCateName}
                       </option>

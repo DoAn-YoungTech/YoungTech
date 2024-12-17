@@ -22,15 +22,14 @@ const inputInvoiceRepository = {
   saveInputInvoice: async (invoiceData) => {
     try {
       const query = `
-        INSERT INTO InputInvoice (invoiceDate, totalAmount, employee_id, linkPdf)
-        VALUES (:invoiceDate, :totalAmount, :employee_id, :linkPdf)
+        INSERT INTO InputInvoice (invoiceDate, totalAmount,  linkPdf)
+        VALUES (:invoiceDate, :totalAmount, :linkPdf)
       `;
       
       const [result] = await sequelize.query(query, {
         replacements: {
           invoiceDate: invoiceData.invoiceDate,
           totalAmount: invoiceData.totalAmount,
-          employee_id: invoiceData.employee_id,
           linkPdf: invoiceData.linkPdf
         }
       });
