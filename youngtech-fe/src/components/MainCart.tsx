@@ -59,7 +59,7 @@ const CartPage: React.FC = () => {
         <CartHeader />
         {cartItemS?.length > 0 ? cartItemS.map((item) => (
           <CartItem
-            key={item.cart_item_id}
+            key={item.id}
             item={item}
             onSelectChange={handleItemSelectChange}
           />

@@ -74,7 +74,8 @@ const orderRepository = {
     const [orderIdResult] = await sequelize.query(
       'SELECT LAST_INSERT_ID() AS id'
     );
-    return orderIdResult[0]?.id; // Trả về ID vừa tạo
+    return orderIdResult[0]?.id;
+     // Trả về ID vừa tạo
   },
 
   updateOrderStatus: async (orderId, newStatus) => {
