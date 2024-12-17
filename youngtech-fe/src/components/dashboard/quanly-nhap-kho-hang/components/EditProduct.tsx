@@ -190,18 +190,18 @@ const EditProduct = (props: EditProduct) => {
   };
 
   return <>
-    <div className=" inset-0 flex justify-center items-center">
-    <div className="p-6 rounded w-[100%] max-w-md">
-          <div className="flex items-center justify-center min-h-screen bg-[#22282E] ">
-        <div className="w-[600px] p-8 bg-[#282F36] shadow-lg rounded-lg border-md">
-        <h2 className="text-3xl font-bold text-center text-white mb-6">Chỉnh sửa sản phẩm</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <div className=" inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded shadow-md w-[100%] max-w-md">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+          <div className="w-[600px] p-8 bg-white shadow-lg rounded border border-gray-300">
+            <h1 className="text-3xl font-bold text-center mb-6">Chỉnh sửa sản phẩm</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Product Name */}
               <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Tên hàng</label>
+                <label className="block text-sm font-semibold mb-2">Tên hàng</label>
                 <input
                   {...register('productName')}
-                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
               </div>
@@ -228,51 +228,51 @@ const EditProduct = (props: EditProduct) => {
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Mô tả</label>
+                <label className="block text-sm font-semibold mb-2">Mô tả</label>
                 <input
                   {...register('description')}
-                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
               </div>
 
               {/* Brand */}
               <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Thương hiệu</label>
+                <label className="block text-sm font-semibold mb-2">Thương hiệu</label>
                 <input
                   {...register('brand')}
-                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.brand && <p className="text-red-500 text-sm mt-1">{errors.brand.message}</p>}
               </div>
 
               {/* Product Price */}
               <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Giá</label>
+                <label className="block text-sm font-semibold mb-2">Giá</label>
                 <input
                   {...register('productPrice')}
-                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.productPrice && <p className="text-red-500 text-sm mt-1">{errors.productPrice.message}</p>}
               </div>
 
               {/* Quantity */}
               <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Số lượng</label>
+                <label className="block text-sm font-semibold mb-2">Số lượng</label>
                 <input
                   type="number"
                   {...register('quantity')}
-                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity.message}</p>}
               </div>
 
               {/* Supplier */}
               <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Nhà cung cấp</label>
+                <label className="block text-sm font-semibold mb-2">Nhà cung cấp</label>
                 <select
                   {...register('supplier_id')}
-                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {isLoadingSuppliers && <option>Đang tải...</option>}
                   {isErrorSuppliers && <option>Không thể tải danh sách</option>}
@@ -288,10 +288,10 @@ const EditProduct = (props: EditProduct) => {
 
               {/* Child Categories */}
               <div>
-                <label className="block text-sm font-medium text-white/50 mb-2">Child Categories</label>
+                <label className="block text-sm font-semibold mb-2">Child Categories</label>
                 <select
                   {...register('childCategory_id')}
-                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {isLoadingCategories && <option>Đang tải...</option>}
                   {isErrorCategories && <option>Không thể tải danh sách</option>}
@@ -306,14 +306,19 @@ const EditProduct = (props: EditProduct) => {
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-end gap-4">
-            <ShinyRotatingBorderButton type="submit" onClick={handleClose}>
-            Cập nhật
-            </ShinyRotatingBorderButton>
-            <ShinyRotatingBorderButton type="button" onClick={handleClose}>
-            Đóng
-            </ShinyRotatingBorderButton>
-          </div>
+              <div className="flex justify-between mt-4">
+                <button type="submit" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                  Cập nhật
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  //   onClick={() => reset()}
+                  className="w-[33%] bg-gray-400 text-white py-2 rounded hover:bg-gray-500"
+                >
+                  Đóng
+                </button>
+              </div>
             </form>
           </div>
         </div>

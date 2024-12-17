@@ -10,14 +10,16 @@ import { usePathname } from "next/navigation";
 import MenuCategory from "../categories/MenuCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/Store";
+import { useSession } from "next-auth/react";
 import { fetchCartItems } from "@/redux/Cart/cartThunks";
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
+  const {data:session} = useSession();
   const [isSearchOpen, setIsSearchOpen] = useState(false); // State cho input tìm kiếm
   const pathname = usePathname();
-  const isAdmin = pathname.includes('/dashboard');
-  const user = useSelector((state: RootState) => state.auth.user);
-  const idUser = user?.id;  // Optional chaining để tránh lỗi nếu user là null hoặc undefined
+  const isAdmin = pathname.includes('/dashboard');;
+  const idUser = session?.user?.id; 
+  console.log(session)
   const dispatch = useDispatch();
   const {cartItems,loading} = useSelector(state=>state.cart);
   useEffect(() => {
@@ -32,7 +34,9 @@ const Header = () => {
   }, []);
 
   useEffect(()=>{
+    if(session){
       dispatch(fetchCartItems())
+    }
   },[dispatch])
 
   return (

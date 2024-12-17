@@ -14,6 +14,7 @@ const supplierController = {
   getSupplierById: async (req, res) => {
     try {
       const id = req.params.id;
+      console.log('<< id >>', id);
       const supplier = await supplierService.getSupplierById(id);
       if (!supplier) {
         res.status(404).json({ message: "Supplier not found" });

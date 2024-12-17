@@ -145,14 +145,15 @@ const ListProduct = () => {
     }
 
     try {
-      const response = await axios.post(`${Api_url}/inputinvoice/addProduct`, formattedData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/inputinvoice/addProduct`, formattedData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
       if (response.status === 200) {
-        toast.success("Thêm sản phẩm thành công!"); // Hiển thị thông báo toast thành công
+        alert("Thêm sản phẩm thành công!");
+        // tải file pdf
         doc.save("DanhSachSanPham.pdf");
         dispatch(resetWareHouseMannagementItems())
       } else {
@@ -168,7 +169,7 @@ const ListProduct = () => {
   const { data: suppliers, isLoading: isLoadingSuppliers, isError: isErrorSuppliers } = useQuery(
     ['suppliers'],
     async () => {
-      const response = await axios.get(`${Api_url}/suppliers?limit=100&offset=0`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/suppliers?limit=100&offset=0`);
       return response.data;
     },
 
@@ -180,7 +181,7 @@ data: childCategories,
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
   } = useQuery(['childCategories'], async () => {
-    const response = await axios.get(`${Api_url}/childcategories?limit=100&page=1`);
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/childcategories?limit=100&page=1`);
     return response.data;
   });
 

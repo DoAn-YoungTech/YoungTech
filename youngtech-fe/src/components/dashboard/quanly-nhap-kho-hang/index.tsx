@@ -152,9 +152,9 @@ export default function WarehouseManagement() {
   },[urlsImage])
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#22282E] ">
-    <div className="w-[600px] p-8 bg-[#282F36] shadow-lg rounded-lg border-md ">
-      <h2 className="text-3xl font-bold text-center text-white mb-6">Nhập kho</h2>
+    <div className="flex items-center justify-center min-h-screen bg-[#22282E]">
+    <div className="w-[600px] p-8 bg-[#1F2937] shadow-lg rounded border border-[#374151]">
+      <h1 className="text-3xl font-bold text-center text-white mb-6">NHẬP KHO</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Product Name */}
         <div>
