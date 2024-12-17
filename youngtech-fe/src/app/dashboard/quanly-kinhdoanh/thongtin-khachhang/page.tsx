@@ -12,10 +12,8 @@ const Page = () => {
         </h2>
       </header>
       <main>
-       
           <HeaderTable />
           <ListCustomer />
-      
       </main>
     </div>
   );

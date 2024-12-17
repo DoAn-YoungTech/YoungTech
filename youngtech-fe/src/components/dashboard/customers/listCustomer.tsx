@@ -1,9 +1,10 @@
 'use client';
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import View from "../Action/view";
 import Update from "../Action/update";
-import Delete from "../Action/delete";
-import ReactPaginate from "react-paginate";  // Import thư viện phân trang
+import ReactPaginate from "react-paginate";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 type Customer = {
   id: number;
@@ -16,18 +17,19 @@ type Customer = {
 const ListCustomer = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentCustomers, setCurrentCustomers] = useState<Customer[]>([]);
+  const [modalCustomerId, setModalCustomerId] = useState<number | null>(null); // Customer ID for deletion
+  const customersPerPage = 5;
+  const router = useRouter();
 
-  const [currentPage, setCurrentPage] = useState<number>(0);  // Trang hiện tại (index bắt đầu từ 0)
-  const [customersPerPage] = useState<number>(5);  // Số khách hàng trên mỗi trang
-
-  // Fetch data from API
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await fetch("http://localhost:3200/api/customers/viewListCustomer");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customers/viewListCustomer`);
         const data = await response.json();
-        if (data.message) {
-          setCustomers(data.message);
+        if (data.data) {
+          setCustomers(data.data);
         }
       } catch (error) {
         console.error("Error fetching customers:", error);
@@ -44,14 +46,36 @@ const ListCustomer = () => {
   };
 
   const handleViewHistory = (id: number) => {
-    console.log("View history for customer ID:", id);
-    // Redirect or handle history logic
+    router.push(`/dashboard/quanly-kinhdoanh/thongtin-khachhang/${id}`);
   };
 
-  // Xác định các khách hàng cần hiển thị cho trang hiện tại
-  const indexOfLastCustomer = (currentPage + 1) * customersPerPage;
-  const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
-  const currentCustomers = customers.slice(indexOfFirstCustomer, indexOfLastCustomer);
+  const handleDelete = async () => {
+    if (modalCustomerId === null) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/customers/softDelete/${modalCustomerId}`,
+        { method: "PATCH" }
+      );
+      if (response.ok) {
+        setCustomers(customers.filter((customer) => customer.id !== modalCustomerId));
+        alert("Xoá thành công!");
+      } else {
+        alert("Xoá thất bại, vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Error during delete:", error);
+      alert("Đã xảy ra lỗi!");
+    } finally {
+      setModalCustomerId(null); // Đóng modal
+    }
+  };
+
+  useEffect(() => {
+    const indexOfLastCustomer = (currentPage + 1) * customersPerPage;
+    const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
+    setCurrentCustomers(customers.slice(indexOfFirstCustomer, indexOfLastCustomer));
+  }, [currentPage, customers]);
 
   if (loading) {
     return <div className="text-white">Đang tải dữ liệu khách hàng...</div>;
@@ -65,27 +89,22 @@ const ListCustomer = () => {
           className="product-item border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]"
         >
           <div className="content-product-header p-4 flex items-center justify-between">
-            {/* Tên khách hàng */}
             <div className="font-bold text-white/80 w-[20%]">
               <span className="text-[0.9rem]">{customer.fullName}</span>
             </div>
 
-            {/* Email */}
             <div className="font-bold text-white/80 w-[20%]">
               <span className="text-[0.9rem]">{customer.email || "N/A"}</span>
             </div>
 
-            {/* Số điện thoại */}
             <div className="font-bold text-white/80 w-[15%]">
               <span className="text-[0.9rem]">{customer.phoneNumber}</span>
             </div>
 
-            {/* Địa chỉ giao hàng */}
             <div className="font-bold text-white/80 w-[25%]">
               <span className="text-[0.9rem]">{customer.address}</span>
             </div>
 
-            {/* Lịch sử mua hàng */}
             <div
               className="font-bold text-blue-500 underline cursor-pointer w-[10%]"
               onClick={() => handleViewHistory(customer.id)}
@@ -93,35 +112,60 @@ const ListCustomer = () => {
               Xem lịch sử
             </div>
 
-            {/* Hành động */}
             <div className="font-bold flex items-center gap-2 w-[10%]">
-              <View url={`/customer/${customer.id}/view`} />
-              <Update url={`/customer/${customer.id}/update`} />
-              <Delete url={`/customer/${customer.id}/delete`} />
+              <Update url={`/dashboard/quanly-kinhdoanh/thongtin-khachhang/suathongtin-khachhang/${customer.id}`} />
+              <button
+                className="hover:bg-orange-300 bg-black/50 rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
+                onClick={() => setModalCustomerId(customer.id)}
+              >
+                <RiDeleteBin6Line className="text-[1.1rem] text-orange-600" />
+
+              </button>
             </div>
           </div>
         </div>
       ))}
-      
-      {/* Pagination with react-paginate */}
+
       <div className="pagination mt-4 flex justify-center gap-4">
         <ReactPaginate
-          pageCount={Math.ceil(customers.length / customersPerPage)}  // Tính tổng số trang
-          pageRangeDisplayed={3}  // Hiển thị 3 trang xung quanh trang hiện tại
-          marginPagesDisplayed={2}  // Hiển thị 2 trang đầu và cuối
+          pageCount={Math.ceil(customers.length / customersPerPage)}
+          pageRangeDisplayed={3}
+          marginPagesDisplayed={2}
           onPageChange={handlePageChange}
           containerClassName="pagination-container flex gap-2"
           pageClassName="page-item"
           pageLinkClassName="page-link px-4 py-2 bg-gray-200 text-white rounded"
           activeClassName="active"
           activeLinkClassName="bg-blue-500 text-white"
-          disabledClassName="disabled"
           previousClassName="previous"
           previousLinkClassName="px-4 py-2 bg-gray-500 text-white rounded"
           nextClassName="next"
           nextLinkClassName="px-4 py-2 bg-gray-500 text-white rounded"
         />
       </div>
+
+      {modalCustomerId !== null && (
+        <div className="modal fixed inset-0 flex items-center justify-center bg-black/50">
+          <div className="bg-white p-6 rounded shadow-lg text-center">
+            <h2 className="mb-4 text-xl font-bold">Xác nhận xoá</h2>
+            <p>Bạn có chắc chắn muốn xoá khách hàng này?</p>
+            <div className="mt-4 flex justify-center gap-4">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={() => setModalCustomerId(null)}
+              >
+                Huỷ
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={handleDelete} // Confirm delete
+              >
+                Xoá
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
