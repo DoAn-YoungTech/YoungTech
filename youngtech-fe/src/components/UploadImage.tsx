@@ -98,8 +98,8 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Upload Images</h1>
+    <div className="p-6 max-w-4xl mx-auto bg-[#282F36] rounded-lg  border border-gray-600">
+      <h2 className="text-2xl font-bold text-white/50 mb-4">Upload Images</h2>
       <div className="mb-4">
         <input
           type="file"
@@ -118,7 +118,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
       {/* Preview Section */}
       {imagePreviews.length > 0 && (
         <div className="mt-4 mb-4">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Preview Images:</h3>
+          <h3 className="text-xl font-semibold text-white/50 mb-4">Preview Images:</h3>
           <ul className="grid grid-cols-3 md:grid-cols-2 gap-4">
             {imagePreviews.map((preview, index) => (
               <li key={index} className="relative flex flex-col items-center">
@@ -170,7 +170,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ handleGetArrayImage }) => {
       {/* Display Uploaded Images */}
       {uploadedImages.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Uploaded Images:</h3>
+          <h3 className="text-xl font-semibold text-white/50 mb-4">Uploaded Images:</h3>
           <ul className="grid grid-cols-3 md:grid-cols-2 gap-4">
             {uploadedImages.map((item, index) => (
               <li key={index} className="flex flex-col items-center">

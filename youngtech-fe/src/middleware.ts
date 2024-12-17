@@ -61,7 +61,6 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard', req.url)); // Chuyển hướng về trang chủ nếu không phải admin hoặc storekeeper
     }
   }
-
   
 
   return NextResponse.next(); // Tiếp tục yêu cầu

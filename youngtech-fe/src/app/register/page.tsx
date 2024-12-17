@@ -13,6 +13,8 @@ import './register.css'
 import { useRouter } from 'next/navigation';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+const Api_url = process.env.NEXT_PUBLIC_API_URL;
+
 const schema = yup.object().shape({
   userName: yup.string().required('Usename là bắt buộc'),
   email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),

@@ -1,10 +1,15 @@
 import axios from 'axios';
-
+import { getAuthHeaders } from '@/utils/session';
 const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 export const getAllSupplier = async () => {
+    const headers = await getAuthHeaders();
     try {
-      const response = await axios.get(`${Api_url}/suppliers`);
+      const response = await axios.get(`${Api_url}/suppliers`,
+        {
+            headers
+        }
+      );
       return response.data; // Trả về dữ liệu nhà cungcap từ API
     } catch (error) {
       console.error("Error fetching data:", error.response ? error.response.data : error.message);

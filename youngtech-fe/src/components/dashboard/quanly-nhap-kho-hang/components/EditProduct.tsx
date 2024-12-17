@@ -8,9 +8,11 @@ import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/Store';
-import { addProductToTemp, resetError, updateProduct } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
+import { resetError, updateProduct } from '@/redux/WareHouseManagement/WareHouseMannagementSlice';
 import { useRouter } from 'next/navigation';
 import UploadImage from '@/components/UploadImage';
+import { ShinyRotatingBorderButton } from '../../ButtonSave/BtnSave';
+
 
 interface EditProduct {
   selectedProduct: any
@@ -189,26 +191,26 @@ const EditProduct = (props: EditProduct) => {
   };
 
   return <>
-    <div className=" inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded shadow-md w-[100%] max-w-md">
-        <div className="flex items-center justify-center min-h-screen bg-gray-50">
-          <div className="w-[600px] p-8 bg-white shadow-lg rounded border border-gray-300">
-            <h1 className="text-3xl font-bold text-center mb-6">Chỉnh sửa sản phẩm</h1>
+    <div className=" inset-0 flex justify-center items-center bg-[#282F36] shadow-lg rounded-lg border border-gray-600">
+      <div className="p-6 rounded  bg-[#282F36]">
+        <div className="flex items-center justify-center ">
+          <div className="w-[600px] p-8 rounded">
+            <h2 className="text-3xl font-bold text-white text-center mb-6">Chỉnh sửa sản phẩm</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Product Name */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Tên hàng</label>
+                <label className="block text-sm font-medium text-white/50 mb-2">Tên hàng</label>
                 <input
                   {...register('productName')}
-                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
               </div>
 
               {/* Album ảnh */}
               <div>
-                <label className="block text-sm font-semibold text-white mb-2">Album ảnh</label>
-                <div className="grid grid-cols-2 gap-4">
+                <label className="block text-sm font-medium text-white/50 mb-2">Album ảnh</label>
+                <div className="grid grid-cols-2 gap-4 p-4">
                   {urlsImageAvailable && urlsImageAvailable.map((item: string, index: number) => (
                     <div key={index} className="relative">
                       <img
@@ -227,51 +229,51 @@ const EditProduct = (props: EditProduct) => {
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Mô tả</label>
+                <label className="block text-sm font-medium text-white/50 mb-2">Mô tả</label>
                 <input
                   {...register('description')}
-                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
               </div>
 
               {/* Brand */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Thương hiệu</label>
+                <label className="block text-sm font-medium text-white/50 mb-2">Thương hiệu</label>
                 <input
                   {...register('brand')}
-                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.brand && <p className="text-red-500 text-sm mt-1">{errors.brand.message}</p>}
               </div>
 
               {/* Product Price */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Giá</label>
+                <label className="block text-sm font-medium text-white/50 mb-2">Giá</label>
                 <input
                   {...register('productPrice')}
-                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.productPrice && <p className="text-red-500 text-sm mt-1">{errors.productPrice.message}</p>}
               </div>
 
               {/* Quantity */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Số lượng</label>
+                <label className="block text-sm font-medium text-white/50 mb-2">Số lượng</label>
                 <input
                   type="number"
                   {...register('quantity')}
-                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity.message}</p>}
               </div>
 
               {/* Supplier */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Nhà cung cấp</label>
+                <label className="block text-sm font-medium text-white/50 mb-2">Nhà cung cấp</label>
                 <select
                   {...register('supplier_id')}
-                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {isLoadingSuppliers && <option>Đang tải...</option>}
                   {isErrorSuppliers && <option>Không thể tải danh sách</option>}
@@ -287,10 +289,10 @@ const EditProduct = (props: EditProduct) => {
 
               {/* Child Categories */}
               <div>
-                <label className="block text-sm font-semibold mb-2">Child Categories</label>
+                <label className="block text-sm font-medium text-white/50 mb-2">Child Categories</label>
                 <select
                   {...register('childCategory_id')}
-                  className="w-full p-3 border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {isLoadingCategories && <option>Đang tải...</option>}
                   {isErrorCategories && <option>Không thể tải danh sách</option>}
@@ -306,17 +308,14 @@ const EditProduct = (props: EditProduct) => {
 
               {/* Buttons */}
               <div className="flex justify-between mt-4">
-                <button type="submit" className="w-[33%] bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-                  Cập nhật
-                </button>
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  //   onClick={() => reset()}
-                  className="w-[33%] bg-gray-400 text-white py-2 rounded hover:bg-gray-500"
-                >
-                  Đóng
-                </button>
+              <div className="flex justify-end gap-4">
+            <ShinyRotatingBorderButton type="submit" onClick={handleClose}>
+            Cập nhật
+            </ShinyRotatingBorderButton>
+            <ShinyRotatingBorderButton type="button" onClick={handleClose}>
+            Đóng
+            </ShinyRotatingBorderButton>
+          </div>
               </div>
             </form>
           </div>

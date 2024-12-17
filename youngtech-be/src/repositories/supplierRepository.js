@@ -38,7 +38,7 @@ const supplierRepository = {
   updateSupplier: async (id, supplierData) => {
     const query = `UPDATE supplier SET supplierName = :supplierName, contactName = :contactName, 
                    phoneNumber = :phoneNumber, email = :email, address = :address 
-                   WHERE id = :id AND flag = false`;
+                   WHERE id = :id AND flag = true`;
     const [result] = await sequelize.query(query, {
       replacements: { ...supplierData, id }
     });
