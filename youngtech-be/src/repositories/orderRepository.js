@@ -59,6 +59,7 @@ const orderRepository = {
 
   createOrder: async (orderData) => {
     const query = `
+
       INSERT INTO \`Order\` (totalAmount, status, customer_id)
       VALUES (:totalAmount, :status, :customer_id)
     `;
@@ -68,7 +69,7 @@ const orderRepository = {
         totalAmount: orderData.totalAmount,
         status: orderData.status,
         customer_id: orderData.customer_id, 
-    });
+  }});
     // Dùng query để lấy ID vừa thêm
     const [orderIdResult] = await sequelize.query(
       'SELECT LAST_INSERT_ID() AS id'

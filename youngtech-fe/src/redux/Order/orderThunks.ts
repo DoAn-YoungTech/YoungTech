@@ -8,10 +8,10 @@ const API_URL_Orders = `${Api_url}/order`;
 // Thunk để tạo đơn hàng
 export const createOrder = createAsyncThunk(
   'orders/createOrder',
-  async ({order, orderDetails}, { rejectWithValue }) => {
+  async ({order, orderDetails,cartId, cartItems}, { rejectWithValue }) => {
     try {
       const session = await getSession();
-      const response = await axios.post(`${API_URL_Orders}/createOrder`,{order, orderDetails}, {
+      const response = await axios.post(`${API_URL_Orders}/createOrder`,{order, orderDetails,cartId, cartItems}, {
         headers: {
           Authorization: ` ${session?.accessToken}`, // Gửi token trong header
         },

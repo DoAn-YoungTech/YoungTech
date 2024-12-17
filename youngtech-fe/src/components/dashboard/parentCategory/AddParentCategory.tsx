@@ -23,7 +23,7 @@ const AddParentCategory = () => {
       toast.success("Danh mục đã được thêm thành công!"); // Hiển thị toast thành công
       setTimeout(() => {
         router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
-      }, 6000);
+      }, 2000);
       // Điều hướng về danh sách danh mục cha
     } catch (error) {
       console.error("Error adding category:", error.message);
@@ -35,13 +35,8 @@ const AddParentCategory = () => {
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex items-center justify-between mb-6">
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha")}
-            className="text-blue-600 hover:text-blue-800"
-          >
-            <ShinyRotatingBorderButton>Quay lại</ShinyRotatingBorderButton>
-          </button>
+            <ShinyRotatingBorderButton type="button"
+            onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha")}>Quay lại</ShinyRotatingBorderButton>
           <h2 className="text-2xl font-bold text-white text-center flex-1">
             Thêm danh mục cha
           </h2>
