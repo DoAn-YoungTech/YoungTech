@@ -6,7 +6,6 @@ import ParentCategoryTable from "./TableParentCategory";
 import UpdateParentCategory from "./updateParentCategory";  // Import your new component
 import { useRouter } from "next/navigation";
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
-import Modal from "../Modal"; // Import your modal component
 
 const ListParentCategories: React.FC = () => {
   const [categories, setCategories] = useState<Category_Paren[]>([]);

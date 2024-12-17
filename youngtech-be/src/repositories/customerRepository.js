@@ -4,13 +4,37 @@ const customerController = require('../controllers/customerController');
 const customerRepository = {
   // all customer , only admin can viewing them
 
-  getAllCustomers: async () => {
-    const query = `SELECT * FROM customer WHERE flag = ${true}`;
-
-    const [results] = await sequelize.query(query);
-
-    return results;
+  getAllCustomers : async () => {
+    try {
+      // Viết native SQL query để JOIN Customer và Account
+      const query = `
+        SELECT
+          c.id,
+          c.fullName,
+          c.phoneNumber,
+          c.address,
+          c.account_id,
+          c.flag,
+          a.email
+        FROM
+          Customer c
+        LEFT JOIN
+          Account a ON c.account_id = a.id
+        WHERE
+          c.flag = true
+      `;
+  
+      // Thực thi truy vấn SQL
+      const [results] = await sequelize.query(query);
+  
+      return results;
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      throw error;
+    }
   },
+  
+
 
   // addInformationByAccount
   addInformationByAccount: async (data, accountId) => {
@@ -41,6 +65,21 @@ const customerRepository = {
       result.status(500).json({ message: err });
     }
   },
+
+    //checkAccountExist(userId)
+    getCustomersById: async (id) => {
+      try {
+        const query = `SELECT * FROM customer  WHERE id = :id AND flag = ${true}`;
+  
+        const [result] = await sequelize.query(query, {
+          replacements: { id: id },
+        });
+  
+        return result.length > 0 ? result[0] : null;
+      } catch (err) {
+        result.status(500).json({ message: err });
+      }
+    },
 
   // editCustomer(checkUserIdExist)
   editCustomer: async (customerId, updateData) => {
@@ -117,8 +156,13 @@ const customerRepository = {
     try {
       const query = `INSERT INTO customer(fullName , phoneNumber , address , account_id) 
    VALUES (:fullName , :phoneNumber , :address , :account_id)`;
-      const [result] = await sequelize.query(query, { replacements: { ...data } });
-      return result;
+      const [result] = await sequelize.query(query, {
+        replacements: { ...data },
+      });
+
+      const [lastInserted] = await sequelize.query("SELECT LAST_INSERT_ID() AS id");
+      return lastInserted[0].id; // Trả về customer_id chp front end nhận được
+ 
     } catch (err) {
       console.log(err);
       throw Error(err.message);

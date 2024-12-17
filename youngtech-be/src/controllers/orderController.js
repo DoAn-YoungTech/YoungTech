@@ -43,8 +43,8 @@ const orderController = {
   //   }
   // },
   addOrderWithDetails: async (req, res) => {
-    const { order, orderDetails, cartId, cartItems } = req.body;
 
+    const { order, orderDetails,cartId, cartItems } = req.body;
     if (!order || !orderDetails || orderDetails.length === 0) {
       return res.status(400).json({ message: 'Order and order details are required' });
     }
@@ -58,8 +58,7 @@ const orderController = {
             console.log(`CartItem with ID ${cartItem.id} has been removed successfully.`);
           }
           // Sau khi xóa hết cartItems, xóa cart tương ứng
-          await cartService.removeCart(cartId);
-          console.log(`Cart with ID ${cartId} has been removed successfully.`);
+        
         } catch (cartError) {
           console.error('Error removing cart or cart items:', cartError);
           return res.status(500).json({

@@ -7,13 +7,13 @@ const rolesControllers = {
         return res.status(404).json({ message: 'Please enter a role name !' });
       }
 
-      const checkRole = await roleService.checkRole(roleName);
+      // const checkRole = await roleService.checkRole(roleName);
 
-      if (!checkRole) {
-        return res.json({
-          message: 'role name exist ! please create another name',
-        });
-      } else {
+      // if (!checkRole) {
+      //   return res.json({
+      //     message: 'role name exist ! please create another name',
+      //   });
+      // } else {
         const result = await roleService.createRole(roleName);
         if (result) {
           res.status(200).json({ message: 'Create role success' });
@@ -22,7 +22,7 @@ const rolesControllers = {
             .status(404)
             .json({ message: `Can not create permission in role` });
         }
-      }
+      // }
     } catch (err) {
       res.status(200).json({ message: err.message });
     }

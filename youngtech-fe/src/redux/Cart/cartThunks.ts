@@ -13,7 +13,7 @@ export const fetchCartItems = createAsyncThunk(
     const session = await getSession();
     const response = await axios.get(`${API_URL_Cart}/viewCart`, {
       headers: {
-        Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+        Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
       },
     });
     return response.data.data; // Dữ liệu giỏ hàng trả về từ API
@@ -28,10 +28,10 @@ export const addToCartThunk = createAsyncThunk(
     const session = await getSession();
     const response = await axios.post(`${API_URL_Cart}/addProductToCart`, cartItem, {
         headers: {
-          Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+          Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
         },
       });
-    return response.data; // Dữ liệu sản phẩm sau khi được thêm vào giỏ hàng
+    return cartItem; // Dữ liệu sản phẩm sau khi được thêm vào giỏ hàng
   }
 );
 
@@ -42,7 +42,7 @@ export const updateCartItemQuantity = createAsyncThunk(
     const session = await getSession();
     const response = await axios.put(`${API_URL_Cart}/editCart`, updatedItem,{
       headers: {
-        Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+        Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
       },
     });
     return {
@@ -59,12 +59,50 @@ export const removeCartItem = createAsyncThunk(
     const session = await getSession();
     await axios.delete(`${API_URL_Cart}/removeProductId/${id}`,{
        headers: {
-      Authorization: ` ${session?.accessToken}`, // Gửi token trong header
+      Authorization: `Bearer ${session?.accessToken}`, // Gửi token trong header
     }
   }
   
   );
     return id; 
+  }
+);
+
+export const removeCartItemIn = createAsyncThunk(
+  'cart/removeCartItemIn',
+  async (data) => {
+    try {
+      const session = await getSession();
+      const req = await axios.delete(`${API_URL_Cart}/removeIn`, {
+        headers: {
+          Authorization: `Bearer${session?.accessToken}`, // Gửi token trong header
+        },
+        data, // Gửi dữ liệu trong phần config
+      });
+
+      return data; // Trả về dữ liệu API trả về
+    } catch (error) {
+      console.error('Error removing cart item:', error);
+      throw error; // Đẩy lỗi lên để xử lý trong reducer
+    }
+  }
+);
+export const removeAllCartItem = createAsyncThunk(
+  'cart/removeAllCartItem',
+  async (_, { rejectWithValue }) => {
+    try {
+      const session = await getSession();
+      const res = await axios.delete(`${API_URL_Cart}/removeAll`, {
+        headers: {
+          Authorization: `Bearer${session.accessToken}`, // Đảm bảo không có dấu cách thừa
+        },
+      });
+
+      return res.data; // Trả về dữ liệu từ API
+    } catch (error) {
+      console.error('Error removing all cart items:', error);
+      return rejectWithValue(error.response?.data || 'Something went wrong');
+    }
   }
 );
 

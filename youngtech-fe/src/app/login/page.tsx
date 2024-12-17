@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import ForgotPassword from "@/components/forgot-password/forgotPassword";
 
 // Define validation schema with Yup
 const schema = yup.object({
@@ -30,14 +31,31 @@ interface IFormInput {
 const Page = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  
-  
+  console.log(session?.user.role)
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({
     resolver: yupResolver(schema), // Attach yup validation schema here
   });
   const [checked, setChecked] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isShowForm,setShowForm] = useState(false)
 
+    // Hàm đóng modal
+    const handleClose = () => {
+      setShowForm(false)
+    };
+    const handlOpen = () => {
+      setShowForm(true)
+    };
+
+    useEffect(()=>{
+     if(session){
+      if(session?.user.role === "customer"){
+        router.push("/")
+    }else{
+      router.push("/dashboard")
+    }
+     }
+    },[session])
   // Define the onSubmit function
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const {email,password} = data
@@ -46,23 +64,13 @@ const Page = () => {
       email,
       password,
     })
-
-
-    if (res?.ok) {
-      if (session && session.user?.role === "user") {
-        toast.success("Đăng nhập thành công !")
-        setTimeout(()=>{
-          router.push("/");
-        },2000)  
-      } else {
-        toast.success("Đăng nhập thành công !")
-        router.push("/dashboard");
-      }
+    if (res.status === 401) {
+      toast.error("Email hoặc mật khẩu không đúng");
+    } else if (res.status === 200) {
+      toast.success("Đăng nhập thành công!");
     } else {
-      toast.error("Đăng nhập thất bại");
+      toast.error("Lỗi server");
     }
-  
-
    
 
   
@@ -83,9 +91,9 @@ const Page = () => {
     
   };
   return (
+   <>
+   <ToastContainer />
     <div className="min-h-screen motion-preset-slide-right motion-duration-3000 flex my-5 justify-center items-center bg-gray-100">
-      <ToastContainer />
-  
       <div className="bg-white shadow-lg rounded-lg w-full lg:w-[90%] mx-5 overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           <Video className="hidden p-8 lg:block lg:w-[50%]" />
@@ -162,7 +170,8 @@ const Page = () => {
               </div>
 
               {/* Terms and Conditions Checkbox */}
-              <div className="flex items-center mb-4">
+              <div className="w-full flex items-center mb-4">
+                <div className="flex w-[70%] items-center">
                 <input
                   type="checkbox"
                   className="mr-2"
@@ -175,7 +184,15 @@ const Page = () => {
                     điều khoản sử dụng
                   </span>
                 </label>
+                </div>
+                <div className="w-[30%] flex justify-end items-center">
+                <button type="button" onClick={handlOpen} className="text-blue-600 text-[14px] font-semibold">
+                  Quên mật khẩu
+                </button>
+                </div>
+               
               </div>
+
 
               {/* Submit Button */}
               <button
@@ -200,6 +217,8 @@ const Page = () => {
         </div>
       </div>
     </div>
+      <ForgotPassword isShowForm={isShowForm} onClose={handleClose}/> 
+   </>
   );
 };
 

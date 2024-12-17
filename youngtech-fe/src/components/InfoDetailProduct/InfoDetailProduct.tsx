@@ -3,30 +3,22 @@ import Link from 'next/link'
 import { useState,useCallback } from "react";
 import NameProduct from "./NameProduct";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { addToCartThunk } from "@/redux/Cart/cartThunks";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCartThunk, fetchCartItems } from "@/redux/Cart/cartThunks";
 import Promotions from "./descriptionSmall";
 import { useSession } from 'next-auth/react';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { formatCurrency } from '../formatCurrency/formatCurrency';
 import { debounce } from 'lodash';
-import { Router } from 'lucide-react';
 export default function InfoDetailProduct({ dataProduct }) {
-  const { data: session } = useSession();
   const searchParams = useSearchParams(); // Lấy tất cả các query params
   const id = searchParams.get("id");
+    const user = useSelector((state: RootState) => state.auth.user);
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const router = useRouter();
-
   const handleAddToCart = async (quantity, id) => {
-    if (!session) {
-      toast.warning("Vui lòng đăng nhập ");
-       setTimeout(()=>{
-        router.push("/login");
-       },2000)
-      return
-    }
 
     const cartItem = {
       quantity: quantity,
@@ -37,9 +29,10 @@ export default function InfoDetailProduct({ dataProduct }) {
       // Dispatch và chờ kết quả từ thunk
       const result = await dispatch(addToCartThunk(cartItem)) 
   
-      if (result && result.success) {
+      if (result ) {
         // Nếu API trả về trạng thái thành công
         toast.success("Thêm vào giỏ hàng thành công");
+              await dispatch(fetchCartItems());
       } else {
         // Nếu API trả về thất bại hoặc không đúng định dạng
         toast.error("Không thể thêm vào giỏ hàng");
@@ -60,18 +53,43 @@ export default function InfoDetailProduct({ dataProduct }) {
       setQuantity("");  // Nếu người dùng xóa hết nội dung, cho phép giá trị là chuỗi rỗng
     }
   };
-
   const debouncedAddToCart = useCallback(
     debounce((quantity, id) => {
-      handleAddToCart(quantity, id);
+      if (user?.accessToken) {
+        handleAddToCart(quantity, id);
+      } else {
+        toast.warning("Vui lòng đăng nhập");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      }
     }, 500),
-    []
+    [user, handleAddToCart]
   );
+  
   const increment = () => setQuantity((prev) => prev + 1);
   const decrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev)); // Không cho phép giá trị nhỏ hơn 1
 
-  const formattedPrice = new Intl.NumberFormat("de-DE").format(dataProduct.productPrice || 0);
+  const formattedPrice = dataProduct.productRetailPrice || 0
+  const priceRetailSale = Number(dataProduct.productRetailPrice) - (Number(dataProduct.productRetailPrice) * Number(dataProduct.productSalePrice /100))
 
+  const handleProceedToPay = () => {
+    const orderDetail = [{
+      unitPrice: priceRetailSale,
+      quantity: quantity,
+      product_id :id,
+      totalItem:Number(priceRetailSale) * Number(quantity),
+      item: dataProduct,
+    }]
+  
+    // Encode JSON thành chuỗi URL-safe
+    const encodedOrderDetail = encodeURIComponent(JSON.stringify(orderDetail));
+  
+    // Sử dụng router.push với query param
+    router.push(`/pay?orderDetail=${encodedOrderDetail}`);
+  };
+  
+  
   return (
    <>
   
@@ -86,7 +104,13 @@ export default function InfoDetailProduct({ dataProduct }) {
         {/* Giá bán */}
         <div className="w-full mt-4 flex items-center gap-4">
           <p className="font-medium">Giá bán:</p>
-          <strong className="price text-[18px] text-red-600">{formattedPrice}₫</strong>
+          <strong className="price text-[18px] text-red-600">{ Number(dataProduct.productSalePrice) ===0 ? formatCurrency(formattedPrice)  : formatCurrency(priceRetailSale)}</strong>
+          {
+              Number(dataProduct.productSalePrice) === 0 ? "" : <div className="flex  space-x-2">
+              <span className="line-through text-gray-400 text-sm">{formatCurrency(formattedPrice)}</span>
+              <span className="text-red-500 text-sm">-{dataProduct.productSalePrice}%</span>
+            </div>
+           }
         </div>
 
         {/* Số lượng */}
@@ -124,14 +148,15 @@ export default function InfoDetailProduct({ dataProduct }) {
           >
             Thêm vào giỏ hàng
           </button>
-         <Link href="/cart" >
+       
          <button
+           onClick={handleProceedToPay}
             type="button"
             className="bg-slate-800 active:scale-95  transform duration-200 hover:bg-slate-900 transition w-[200px] py-3 text-white rounded-lg text-[16px]"
           >
             Mua ngay
           </button>
-         </Link>
+        
         
         </div>
        
