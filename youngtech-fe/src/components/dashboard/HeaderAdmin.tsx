@@ -5,7 +5,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -13,7 +13,7 @@ import { ThemeSwitcherButton } from "./darkmode";
 
 import SearchAdmin from "./SearchAdmin";
 import { SearchBar } from "./SearchBar";
-import Avatar from "./user/Avatar";
+import Logout from "./user/Logout";
 const HeaderAdmin = () => {
   return (
     <header className="flex h-16 w-full  justify-between  items-center mb-10 gap-2 rounded-xl text-[#c8d2db]  ">
@@ -36,7 +36,7 @@ const HeaderAdmin = () => {
       </div>
       <div className="flex gap-4 items-center mr-[90px] ">
         <ThemeSwitcherButton />
-        <Avatar />
+        <Logout />
         <SearchBar />
       </div>
       {/* <SearchAdmin/> */}
