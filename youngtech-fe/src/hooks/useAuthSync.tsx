@@ -1,4 +1,4 @@
-
+'use client'; // Phải được đặt trên cùng của file
 
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
@@ -15,15 +15,15 @@ const AuthSync = () => {
           id: session.user.id || null, 
           email: session.user.email || null,
           role: session.user.role || null,
-          accessToken:session.accessToken || null,
+          accessToken: session.accessToken || null,
         })
       );
-    }else {
+    } else {
       dispatch(clearUser());
     }
   }, [session, dispatch]);
 
+  return null; // AuthSync không render gì cả
 };
 
 export default AuthSync;
-

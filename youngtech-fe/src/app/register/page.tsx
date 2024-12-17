@@ -13,6 +13,8 @@ import './register.css'
 import { useRouter } from 'next/navigation';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+const Api_url = process.env.NEXT_PUBLIC_API_URL;
+
 const schema = yup.object().shape({
   userName: yup.string().required('Usename là bắt buộc'),
   email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
@@ -35,7 +37,7 @@ const Page = () => {
     const onSubmit = async (data: any) => {
       const { userName, email, password } = data;
       try {
-        const res = await axios.post('http://localhost:8080/api/auth/register', {
+        const res = await axios.post(`${Api_url}/auth/register`, {
           userName, 
           email,
           password

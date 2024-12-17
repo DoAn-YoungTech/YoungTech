@@ -18,6 +18,7 @@ export default function InfoDetailProduct({ dataProduct }) {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [isDisabled, setIsDisabled] = useState(false);
   const handleAddToCart = async (quantity, id) => {
 
     const cartItem = {
@@ -137,11 +138,15 @@ export default function InfoDetailProduct({ dataProduct }) {
               +
             </button>
           </div>
+          <div className='quantity'>
+            <span className='text-sm text-gray-500'>Hàng còn : {dataProduct.quantity} sản phẩm </span>
+          </div>
         </div>
 
         {/* Nút hành động */}
         <div className="w-full gap-5 py-5 flex">
           <button
+           disabled={isDisabled}
             type="button"
             onMouseDown={() => debouncedAddToCart(quantity, id)}
             className="bg-red-500 active:scale-95  transform duration-200 hover:bg-red-600 transition w-[200px] py-3 text-white rounded-lg text-[16px]"
@@ -150,6 +155,7 @@ export default function InfoDetailProduct({ dataProduct }) {
           </button>
        
          <button
+          disabled={isDisabled}
            onClick={handleProceedToPay}
             type="button"
             className="bg-slate-800 active:scale-95  transform duration-200 hover:bg-slate-900 transition w-[200px] py-3 text-white rounded-lg text-[16px]"

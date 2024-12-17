@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { toast } from "react-toastify";
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
@@ -13,7 +12,11 @@ import { addProductToTemp } from '@/redux/WareHouseManagement/WareHouseMannageme
 import { useRouter } from 'next/navigation';
 import UploadImage from '@/components/UploadImage';
 import { ShinyRotatingBorderButton } from '../ButtonSave/BtnSave';
-const Api_url = process.env.NEXT_PUBLIC_API_URL;
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+ const Api_url = process.env.NEXT_PUBLIC_API_URL;
+
+const AddProduct = () => {
 
 // Validation schema using Yup
 const schema = yup.object({
@@ -108,34 +111,32 @@ export default function WarehouseManagement() {
   // Form submission handler
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
     try {
-        // Gọi API để xác thực sản phẩm
-        const response = await axios.get(`${Api_url}/product/validate`, {
-            params: data,
+      const response = await axios.get(`${Api_url}/product/validate`, {
+        params: data,
+      });
+  
+      if (response.data.errors) {
+        Object.entries(response.data.errors).forEach(([key, message]) => {
+          const formKey = errorMapping[key];
+          if (formKey) {
+            setError(formKey, { type: 'server', message: message as string });
+          }
         });
-
-        if (response.data.errors) {
-            Object.entries(response.data.errors).forEach(([key, message]) => {
-                const formKey = errorMapping[key];
-                if (formKey) {
-                    setError(formKey, { type: 'server', message: message as string });
-                }
-            });
-        } else {
-            toast.success("Nhập kho thành công!");
-
-            // Đặt lại các trường nhập liệu về rỗng
-            reset();
-
-            // Thêm sản phẩm vào kho tạm
-            dispatch(addProductToTemp(data));
-        }
+        // Triggering toast for validation errors
+        toast.error("Có lỗi trong việc nhập thông tin sản phẩm, vui lòng kiểm tra lại!");
+      } else {
+        // Success message when product is validated successfully
+        toast.success("Sản phẩm đã được nhập kho thành công!");
+  
+        reset();
+        dispatch(addProductToTemp(data));
+      }
     } catch (error) {
-        console.error("Lỗi khi nhập kho sản phẩm:", error);
-        toast.error("Lỗi khi nhập kho sản phẩm!");
+      console.error('Error validating product:', error);
+      toast.error("Lỗi khi nhập sản phẩm!");
     }
-};
-
-
+  };
+  
 
   const viewAllProduct  = () => {
     router.push('/dashboard/quanly-nhap-khohang/danh-sach')
@@ -272,5 +273,6 @@ export default function WarehouseManagement() {
   </div>
   );
 }
+};
 
-
+export default AddProduct;

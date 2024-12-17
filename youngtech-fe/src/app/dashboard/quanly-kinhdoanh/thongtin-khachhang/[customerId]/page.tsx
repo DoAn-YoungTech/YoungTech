@@ -1,18 +1,16 @@
-import ListProducts from "@/components/dashboard/gia-ban-le/listProduct";
-import ProductForm from "@/components/dashboard/gia-ban-le/updateProduct";
+import ListOrderByCustomer from "@/components/dashboard/customers/listOrderByCustomer";
 import React from "react";
-
 
 const Page = () => {
   return (
     <div>
       <header className="mb-5">
         <h2 className="text-white/90 font-bold text-[1.2rem]">
-          DANH SÁCH SẢN PHẨM
+          DANH SÁCH LỊCH SỬ MUA HÀNG 
         </h2>
       </header>
       <main>
-          <ListProducts></ListProducts>
+          <ListOrderByCustomer></ListOrderByCustomer>
       </main>
     </div>
   );

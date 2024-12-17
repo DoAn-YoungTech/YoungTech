@@ -258,7 +258,7 @@ export default function RevenueReport() {
         if (startDate && endDate) {
             const start = format(startDate, "yyyy-MM-dd");
             const end = format(endDate, "yyyy-MM-dd");
-            const response = await fetch(`http://localhost:3200/api/revenue?startDate=${start}&endDate=${end}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/revenue?startDate=${start}&endDate=${end}`);
             const data = await response.json();
             console.log(data); // Kiểm tra dữ liệu từ API
 
