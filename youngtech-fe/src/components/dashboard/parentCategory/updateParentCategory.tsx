@@ -19,12 +19,13 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
   onUpdateSuccess,
 }) => {
   const [categoryName, setCategoryName] = useState(category.name);
+  const [error, setError] = useState(""); // Trạng thái lỗi
   const router = useRouter();
 
   const handleEditSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!categoryName) {
-      toast.error("Vui lòng nhập tên danh mục!"); // Hiển thị thông báo lỗi nếu không nhập tên
+      setError("Vui lòng nhập tên danh mục!"); // Hiển thị thông báo lỗi dưới ô input
       return;
     }
     try {
@@ -62,10 +63,16 @@ const UpdateParentCategory: React.FC<UpdateParentCategoryProps> = ({
             id="categoryName"
             type="text"
             value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => {
+              setCategoryName(e.target.value);
+              if (e.target.value) {
+                setError(""); // Xóa lỗi khi có giá trị nhập vào
+              }
+            }}
+            className={`mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border ${error ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
             placeholder="Nhập tên danh mục"
           />
+          {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
         </div>
         <div className="flex justify-center gap-4">
           <ShinyRotatingBorderButton type="submit">Lưu thay đổi</ShinyRotatingBorderButton>

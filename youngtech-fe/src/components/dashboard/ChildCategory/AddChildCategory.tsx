@@ -1,18 +1,19 @@
 "use client";
 import { addChildCategory } from "@/services/category/CategoryChildService";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
 const AddChildCategory = () => {
   const [parentCategories, setParentCategories] = useState([]);
   const [parentCategoryName, setParentCategoryName] = useState("");
   const [childCategoryName, setChildCategoryName] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({ parentCategoryName: "", childCategoryName: "" });
   const router = useRouter();
 
   useEffect(() => {
@@ -28,14 +29,25 @@ const AddChildCategory = () => {
     fetchParentCategories();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError(""); // Clear previous error
+    const validationErrors: { parentCategoryName?: string; childCategoryName?: string } = {};
 
-    if (!childCategoryName || !parentCategoryName) {
-      toast.error("Vui lòng điền đầy đủ thông tin!"); // Show error toast
+    if (!parentCategoryName) {
+      validationErrors.parentCategoryName = "Vui lòng chọn danh mục cha.";
+    }
+
+    if (!childCategoryName) {
+      validationErrors.childCategoryName = "Vui lòng nhập tên danh mục con.";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
+
+    setErrors({}); // Clear errors if valid
+
     try {
       const selectedCategory = parentCategories.find((cat) => cat.name === parentCategoryName);
       if (selectedCategory) {
@@ -45,12 +57,10 @@ const AddChildCategory = () => {
           flag: false,
         });
 
-        // Hiển thị toast thành công
         toast.success("Danh mục con đã được thêm thành công!");
         setChildCategoryName("");
         setParentCategoryName("");
 
-        // Điều hướng sau 2 giây
         setTimeout(() => {
           router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con");
         }, 2000);
@@ -63,17 +73,35 @@ const AddChildCategory = () => {
     }
   };
 
+  const handleParentCategoryChange = (e) => {
+    setParentCategoryName(e.target.value);
+    if (e.target.value) {
+      setErrors((prevErrors) => ({ ...prevErrors, parentCategoryName: "" }));
+    }
+  };
+
+  const handleChildCategoryChange = (e) => {
+    setChildCategoryName(e.target.value);
+    if (e.target.value) {
+      setErrors((prevErrors) => ({ ...prevErrors, childCategoryName: "" }));
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex items-center justify-between mb-6">
-            <ShinyRotatingBorderButton onClick={() =>
-              router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con")
-            }>Quay lại</ShinyRotatingBorderButton>
+          <ShinyRotatingBorderButton
+            onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-con")}
+          >
+            Quay lại
+          </ShinyRotatingBorderButton>
           <h2 className="text-2xl font-bold text-white text-center flex-1">
             Thêm danh mục con
           </h2>
         </div>
+
+        {/* Danh mục cha */}
         <div>
           <label
             htmlFor="parentCategoryName"
@@ -84,8 +112,10 @@ const AddChildCategory = () => {
           <select
             id="parentCategoryName"
             value={parentCategoryName}
-            onChange={(e) => setParentCategoryName(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={handleParentCategoryChange}
+            className={`mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border ${
+              errors.parentCategoryName ? "border-red-500" : "border-gray-600"
+            } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             <option value="">--Chọn danh mục cha--</option>
             {parentCategories.map((category) => (
@@ -94,7 +124,12 @@ const AddChildCategory = () => {
               </option>
             ))}
           </select>
+          {errors.parentCategoryName && (
+            <p className="text-red-500 text-xs mt-1">{errors.parentCategoryName}</p>
+          )}
         </div>
+
+        {/* Tên danh mục con */}
         <div>
           <label
             htmlFor="childCategoryName"
@@ -106,16 +141,22 @@ const AddChildCategory = () => {
             id="childCategoryName"
             type="text"
             value={childCategoryName}
-            onChange={(e) => setChildCategoryName(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={handleChildCategoryChange}
+            className={`mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border ${
+              errors.childCategoryName ? "border-red-500" : "border-gray-600"
+            } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
             placeholder="Nhập tên danh mục con"
           />
+          {errors.childCategoryName && (
+            <p className="text-red-500 text-xs mt-1">{errors.childCategoryName}</p>
+          )}
         </div>
-        {error && (
-          <div className="text-red-500 text-sm mt-2">{error}</div>
-        )}
+
+        {/* Button thêm */}
         <div className="flex justify-center gap-4">
-            <ShinyRotatingBorderButton type="submit" >Thêm danh mục con</ShinyRotatingBorderButton>
+          <ShinyRotatingBorderButton type="submit">
+            Thêm danh mục con
+          </ShinyRotatingBorderButton>
         </div>
       </form>
     </div>

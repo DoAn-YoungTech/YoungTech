@@ -1,107 +1,78 @@
-const sequelize = require('../configs/db');
+"use client";
+import { addCategory } from "@/services/category/CategoryParentService";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter từ Next.js
+import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const orderRepository = {
-  getPendingOrders: async () => {
-    const query = `
-      SELECT 
-        c.fullName AS customerName,
-        o.orderDate,
-        o.totalAmount,
-        o.paymentMethod,
-        o.id
-      FROM 
-        Customer c
-      INNER JOIN 
-        \`Order\` o ON c.id = o.customer_id
-      WHERE 
-        o.status = 'Pending' AND o.flag = true
-    `;
+const AddParentCategory = () => {
+  const [categoryName, setCategoryName] = useState(""); // Trạng thái tên danh mục
+  const router = useRouter(); // Sử dụng router để điều hướng
+  const [error, setError] = useState(""); // Trạng thái lỗi
 
-    try {
-      const [results] = await sequelize.query(query);
-      return results;
-    } catch (error) {
-      console.error('Error fetching pending orders:', error);
-      throw error;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!categoryName) {
+      setError("Vui lòng nhập tên danh mục!"); // Hiển thị thông báo lỗi dưới ô input
+      return;
     }
-  },
-
-  getOrderById: async (orderId) => {
-    const query = `
-      SELECT 
-        o.id AS orderId,
-        o.totalAmount,
-        o.orderDate,
-        o.paymentMethod,
-        c.id AS customerId,
-        c.fullName,
-        c.phoneNumber,
-        c.address
-      FROM 
-        \`Order\` o
-      INNER JOIN 
-        Customer c ON o.customer_id = c.id
-      WHERE 
-        o.id = :orderId AND o.flag = true
-    `;
-
     try {
-      const [order] = await sequelize.query(query, {
-        replacements: { orderId },
-        type: sequelize.QueryTypes.SELECT,
-      });
-      return order;
+      await addCategory({ name: categoryName }); // Gửi API thêm danh mục
+      console.log("Category added successfully");
+      setCategoryName(""); // Reset trạng thái form
+      setError(""); // Xoá thông báo lỗi
+      toast.success("Danh mục đã được thêm thành công!"); // Hiển thị toast thành công
+      setTimeout(() => {
+        router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha");
+      }, 2000);
+      // Điều hướng về danh sách danh mục cha
     } catch (error) {
-      console.error('Error fetching order:', error);
-      throw error;
+      console.error("Error adding category:", error.message);
+      toast.error("Lỗi khi thêm danh mục!"); // Hiển thị toast lỗi
     }
-  },
+  };
 
-  createOrder: async (orderData) => {
-    const query = `
-      INSERT INTO \`Order\` (totalAmount, status, customer_id)
-      VALUES (:totalAmount, :status, :customer_id)
-    `;
-    const [result] = await sequelize.query(query, {
-      replacements: { 
-        totalAmount: orderData.totalAmount,
-        status: orderData.status,
-        customer_id: orderData.customer_id, 
-      }, // Đóng dấu ngoặc } đúng vị trí
-    });
-    // Dùng query để lấy ID vừa thêm
-    const [orderIdResult] = await sequelize.query(
-      'SELECT LAST_INSERT_ID() AS id'
-    );
-    return orderIdResult[0]?.id; // Trả về ID vừa tạo
-  },
-  
-
-  updateOrderStatus: async (orderId, newStatus) => {
-    const query = `
-      UPDATE \`Order\`
-      SET status = :newStatus
-      WHERE id = :orderId AND flag = true
-    `;
-
-    try {
-      const [updatedRows] = await sequelize.query(query, {
-        replacements: { orderId, newStatus },
-        type: sequelize.QueryTypes.UPDATE,
-      });
-
-      if (updatedRows === 0) {
-        throw new Error(
-          'Không tìm thấy đơn hàng hoặc cập nhật trạng thái thất bại.'
-        );
-      }
-
-      return { message: 'Cập nhật trạng thái đơn hàng thành công' };
-    } catch (error) {
-      console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
-      throw error;
-    }
-  },
+  return (
+    <div className="max-w-4xl mx-auto bg-[#282F36] rounded-lg p-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex items-center justify-between mb-6">
+          <ShinyRotatingBorderButton type="button"
+            onClick={() => router.push("/dashboard/quanly-danhmuc-sanpham/danhsach-danhmuc-cha")}>
+            Quay lại
+          </ShinyRotatingBorderButton>
+          <h2 className="text-2xl font-bold text-white text-center flex-1">
+            Thêm danh mục cha
+          </h2>
+        </div>
+        <div>
+          <label
+            htmlFor="categoryName"
+            className="block text-sm font-medium text-white/50 mb-2"
+          >
+            Tên danh mục
+          </label>
+          <input
+            id="categoryName"
+            type="text"
+            value={categoryName}
+            onChange={(e) => {
+              setCategoryName(e.target.value);
+              if (e.target.value) {
+                setError(""); // Xoá lỗi khi có giá trị nhập vào
+              }
+            }}
+            className={`mt-1 block w-full px-3 py-2 bg-[#282F36] text-white border ${error ? 'border-red-500' : 'border-gray-600'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            placeholder="Nhập tên danh mục"
+          />
+          {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+        </div>
+        <div className="flex justify-center gap-4">
+          <ShinyRotatingBorderButton type="submit">Thêm danh mục cha</ShinyRotatingBorderButton>
+        </div>
+      </form>
+    </div>
+  );
 };
 
-module.exports = orderRepository;
+export default AddParentCategory;

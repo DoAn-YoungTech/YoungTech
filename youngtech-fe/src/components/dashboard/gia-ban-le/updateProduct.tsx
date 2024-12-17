@@ -195,7 +195,7 @@ const UpdatePricePage = () => {
           <div className="w-[70%] h-full">
             <div className="bg-[#282F36]  rounded-xl mb-3">
               <div className="p-4">
-                <ShinyRotatingBorderButton>Cập nhập</ShinyRotatingBorderButton>
+                <ShinyRotatingBorderButton>Cập nhật</ShinyRotatingBorderButton>
               </div>
             </div>
             <div className="bg-[#282F36]  rounded-xl  ">
@@ -315,9 +315,7 @@ const UpdatePricePage = () => {
                     <div className="bg-[#282F36]  rounded-xl mt-3">
                       <div className="p-4">
                         <div className="flex gap-4 items-center">
-                          <button type="submit">
-                             Sửa
-                          </button>
+                          <ShinyRotatingBorderButton type="submit">Sửa</ShinyRotatingBorderButton>
                         </div>
                       </div>
                     </div>
