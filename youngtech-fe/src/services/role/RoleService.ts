@@ -1,16 +1,16 @@
 import axios from 'axios';
+import { getAuthHeaders } from '@/utils/session';
 
 const Api_url = process.env.NEXT_PUBLIC_API_URL;
 
-
 export const getRoles = async () => {
-
+  const headers = await getAuthHeaders();
   try {
-    const response = await axios.get(`${Api_url}/roles/getAllRole`);
-    console.log('Roles retrieved:', response.data); // Log dữ liệu trả về từ API
+    const response = await axios.get(`${Api_url}/roles/getAllRole`, {
+      headers,
+    });
     return response.data;
   } catch (error) {
-    console.error('Error retrieving Roles:', error.response?.data || error.message);
     throw error;
   }
 };
