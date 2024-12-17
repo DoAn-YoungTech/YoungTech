@@ -31,7 +31,7 @@ interface IFormInput {
 const Page = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  console.log(session?.user.role)
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
   const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({
     resolver: yupResolver(schema), // Attach yup validation schema here
   });
@@ -78,7 +78,7 @@ const Page = () => {
 
   const handleGoogleLogin = async () => {
      await signIn("google", { redirect: false });
-    await axios.post('http://localhost:8080/api/auth/register', {
+    await axios.post(`${apiUrl}/auth/register`, {
       userName: "than",  // Lấy tên từ thông tin người dùng Google
       email: "thhhnnvnn@gmail.com",    // Lấy email từ thông tin người dùng Google
       password: '',         // Để trống mật khẩu vì Google đã cung cấp thông tin xác thực

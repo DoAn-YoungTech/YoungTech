@@ -33,11 +33,11 @@ const Page = () => {
   const [message, setMessage] = useState<string>(''); // Đảm bảo message là string
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
     const onSubmit = async (data: any) => {
       const { userName, email, password } = data;
       try {
-        const res = await axios.post(`${Api_url}/auth/register`, {
+        const res = await axios.post(`${apiUrl}/auth/register`, {
           userName, 
           email,
           password
