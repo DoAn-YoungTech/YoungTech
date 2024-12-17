@@ -18,7 +18,7 @@ const ListEmployees = () => {
 
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  const rows = 5; // Số dòng mỗi trang
+  const rows = 1; // Số dòng mỗi trang
   const totalPages = Math.ceil(filteredEmployees.length / rows);
 
   const [selectedEmployee, setSelectedEmployee] = useState(null);

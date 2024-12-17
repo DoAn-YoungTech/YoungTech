@@ -5,11 +5,15 @@ import { useParams, useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import UploadImage from "@/components/UploadImage/UploadImgEmployee";
-import { getEmployeeById, updateEmployee } from "@/services/employee/EmployeeService";
+import {
+  getEmployeeById,
+  updateEmployee,
+} from "@/services/employee/EmployeeService";
 import { getRoles } from "@/services/role/RoleService";
 import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 
 const schema = yup.object({
   userName: yup.string().required("Tên tài khoản là bắt buộc"),
@@ -113,12 +117,11 @@ const UpdateEmployeeForm: React.FC = () => {
   return (
     <div className="p-4 bg-[#282F36] text-white rounded-md">
       <div className="p-4 relative flex items-center mb-6">
-        <ShinyRotatingBorderButton
-          onClick={() => router.push("/dashboard/quanly-nhanvien")}
-          className="absolute left-0 text-center text-blue-600 hover:text-blue-800"
-        >
-          Quay lại
-        </ShinyRotatingBorderButton>
+        <Link href="/dashboard/quanly-nhanvien">
+          <ShinyRotatingBorderButton className="absolute left-0 text-center text-blue-600 hover:text-blue-800">
+            Quay lại
+          </ShinyRotatingBorderButton>
+        </Link>
 
         <h2 className="absolute inset-x-0 text-center text-2xl font-semibold">
           Cập nhật nhân viên
@@ -164,7 +167,9 @@ const UpdateEmployeeForm: React.FC = () => {
                 />
               )}
               {formik.touched[name] && formik.errors[name] && (
-                <p className="text-red-500 text-xs mt-1">{formik.errors[name]}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {formik.errors[name]}
+                </p>
               )}
             </div>
           ))}
