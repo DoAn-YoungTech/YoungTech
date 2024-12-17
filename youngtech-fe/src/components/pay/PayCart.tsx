@@ -67,7 +67,7 @@ const PayCart = ({ userInfo, handleOpen, totalOrder, CartProduct, CartProductOrd
       }));
       order = {
         totalAmount: Number(totalOrderCart) + 50000,
-        status: 'pending',
+        status: 'Pending',
         customer_id: Number(customers.id),
       };
     }
@@ -165,7 +165,7 @@ const PayCart = ({ userInfo, handleOpen, totalOrder, CartProduct, CartProductOrd
             onClick={handlePayment}
             className="w-[40%] py-2 shadow-md hover:bg-red-600 text-white rounded-md shadow-red-500 px-10 bg-red-500 active:scale-95 active:shadow-none transition duration-150"
           >
-            Thanh toán
+            Đặt hàng
           </button>
         </div>
       </div>

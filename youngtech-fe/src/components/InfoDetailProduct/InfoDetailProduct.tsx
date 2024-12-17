@@ -14,7 +14,7 @@ import { debounce } from 'lodash';
 export default function InfoDetailProduct({ dataProduct }) {
   const searchParams = useSearchParams(); // Lấy tất cả các query params
   const id = searchParams.get("id");
-    const user = useSelector((state: RootState) => state.auth.user);
+  const { data: session, status } = useSession()
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function InfoDetailProduct({ dataProduct }) {
   };
   const debouncedAddToCart = useCallback(
     debounce((quantity, id) => {
-      if (user?.accessToken) {
+      if (session) {
         handleAddToCart(quantity, id);
       } else {
         toast.warning("Vui lòng đăng nhập");
@@ -65,7 +65,7 @@ export default function InfoDetailProduct({ dataProduct }) {
         }, 2000);
       }
     }, 500),
-    [user, handleAddToCart]
+    [session, handleAddToCart]
   );
   
   const increment = () => setQuantity((prev) => prev + 1);
