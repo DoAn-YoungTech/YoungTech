@@ -21,7 +21,7 @@ const supplierRepository = {
   },
 
   getSupplierById: async (id) => {
-    const query = `SELECT * FROM supplier WHERE id = :id AND flag = false`;
+    const query = `SELECT * FROM supplier WHERE id = :id AND flag = 1`;
     const [result] = await sequelize.query(query, { replacements: { id } });
     return result[0];
   },
