@@ -3,6 +3,7 @@ const productRoutes = express.Router();
 const productController = require('../controllers/productController');
 
 productRoutes.get('/', productController.getAllProduct);
+productRoutes.get('/viewListProduct', productController.viewListProduct);
 productRoutes.get('/validate', productController.validateProduct);
 
 productRoutes.get('/:id', productController.getProductById);

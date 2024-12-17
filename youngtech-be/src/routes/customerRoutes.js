@@ -10,6 +10,12 @@ customerRoutes.get(
 );
 
 customerRoutes.get(
+  '/getCustomerById/:id',
+  // middlewareController.verifyToken,
+  customerController.viewCustomerById
+);
+
+customerRoutes.get(
   '/viewCustomerById',
   middlewareController.verifyToken,
   customerController.getCustomersById
@@ -24,22 +30,22 @@ customerRoutes.put(
 // edit information
 customerRoutes.patch(
   '/editCustomer/:id',
-  middlewareController.verifyToken,
+  // middlewareController.verifyToken,
   customerController.editCustomer
 );
 
 // delete soft
 customerRoutes.patch(
   '/softDelete/:id',
-  middlewareController.verifyToken,
-  middlewareController.verifyTokenAndRole(['admin']),
+  // middlewareController.verifyToken,
+  // middlewareController.verifyTokenAndRole(['admin']),
   customerController.softDelete
 );
 
 customerRoutes.get(
   '/getOrderHistoryByCustomerId/:id',
-   middlewareController.verifyToken,
-   middlewareController.verifyTokenAndRole(['salesperson','admin']),
+  //  middlewareController.verifyToken,
+  //  middlewareController.verifyTokenAndRole(['salesperson','admin']),
   customerController.getOrderHistoryHandler
 );
 customerRoutes.post(
