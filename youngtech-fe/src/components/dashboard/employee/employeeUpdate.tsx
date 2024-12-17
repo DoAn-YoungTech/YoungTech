@@ -2,17 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-  getEmployeeById,
-  updateEmployee,
-} from "@/services/employee/EmployeeService";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import UploadImage from "@/components/UploadImage/UploadImgEmployee";
+import { getEmployeeById, updateEmployee } from "@/services/employee/EmployeeService";
+import { getRoles } from "@/services/role/RoleService";
+import { ShinyRotatingBorderButton } from "../ButtonSave/BtnSave";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Schema xác thực
 const schema = yup.object({
   userName: yup.string().required("Tên tài khoản là bắt buộc"),
   email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
@@ -25,21 +23,14 @@ const schema = yup.object({
   profilePicture: yup.string().required("Ảnh đại diện là bắt buộc"),
 });
 
-// Các trường dữ liệu
-const fields = [
-  { label: "Tên tài khoản", name: "userName", type: "text" },
-  { label: "Email", name: "email", type: "email" },
-  { label: "Tên đầy đủ", name: "fullName", type: "text" },
-  { label: "Số điện thoại", name: "phoneNumber", type: "text" },
-  { label: "Chức vụ", name: "position", type: "text" },
-];
-
-const UpdateEmployee = () => {
+const UpdateEmployeeForm: React.FC = () => {
   const { id } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [roles, setRoles] = useState<{ id: number; roleName: string }[]>([]);
   const [error, setError] = useState("");
 
+  // Formik setup
   const formik = useFormik({
     initialValues: {
       userName: "",
@@ -56,7 +47,7 @@ const UpdateEmployee = () => {
         await updateEmployee(id, values);
         toast.success("Cập nhật thông tin nhân viên thành công!");
         router.push("/dashboard/quanly-nhanvien");
-      } catch (err) {
+      } catch (err: any) {
         const errorMsg = err.message || "Có lỗi xảy ra khi cập nhật";
         toast.error(errorMsg);
         setError(errorMsg);
@@ -64,6 +55,7 @@ const UpdateEmployee = () => {
     },
   });
 
+  // Fetch employee data and roles on component mount
   useEffect(() => {
     if (id) {
       const fetchEmployee = async () => {
@@ -93,72 +85,120 @@ const UpdateEmployee = () => {
       setError("Không tìm thấy ID nhân viên");
       setLoading(false);
     }
+
+    const fetchRoles = async () => {
+      try {
+        const rolesData = await getRoles();
+        if (rolesData && Array.isArray(rolesData.result)) {
+          setRoles(rolesData.result);
+        } else {
+          throw new Error("Dữ liệu chức vụ không hợp lệ");
+        }
+      } catch (error) {
+        toast.error("Lỗi khi tải danh sách chức vụ!");
+      }
+    };
+
+    fetchRoles();
   }, [id]);
 
-  // Hàm xử lý khi ảnh được tải lên
-  const handleGetArrayImage = (imageArray) => {
+  // Handle uploaded image
+  const handleGetArrayImage = (imageArray: any[]) => {
     if (Array.isArray(imageArray) && imageArray.length > 0) {
-      const imageUrl = imageArray[0]?.url || ""; // Lấy URL đầu tiên từ mảng
-      formik.setFieldValue("profilePicture", imageUrl); // Cập nhật giá trị
+      const imageUrl = imageArray[0]?.url || "";
+      formik.setFieldValue("profilePicture", imageUrl);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
-      <h1 className="text-3xl font-bold mb-6">Cập nhật thông tin nhân viên</h1>
-      {error && <p className="mb-4 text-red-600">{error}</p>}
-      {loading ? (
-        <p className="text-center">Đang tải dữ liệu...</p>
-      ) : (
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
-          {fields.map(({ label, name, type }) => (
-            <div key={name} className="mb-4">
-              <label
-                htmlFor={name}
-                className="block text-sm font-medium text-gray-700"
-              >
-                {label}
-              </label>
-              <input
-                id={name}
-                name={name}
-                type={type}
-                value={formik.values[name]}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
+    <div className="p-4 bg-[#282F36] text-white rounded-md">
+      <div className="p-4 relative flex items-center mb-6">
+        <ShinyRotatingBorderButton
+          onClick={() => router.push("/dashboard/quanly-nhanvien")}
+          className="absolute left-0 text-center text-blue-600 hover:text-blue-800"
+        >
+          Quay lại
+        </ShinyRotatingBorderButton>
+
+        <h2 className="absolute inset-x-0 text-center text-2xl font-semibold">
+          Cập nhật nhân viên
+        </h2>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white/50">
+          {[
+            { label: "Tên tài khoản", name: "userName", type: "text" },
+            { label: "Email", name: "email", type: "email" },
+            { label: "Tên đầy đủ", name: "fullName", type: "text" },
+            { label: "Số điện thoại", name: "phoneNumber", type: "text" },
+            { label: "Chức vụ", name: "position", type: "select" },
+          ].map(({ label, name, type }) => (
+            <div key={name}>
+              <label className="block text-sm font-medium mb-1">{label}</label>
+              {type === "select" ? (
+                <select
+                  name={name}
+                  value={formik.values[name]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full px-3 py-2 rounded bg-[#282F36] text-white border border-gray-700"
+                >
+                  <option value="">Chọn chức vụ</option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.roleName}>
+                      {role.roleName}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={type}
+                  name={name}
+                  value={formik.values[name]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder={label}
+                  className="w-full px-3 py-2 rounded bg-[#282F36] text-white border border-gray-700"
+                />
+              )}
               {formik.touched[name] && formik.errors[name] && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formik.errors[name]}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{formik.errors[name]}</p>
               )}
             </div>
           ))}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Ảnh đại diện
-            </label>
-            <UploadImage
-              handleGetArrayImage={handleGetArrayImage}
-              initialImage={formik.values.profilePicture}
-            />
-            {formik.errors.profilePicture && formik.touched.profilePicture && (
-              <p className="mt-1 text-sm text-red-600">
-                {formik.errors.profilePicture}
-              </p>
-            )}
-          </div>
-          <button
+        </div>
+
+        {/* Upload Image */}
+        <div>
+          <label className="block text-sm text-white/50 font-medium mb-1">
+            Ảnh đại diện
+          </label>
+          <UploadImage
+            handleGetArrayImage={handleGetArrayImage}
+            initialImage={formik.values.profilePicture}
+          />
+          {formik.touched.profilePicture && formik.errors.profilePicture && (
+            <p className="text-red-500 text-xs mt-1">
+              {formik.errors.profilePicture}
+            </p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-end">
+          <ShinyRotatingBorderButton
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className={`${loading && "cursor-wait"}`}
+            disabled={loading}
           >
-            Cập nhật
-          </button>
-        </form>
-      )}
+            {loading ? "Đang xử lý..." : "Cập nhật nhân viên"}
+          </ShinyRotatingBorderButton>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default UpdateEmployee;
+export default UpdateEmployeeForm;

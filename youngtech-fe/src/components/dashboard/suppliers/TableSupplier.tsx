@@ -1,11 +1,11 @@
 "use client";
-import { Table } from '@/components/ui/table'; // Kiểm tra đường dẫn chính xác
-import { Button } from '@/components/ui/button'; // Kiểm tra đường dẫn chính xác
+import { Table } from "@/components/ui/table"; // Kiểm tra đường dẫn chính xác
+import { Button } from "@/components/ui/button"; // Kiểm tra đường dẫn chính xác
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import { Supplier } from '@/types/SupplierTypes'; // Sử dụng kiểu dữ liệu cho nhà cung cấp
-import { useState } from 'react'; // Import useState
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi'; // Import icon
+import { Supplier } from "@/types/SupplierTypes"; // Sử dụng kiểu dữ liệu cho nhà cung cấp
+import { useState } from "react"; // Import useState
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi"; // Import icon
 
 interface SupplierTableProps {
   suppliers: Supplier[];
@@ -13,7 +13,11 @@ interface SupplierTableProps {
   onDelete: (id: number) => void;
 }
 
-const SupplierTable: React.FC<SupplierTableProps> = ({ suppliers, onEdit, onDelete }) => {
+const SupplierTable: React.FC<SupplierTableProps> = ({
+  suppliers,
+  onEdit,
+  onDelete,
+}) => {
   // State để quản lý trang hiện tại và số mục trên mỗi trang
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Số nhà cung cấp trên mỗi trang (có thể tùy chỉnh)
@@ -21,7 +25,10 @@ const SupplierTable: React.FC<SupplierTableProps> = ({ suppliers, onEdit, onDele
   // Tính toán số trang và dữ liệu nhà cung cấp trên mỗi trang
   const totalPages = Math.ceil(suppliers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentSuppliers = suppliers.slice(startIndex, startIndex + itemsPerPage);
+  const currentSuppliers = suppliers.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   // Xử lý khi nhấn nút "Trang trước"
   const handlePreviousPage = () => {
@@ -59,8 +66,13 @@ const SupplierTable: React.FC<SupplierTableProps> = ({ suppliers, onEdit, onDele
         </thead>
         <tbody className="text-gray-800 ">
           {currentSuppliers.map((supplier, index) => (
-            <tr key={supplier.id} className="product-item text-white/80 border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]">
-              <td className="py-2 px-4 text-center">{startIndex + index + 1}</td>
+            <tr
+              key={supplier.id}
+              className="product-item text-white/80 border-t border-t-slate-300/50 transition-all duration-300 ease-in-out cursor-pointer hover:bg-[#22282E]"
+            >
+              <td className="py-2 px-4 text-center">
+                {startIndex + index + 1}
+              </td>
               <td className="py-2 px-4">MNCC{supplier.id}</td>
               <td className="py-2 px-4">{supplier.supplierName}</td>
               <td className="py-2 px-4">{supplier.contactName}</td>
@@ -68,17 +80,17 @@ const SupplierTable: React.FC<SupplierTableProps> = ({ suppliers, onEdit, onDele
               <td className="py-2 px-4">{supplier.email}</td>
               <td className="py-2 px-4">{supplier.address}</td>
               <td className="py-2 px-4 flex justify-center space-x-2">
-                <Button 
-                  className="hover:bg-blue-300 rounded-md bg-black/50 transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center" 
+                <Button
+                  className="hover:bg-blue-300 rounded-md bg-black/50 transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
                   onClick={() => onEdit(supplier)}
                 >
-                  <FaEdit className="text-[1.1rem] text-blue-600"/>
+                  <FaEdit className="text-[1.1rem] text-blue-600" />
                 </Button>
-                <Button 
-                  className="hover:bg-red-300 bg-black/50 rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center" 
+                <Button
+                  className="hover:bg-red-300 bg-black/50 rounded-md transition-all duration-300 ease-in-out w-[40px] h-[40px] flex justify-center items-center"
                   onClick={() => onDelete(supplier.id)}
                 >
-                  <MdDeleteOutline className="text-[1.1rem] text-red-600"/>
+                  <MdDeleteOutline className="text-[1.1rem] text-red-600" />
                 </Button>
               </td>
             </tr>
@@ -88,32 +100,36 @@ const SupplierTable: React.FC<SupplierTableProps> = ({ suppliers, onEdit, onDele
 
       {/* Nút phân trang */}
       <div className="flex justify-center items-center mt-4 space-x-2">
-  <Button 
-    onClick={handlePreviousPage} 
-    disabled={currentPage === 1} 
-    className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50 flex items-center justify-center"
-  >
-    <HiChevronLeft className="text-xl" /> {/* Dấu << */}
-  </Button>
+        <Button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50 flex items-center justify-center"
+        >
+          <HiChevronLeft className="text-xl" /> {/* Dấu << */}
+        </Button>
 
-  {Array.from({ length: totalPages }, (_, index) => (
-    <Button 
-      key={index} 
-      onClick={() => handlePageClick(index + 1)} 
-      className={`px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-slate-600 text-white' : 'bg-gray-800 text-white'}`}
-    >
-      {index + 1}
-    </Button>
-  ))}
+        {Array.from({ length: totalPages }, (_, index) => (
+          <Button
+            key={index}
+            onClick={() => handlePageClick(index + 1)}
+            className={`px-4 py-2 rounded ${
+              currentPage === index + 1
+                ? "bg-slate-600 text-white"
+                : "bg-gray-800 text-white"
+            }`}
+          >
+            {index + 1}
+          </Button>
+        ))}
 
-  <Button 
-    onClick={handleNextPage} 
-    disabled={currentPage === totalPages} 
-    className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50 flex items-center justify-center"
-  >
-    <HiChevronRight className="text-xl" /> {/* Dấu >> */}
-  </Button>
-</div>
+        <Button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50 flex items-center justify-center"
+        >
+          <HiChevronRight className="text-xl" /> {/* Dấu >> */}
+        </Button>
+      </div>
     </>
   );
 };

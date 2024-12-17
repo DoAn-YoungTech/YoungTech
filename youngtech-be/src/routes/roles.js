@@ -11,7 +11,7 @@ roles.post(
 roles.get(
  
   '/getAllRole',
-  middlewareController.verifyToken, 
+  // middlewareController.verifyToken, 
   rolesControllers.getAllRole
 );
 
